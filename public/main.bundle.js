@@ -205,13 +205,13 @@ var DatabaseService = /** @class */ (function () {
     DatabaseService.prototype.saveAnimal = function (animal) {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
         headers.append('ContentType', 'application/json');
-        return this.http.post('http://localhost:8000/animal', animal, { headers: headers })
+        return this.http.post('/animal', animal, { headers: headers })
             .map(function (res) { return res.json(); });
     };
     DatabaseService.prototype.getAnimals = function () {
         var headers = new __WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Headers */]();
         headers.append('ContentType', 'application/json');
-        return this.http.get('http://localhost:8000/animal', { headers: headers })
+        return this.http.get('/animal', { headers: headers })
             .map(function (res) { return res.json(); });
     };
     DatabaseService = __decorate([
