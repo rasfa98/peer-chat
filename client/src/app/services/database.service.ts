@@ -11,14 +11,14 @@ export class DatabaseService {
   saveAnimal(animal) {
     const headers = new Headers()
     headers.append('ContentType', 'application/json')
-    return this.http.post('http://localhost:8000/animal', animal, { headers: headers })
+    return this.http.post('/animal', animal, { headers: headers })
       .map(res => res.json())
   }
 
   getAnimals() {
     const headers = new Headers()
     headers.append('ContentType', 'application/json')
-    return this.http.get('http://localhost:8000/animal', { headers: headers })
+    return this.http.get('/animal', { headers: headers })
       .map(res => res.json())
   }
 }

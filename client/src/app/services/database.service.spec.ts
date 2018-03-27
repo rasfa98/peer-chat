@@ -1,15 +1,15 @@
 import { TestBed, inject } from '@angular/core/testing';
 
-import { SaveService } from './save.service';
+import { DatabaseService } from './database.service';
 
 describe('SaveService', () => {
   beforeEach(() => {
     TestBed.configureTestingModule({
-      providers: [SaveService]
+      providers: [DatabaseService]
     });
   });
 
-  it('should be created', inject([SaveService], (service: SaveService) => {
+  it('should be created', inject([DatabaseService], (service: DatabaseService) => {
     expect(service).toBeTruthy();
   }));
 });
