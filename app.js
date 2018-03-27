@@ -4,7 +4,7 @@ const path = require('path')
 
 const app = express.run()
 
-mongoose.run().catch(err => {
+mongoose.run(app).catch(err => {
   console.log(err)
   process.exit(1)
 })

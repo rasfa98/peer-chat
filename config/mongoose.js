@@ -15,8 +15,14 @@
   *
   * @returns {Promise}
   */
- module.exports.run = async () => {
-   const connectionString = 'mongodb://db/test'
+ module.exports.run = async (app) => {
+   let connectionString
+
+   if (app.get('env') === 'development') {
+     connectionString = 'mongodb://db/test'
+   } else {
+     connectionString = 'mongodb://localhost:8000/test'
+   }
 
    mongoose.Promise = global.Promise
 
