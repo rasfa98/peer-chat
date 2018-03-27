@@ -21,7 +21,7 @@
    if (app.get('env') === 'development') {
      connectionString = 'mongodb://db/test'
    } else {
-     connectionString = 'mongodb://localhost:8000/test'
+     connectionString = 'localhost/test'
    }
 
    mongoose.Promise = global.Promise
