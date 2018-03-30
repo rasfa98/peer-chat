@@ -2,25 +2,36 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HttpModule } from '@angular/http';
+import { RouterModule, Routes, Route } from '@angular/router';
 
 
 import { AppComponent } from './app.component';
-import { AnimalComponent } from './components/animal/animal.component';
+import { NavbarComponent } from './components/navbar/navbar.component';
+import { HomeComponent } from './components/home/home.component';
+import { LoginComponent } from './components/login/login.component';
+import { RegisterComponent } from './components/register/register.component';
 
-import { DatabaseService } from './services/database.service';
-
+const appRoutes: Routes = [
+  { path: '', component: HomeComponent },
+  { path: 'login', component: LoginComponent },
+  { path: 'register', component: RegisterComponent },
+]
 
 @NgModule({
   declarations: [
     AppComponent,
-    AnimalComponent
+    NavbarComponent,
+    HomeComponent,
+    LoginComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule,
     FormsModule,
-    HttpModule
+    HttpModule,
+    RouterModule.forRoot(appRoutes)
   ],
-  providers: [DatabaseService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
