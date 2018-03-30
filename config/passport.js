@@ -20,9 +20,7 @@ module.exports.run = () => {
   }, async (accessToken, refreshToken, profile, done) => {
     const current = await User.findOne({ googleId: profile.id })
 
-    if (current) {
-
-    } else {
+    if (!current) {
       const user = new User({
         username: profile.displayName,
         googleId: profile.googleId
@@ -30,5 +28,9 @@ module.exports.run = () => {
 
       user.save()
     }
+
+    console.log('hej')
+
+    done()
   }))
 }

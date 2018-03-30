@@ -12,6 +12,7 @@
  const path = require('path')
  const cors = require('cors')
  const bodyParser = require('body-parser')
+ const dotenv = require('dotenv')
 
 /**
   * Configures and starts the express application.
@@ -21,6 +22,8 @@
  module.exports.run = () => {
    const app = express()
    const port = 8000
+
+   dotenv.config()
 
    app.use(cors())
 
