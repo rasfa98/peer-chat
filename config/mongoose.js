@@ -24,6 +24,8 @@
      connectionString = 'mongodb://localhost/test'
    }
 
+   app.set('connectionString', connectionString)
+
    mongoose.Promise = global.Promise
 
    mongoose.connection.on('connected', () => console.log('Mongoose connection is open.'))

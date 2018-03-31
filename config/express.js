@@ -9,10 +9,12 @@
  'use strict'
 
  const express = require('express')
+ const passport = require('./passport')
  const path = require('path')
  const cors = require('cors')
  const bodyParser = require('body-parser')
  const dotenv = require('dotenv')
+ const handlebars = require('express-handlebars')
 
 /**
   * Configures and starts the express application.
@@ -24,8 +26,16 @@
    const port = 8000
 
    dotenv.config()
+   passport.run()
 
    app.use(cors())
+
+   app.engine('.hbs', handlebars({
+     defaultLayout: 'main',
+     extname: '.hbs'
+   }))
+
+   app.set('view engine', '.hbs')
 
    app.use(bodyParser.json())
 

@@ -11,17 +11,14 @@
 const router = require('express').Router()
 const passport = require('passport')
 
-router.post('/google', (req, res) => {
-  res.redirect('/google')
-})
+router.route('/google')
+    .get(passport.authenticate('google', { scope: ['profile'] }))
 
-router.get('/google', passport.authenticate('google', {
-  scope: ['profile']
-}))
-
-router.get('/google/redirect', (req, res) => {
-  console.log('hej')
-})
+router.route('/google/redirect')
+    .get(passport.authenticate('google'), (req, res) => {
+      req.session.login = true
+      res.redirect('/chat')
+    })
 
 // Exports
 module.exports = router

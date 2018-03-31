@@ -1,7 +1,7 @@
 const mongoose = require('./config/mongoose')
 const express = require('./config/express')
-const passport = require('./config/passport')
 const path = require('path')
+const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 
@@ -11,8 +11,6 @@ mongoose.run(app).catch(err => {
   console.log(err)
   process.exit(1)
 })
-
-passport.run()
 
 app.use(session({
   name: 'PeerChat',
@@ -26,13 +24,18 @@ app.use(session({
   }
 }))
 
+app.use(passport.initialize())
+
 app.use((req, res, next) => {
   res.locals.login = req.session.login
+  console.log(req.user)
+  next()
 })
 
 app.use('/', require('./routes/index'))
 app.use('/chat', require('./routes/chat'))
 app.use('/login', require('./routes/login'))
+app.use('/signout', require('./routes/signout'))
 app.use('/register', require('./routes/register'))
 app.use('/auth', require('./routes/auth'))
 
