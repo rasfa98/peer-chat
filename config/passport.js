@@ -44,7 +44,7 @@ module.exports.run = () => {
   }))
 
   passport.use(new FacebookStrategy({
-    callbackURL: 'https://rasmusfalk.se//auth/facebook/redirect',
+    callbackURL: 'https://rasmusfalk.se/auth/facebook/redirect',
     clientID: process.env.FACEBOOK_APP_ID,
     clientSecret: process.env.FACEBOOK_APP_SECRET
   }, (accessToken, refreshToken, profile, done) => {
@@ -54,7 +54,7 @@ module.exports.run = () => {
       } else {
         new User({
           username: profile.displayName,
-          googleId: profile.id
+          facebookId: profile.id
         }).save().then(newUser => {
           done(null, newUser)
         })
