@@ -10,6 +10,7 @@
 
 const passport = require('passport')
 const GoogleStrategy = require('passport-google-oauth20')
+const FacebookStrategy = require('passport-facebook')
 const User = require('../models/User')
 
 module.exports.run = () => {
@@ -29,6 +30,25 @@ module.exports.run = () => {
     clientSecret: process.env.GOOGLE_CLIENT_SECRET
   }, (accessToken, refreshToken, profile, done) => {
     User.findOne({ googleId: profile.id }).then(currentUser => {
+      if (currentUser) {
+        done(null, currentUser)
+      } else {
+        new User({
+          username: profile.displayName,
+          googleId: profile.id
+        }).save().then(newUser => {
+          done(null, newUser)
+        })
+      }
+    })
+  }))
+
+  passport.use(new FacebookStrategy({
+    callbackURL: '/auth/facebook/redirect',
+    clientID: process.env.FACEBOOK_APP_ID,
+    clientSecret: process.env.FACEBOOK_APP_SECRET
+  }, (accessToken, refreshToken, profile, done) => {
+    User.findOne({ facebookId: profile.id }).then(currentUser => {
       if (currentUser) {
         done(null, currentUser)
       } else {

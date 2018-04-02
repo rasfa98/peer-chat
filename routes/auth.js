@@ -20,5 +20,14 @@ router.route('/google/redirect')
       res.redirect('/chat')
     })
 
+router.route('/facebook')
+    .get(passport.authenticate('facebook'))
+
+router.route('/facebook/redirect')
+    .get(passport.authenticate('google'), (req, res) => {
+      req.session.login = true
+      res.redirect('/chat')
+    })
+
 // Exports
 module.exports = router

@@ -28,7 +28,6 @@ app.use(passport.initialize())
 
 app.use((req, res, next) => {
   res.locals.login = req.session.login
-  console.log(req.user)
   next()
 })
 
