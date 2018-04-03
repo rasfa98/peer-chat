@@ -21,6 +21,7 @@ router.route('/')
 
         if (match) {
           req.session.login = true
+          req.session.username = user.username
           res.redirect('/chat')
         } else {
           req.session.flash = {

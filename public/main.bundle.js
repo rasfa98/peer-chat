@@ -73,12 +73,16 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__angular_router__ = __webpack_require__("./node_modules/@angular/router/esm5/router.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__app_component__ = __webpack_require__("./src/app/app.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__components_chat_chat_component__ = __webpack_require__("./src/app/components/chat/chat.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_7__services_websocket_service__ = __webpack_require__("./src/app/services/websocket.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_8__services_database_service__ = __webpack_require__("./src/app/services/database.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
+
 
 
 
@@ -101,10 +105,10 @@ var AppModule = /** @class */ (function () {
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
                 __WEBPACK_IMPORTED_MODULE_2__angular_forms__["a" /* FormsModule */],
-                __WEBPACK_IMPORTED_MODULE_3__angular_http__["a" /* HttpModule */],
+                __WEBPACK_IMPORTED_MODULE_3__angular_http__["b" /* HttpModule */],
                 __WEBPACK_IMPORTED_MODULE_4__angular_router__["a" /* RouterModule */].forRoot(appRoutes)
             ],
-            providers: [],
+            providers: [__WEBPACK_IMPORTED_MODULE_7__services_websocket_service__["a" /* WebsocketService */], __WEBPACK_IMPORTED_MODULE_8__services_database_service__["a" /* DatabaseService */]],
             bootstrap: [__WEBPACK_IMPORTED_MODULE_5__app_component__["a" /* AppComponent */]]
         })
     ], AppModule);
@@ -125,7 +129,7 @@ module.exports = ""
 /***/ "./src/app/components/chat/chat.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<p>\n  chat works!\n</p>\n"
+module.exports = "<ul>\n  List of online users will be shown here...\n</ul>\n"
 
 /***/ }),
 
@@ -135,6 +139,8 @@ module.exports = "<p>\n  chat works!\n</p>\n"
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChatComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_websocket_service__ = __webpack_require__("./src/app/services/websocket.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_database_service__ = __webpack_require__("./src/app/services/database.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -145,10 +151,15 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 
+
+
 var ChatComponent = /** @class */ (function () {
-    function ChatComponent() {
+    function ChatComponent(websocketService, databaseService) {
+        this.websocketService = websocketService;
+        this.databaseService = databaseService;
     }
     ChatComponent.prototype.ngOnInit = function () {
+        this.websocketService.connect();
     };
     ChatComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
@@ -156,9 +167,84 @@ var ChatComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/components/chat/chat.component.html"),
             styles: [__webpack_require__("./src/app/components/chat/chat.component.css")]
         }),
-        __metadata("design:paramtypes", [])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_websocket_service__["a" /* WebsocketService */],
+            __WEBPACK_IMPORTED_MODULE_2__services_database_service__["a" /* DatabaseService */]])
     ], ChatComponent);
     return ChatComponent;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/database.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return DatabaseService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__angular_http__ = __webpack_require__("./node_modules/@angular/http/esm5/http.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_rxjs_add_operator_map__ = __webpack_require__("./node_modules/rxjs/_esm5/add/operator/map.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+
+var DatabaseService = /** @class */ (function () {
+    function DatabaseService(http) {
+        this.http = http;
+    }
+    DatabaseService.prototype.getCurrentUser = function () {
+        return this.http.get('http://localhost:8000/auth/user').map(function (data) { return data.json(); });
+    };
+    DatabaseService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__angular_http__["a" /* Http */]])
+    ], DatabaseService);
+    return DatabaseService;
+}());
+
+
+
+/***/ }),
+
+/***/ "./src/app/services/websocket.service.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WebsocketService; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_socket_io_client__ = __webpack_require__("./node_modules/socket.io-client/lib/index.js");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_socket_io_client___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_socket_io_client__);
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+
+var WebsocketService = /** @class */ (function () {
+    function WebsocketService() {
+    }
+    WebsocketService.prototype.connect = function () {
+        var socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__["connect"]('https://rasmusfalk.se');
+    };
+    WebsocketService = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
+        __metadata("design:paramtypes", [])
+    ], WebsocketService);
+    return WebsocketService;
 }());
 
 
@@ -208,6 +294,13 @@ Object(__WEBPACK_IMPORTED_MODULE_1__angular_platform_browser_dynamic__["a" /* pl
 
 module.exports = __webpack_require__("./src/main.ts");
 
+
+/***/ }),
+
+/***/ 1:
+/***/ (function(module, exports) {
+
+/* (ignored) */
 
 /***/ })
 

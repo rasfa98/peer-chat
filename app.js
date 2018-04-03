@@ -39,7 +39,6 @@
 
  app.use((req, res, next) => {
    res.locals.csrfToken = req.csrfToken()
-
    next()
  })
 
@@ -47,13 +46,13 @@
 
  app.use((req, res, next) => {
    res.locals.login = req.session.login
+   res.locals.username = req.session.username
    next()
  })
 
  app.use((req, res, next) => {
    res.locals.flash = req.session.flash
    delete req.session.flash
-
    next()
  })
 

@@ -29,5 +29,12 @@ router.route('/facebook/redirect')
       res.redirect('/chat')
     })
 
+router.route('/user')
+    .get((req, res) => {
+      res.send({
+        username: res.locals.username
+      })
+    })
+
 // Exports
 module.exports = router

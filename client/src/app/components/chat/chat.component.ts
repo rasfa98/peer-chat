@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { WebsocketService } from '../../services/websocket.service';
+import { DatabaseService } from '../../services/database.service';
 
 @Component({
   selector: 'app-chat',
@@ -6,10 +8,14 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
+  connectedUsers: string[]
 
-  constructor() { }
+  constructor(
+    private websocketService: WebsocketService,
+    private databaseService: DatabaseService) {}
 
   ngOnInit() {
+    this.websocketService.connect()
   }
 
 }

@@ -15,6 +15,7 @@
  const bodyParser = require('body-parser')
  const dotenv = require('dotenv')
  const handlebars = require('express-handlebars')
+ const socket = require('./socket')
 
 /**
   * Configures and starts the express application.
@@ -42,7 +43,9 @@
 
    app.use(express.static(path.join(__dirname, '../public')))
 
-   app.listen(port, console.log(`Server running on PORT: ${port}...`))
+   const server = app.listen(port, console.log(`Server running on PORT: ${port}...`))
+
+   app.set('io', socket.run(server))
 
    return app
  }
