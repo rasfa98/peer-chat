@@ -3,10 +3,11 @@ const bluebird = require('bluebird')
 const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
 
 const userSchema = mongoose.Schema({
-  username: String,
-  googleId: String,
-  facebookId: String,
-  password: String
+  fullName: { type: String, required: '"Full name" is required!"', trim: true },
+  username: { type: String, required: '"Username" is required!"', trim: true, unique: true },
+  googleId: { type: String, default: null },
+  facebookId: { type: String, default: null },
+  password: { type: String, required: '"Password" is required!"', trim: true }
 })
 
 // Hashing of password.
