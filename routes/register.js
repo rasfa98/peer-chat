@@ -9,12 +9,35 @@
 'use strict'
 
 const router = require('express').Router()
+const User = require('../models/User')
+const checkError = require('../lib/checkError')
 
 router.route('/')
     .get((req, res) => res.render('register'))
 
 router.route('/')
-    .post((req, res) => {
+    .post(async (req, res) => {
+      try {
+        const user = new User({
+          username: req.body.username,
+          password: req.body.password
+        })
+
+        if (req.body.password !== req.body.passwordRepeat) {
+          req.session.flash = {
+            type: 'danger',
+            message: 'The passwords do not match!'
+          }
+
+          res.redirect('back')
+        } else {
+          await user.save()
+
+          res.redirect('/login')
+        }
+      } catch (err) {
+        checkError(err, req, res)
+      }
     })
 
 // Exports
