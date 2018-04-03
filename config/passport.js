@@ -13,7 +13,7 @@ const GoogleStrategy = require('passport-google-oauth20')
 const FacebookStrategy = require('passport-facebook')
 const User = require('../models/User')
 
-module.exports.run = () => {
+module.exports.run = async () => {
   passport.serializeUser((user, done) => {
     done(null, user.id)
   })
@@ -34,7 +34,7 @@ module.exports.run = () => {
         done(null, currentUser)
       } else {
         new User({
-          username: profile.displayName,
+          fullName: profile.displayName,
           googleId: profile.id
         }).save().then(newUser => {
           done(null, newUser)
@@ -53,7 +53,7 @@ module.exports.run = () => {
         done(null, currentUser)
       } else {
         new User({
-          username: profile.displayName,
+          fullName: profile.displayName,
           facebookId: profile.id
         }).save().then(newUser => {
           done(null, newUser)

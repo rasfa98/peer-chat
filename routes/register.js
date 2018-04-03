@@ -14,11 +14,10 @@ const checkError = require('../lib/checkError')
 
 router.route('/')
     .get((req, res) => res.render('register'))
-
-router.route('/')
     .post(async (req, res) => {
       try {
         const user = new User({
+          fullName: req.body.fullName,
           username: req.body.username,
           password: req.body.password
         })

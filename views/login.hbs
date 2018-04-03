@@ -1,24 +1,27 @@
-<div class="field">
-  <label class="label">Username</label>
-  <div class="control">
-    <input class="input" type="text" placeholder="Enter username">
-  </div>
-</div>
+{{>flash}}
 
-<div class="field">
-  <label class="label">Password</label>
-  <div class="control">
-    <input class="input" type="password" placeholder="Enter password">
+<form action="/login" method="post">
+  <div class="field">
+    <label class="label">Username</label>
+    <div class="control">
+      <input class="input" type="text" placeholder="Enter username" name="username">
+    </div>
   </div>
-</div>
 
-<div class="field">
-  <div class="control">
-    <button class="button is-link is-primary">Login</button>
+  <div class="field">
+    <label class="label">Password</label>
+    <div class="control">
+      <input class="input" type="password" placeholder="Enter password" name="password">
+    </div>
   </div>
-</div>
 
-<div class="field">
+  <div class="field">
+    <div class="control">
+      <button type="submit" class="button is-link is-primary">Login</button>
+    </div>
+  </div>
+
+  <div class="field">
     <div class="control">
       <a class="button is-link is-primary" href="/auth/google">Login with Google</a>
     </div>
@@ -29,3 +32,6 @@
       <a class="button is-link is-primary" href="/auth/facebook">Login with Facebook</a>
     </div>
   </div>
+
+  <input type="hidden" name="_csrf" value="{{csrfToken}}">
+</form>

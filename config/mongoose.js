@@ -19,7 +19,7 @@
    let connectionString
 
    if (app.get('env') === 'development') {
-     connectionString = 'mongodb://db/test'
+     connectionString = 'mongodb://db/test3'
    } else {
      connectionString = 'mongodb://localhost/test'
    }

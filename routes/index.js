@@ -13,6 +13,7 @@ const router = require('express').Router()
 router.route('/')
     .get((req, res) => {
       res.render('index')
+      require('../models/User').find({}).then(x => console.log(x))
     })
 
 // Exports
