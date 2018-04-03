@@ -31,6 +31,13 @@ app.use((req, res, next) => {
   next()
 })
 
+app.use((req, res , next) => {
+  res.locals.flash = req.session.flash
+  delete req.session.flash
+
+  next()
+})
+
 app.use('/', require('./routes/index'))
 app.use('/chat', require('./routes/chat'))
 app.use('/login', require('./routes/login'))
