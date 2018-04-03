@@ -1,5 +1,5 @@
 /**
- * Module for the index login.
+ * Module for the login routes.
  *
  * @module routes/login.js
  * @author Rasmus Falk

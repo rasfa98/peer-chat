@@ -1,30 +1,40 @@
-const mongoose = require('mongoose')
-const bluebird = require('bluebird')
-const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
+/**
+ * Module for the User schema.
+ *
+ * @module models/User.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const userSchema = mongoose.Schema({
-  fullName: { type: String, required: '"Full name" is required!"', trim: true },
-  username: { type: String, required: '"Username" is required!"', trim: true, unique: true },
-  googleId: { type: String, default: null },
-  facebookId: { type: String, default: null },
-  password: { type: String, required: '"Password" is required!"', trim: true }
-})
+ 'use strict'
 
-// Hashing of password.
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) { next() }
+ const mongoose = require('mongoose')
+ const bluebird = require('bluebird')
+ const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
 
-  const salt = await bcrypt.genSaltAsync(10)
-  const hash = await bcrypt.hashAsync(this.password, salt, null)
+ const userSchema = mongoose.Schema({
+   fullName: { type: String, required: '"Full name" is required!"', trim: true },
+   username: { type: String, required: '"Username" is required!"', trim: true, unique: true },
+   googleId: { type: String, default: null },
+   facebookId: { type: String, default: null },
+   password: { type: String, required: '"Password" is required!"', trim: true }
+ })
 
-  this.password = hash
+ // Hashing of password.
+ userSchema.pre('save', async function (next) {
+   if (!this.isModified('password')) { next() }
 
-  next()
-})
+   const salt = await bcrypt.genSaltAsync(10)
+   const hash = await bcrypt.hashAsync(this.password, salt, null)
 
-// Compare guessed password to stored password.
-userSchema.methods.compare = function (password) {
-  return bcrypt.compareAsync(password, this.password)
-}
+   this.password = hash
 
-module.exports = mongoose.model('User', userSchema)
+   next()
+ })
+
+ // Compare guessed password to stored password.
+ userSchema.methods.compare = function (password) {
+   return bcrypt.compareAsync(password, this.password)
+ }
+
+ module.exports = mongoose.model('User', userSchema)
