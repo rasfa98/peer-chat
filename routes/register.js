@@ -13,5 +13,9 @@ const router = require('express').Router()
 router.route('/')
     .get((req, res) => res.render('register'))
 
+router.route('/')
+    .post((req, res) => {
+    })
+
 // Exports
 module.exports = router
