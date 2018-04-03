@@ -14,10 +14,10 @@
 
  const userSchema = mongoose.Schema({
    fullName: { type: String, required: '"Full name" is required!"', trim: true },
-   username: { type: String, required: '"Username" is required!"', trim: true, unique: true },
+   username: { type: String, trim: true, unique: true },
    googleId: { type: String, default: null },
    facebookId: { type: String, default: null },
-   password: { type: String, required: '"Password" is required!"', trim: true }
+   password: { type: String, trim: true, default: null }
  })
 
  // Hashing of password.
