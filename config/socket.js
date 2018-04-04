@@ -9,6 +9,7 @@
  'use strict'
 
  const socket = require('socket.io')
+ const User = require('../models/User')
 
  /**
   * Configures and starts the websocket server.
@@ -20,7 +21,12 @@
    const io = socket(server)
 
    io.on('connection', socket => {
-     console.log('client connected!')
+     User.find({ status: 'online' })
+     .then(onlineUsers => {
+       const data = onlineUsers.map(x => { return { fullName: x.fullName, email: x.email } })
+
+       io.emit('updateOnlineUsers', data)
+     })
    })
 
    return io

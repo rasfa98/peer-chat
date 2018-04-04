@@ -7,9 +7,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './components/chat/chat.component';
 
-import { WebsocketService } from './services/websocket.service';
-import { DatabaseService } from './services/database.service';
-
 const appRoutes: Routes = [
   { path: '', component: ChatComponent }
 ]
@@ -25,7 +22,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [WebsocketService, DatabaseService],
+  providers: [],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
