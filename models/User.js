@@ -17,7 +17,8 @@
    username: { type: String, trim: true, unique: true },
    googleId: { type: String, default: null },
    facebookId: { type: String, default: null },
-   password: { type: String, trim: true, default: null }
+   password: { type: String, trim: true, default: null },
+   status: { type: String, default: 'offline' }
  })
 
  // Hashing of password.

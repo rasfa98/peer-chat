@@ -40,7 +40,8 @@
            username: null,
            fullName: profile.displayName,
            googleId: profile.id,
-           password: null
+           password: null,
+           status: 'online'
          }).save().then(newUser => {
            done(null, newUser)
          })
@@ -61,7 +62,8 @@
            username: null,
            fullName: profile.displayName,
            facebookId: profile.id,
-           password: null
+           password: null,
+           status: 'online'
          }).save().then(newUser => {
            done(null, newUser)
          })

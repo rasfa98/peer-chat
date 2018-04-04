@@ -13,7 +13,11 @@ const path = require('path')
 const authorize = require('../lib/authorize')
 
 router.route('/')
-    .get(authorize, (req, res) => res.sendFile(path.join(__dirname, '../public', 'chat.html')))
+    .get(authorize, (req, res) => {
+      require('../models/User').find({}).then(x => console.log(x))
+
+      res.sendFile(path.join(__dirname, '../client/src', 'chat.html'))
+    })
 
 // Exports
 module.exports = router
