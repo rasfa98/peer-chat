@@ -23,9 +23,13 @@
    io.on('connection', socket => {
      User.find({ status: 'online' })
      .then(onlineUsers => {
-       const data = onlineUsers.map(x => { return { fullName: x.fullName, email: x.email } })
+       const data = onlineUsers.map(x => { return { id: x._id, fullName: x.fullName, email: x.email } })
 
        io.emit('updateOnlineUsers', data)
+     })
+
+     socket.on('newUser', async user => {
+       await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id })
      })
    })
 

@@ -7,6 +7,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { AppComponent } from './app.component';
 import { ChatComponent } from './components/chat/chat.component';
 
+import { UserService } from './services/user.service';
+
 const appRoutes: Routes = [
   { path: '', component: ChatComponent }
 ]
@@ -22,7 +24,7 @@ const appRoutes: Routes = [
     HttpModule,
     RouterModule.forRoot(appRoutes)
   ],
-  providers: [],
+  providers: [UserService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
