@@ -12,7 +12,7 @@ export class ChatComponent implements OnInit {
   socket
 
   constructor(private userService: UserService) {
-    this.socket = io('http://localhost:8000')
+    this.socket = io()
   }
 
   ngOnInit() {
@@ -22,9 +22,11 @@ export class ChatComponent implements OnInit {
 
     this.userService.getCurrentUser()
     .subscribe(currentUser => this.socket.emit('newUser', currentUser))
+
+    this.socket.on('getPing', message => console.log(message))
   }
 
-  pingUser() {
-    console.log('ping ping')
+  pingUser(id) {
+    this.socket.emit('pingUser', id)
   }
 }
