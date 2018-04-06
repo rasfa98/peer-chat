@@ -179,8 +179,16 @@ var ChatComponent = /** @class */ (function () {
             initiator: location.hash === '#1',
             trickle: false,
             objectMode: true,
+            reconnectTimer: 150,
             config: {
-                iceServers: [{ urls: 'stun:stun.1.google.com:19302' }]
+                iceServers: [{ urls: [
+                            'stun.l.google.com:19302',
+                            'stun1.l.google.com:19302',
+                            'stun2.l.google.com:19302',
+                            'stun3.l.google.com:19302',
+                            'stun4.l.google.com:19302'
+                        ] }
+                ]
             }
         });
         this.peer.on('error', function (err) { return console.log(err); });

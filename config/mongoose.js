@@ -21,7 +21,7 @@
    if (app.get('env') === 'development') {
      connectionString = 'mongodb://db/test5'
    } else {
-     connectionString = 'mongodb://localhost/test'
+     connectionString = 'mongodb://localhost/test1'
    }
 
    app.set('connectionString', connectionString)

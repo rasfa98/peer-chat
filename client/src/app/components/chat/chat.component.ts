@@ -41,6 +41,7 @@ export class ChatComponent implements OnInit {
       initiator: location.hash === '#1',
       trickle: false,
       objectMode: true,
+      reconnectTimer: 150,
       config: {
         iceServers: [{ urls:  [
           'stun.l.google.com:19302',
