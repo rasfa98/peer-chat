@@ -175,7 +175,14 @@ var ChatComponent = /** @class */ (function () {
             _this.peer.signal(data);
         });
         //Setup simple-peer.
-        this.peer = new __WEBPACK_IMPORTED_MODULE_3_simple_peer__({ initiator: location.hash === '#1', trickle: false, objectMode: true });
+        this.peer = new __WEBPACK_IMPORTED_MODULE_3_simple_peer__({
+            initiator: location.hash === '#1',
+            trickle: false,
+            objectMode: true,
+            config: {
+                iceServers: [{ urls: 'stun:stun.1.google.com:19302' }]
+            }
+        });
         this.peer.on('error', function (err) { return console.log(err); });
         this.peer.on('signal', function (data) { return _this.peerId = data; });
         this.peer.on('connect', function () { return console.log('Peer2Peer connection established!'); });

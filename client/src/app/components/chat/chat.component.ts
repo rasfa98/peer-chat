@@ -37,7 +37,14 @@ export class ChatComponent implements OnInit {
     })
 
     //Setup simple-peer.
-    this.peer = new SimplePeer({ initiator: location.hash === '#1', trickle: false, objectMode: true })
+    this.peer = new SimplePeer({
+      initiator: location.hash === '#1',
+      trickle: false,
+      objectMode: true,
+      config: {
+        iceServers: [ { urls: 'stun:stun.1.google.com:19302' } ] 
+      }
+    })
 
     this.peer.on('error', err => console.log(err))
 
