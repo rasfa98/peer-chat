@@ -32,10 +32,10 @@
        await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id })
      })
 
-     socket.on('pingUser', async id => {
-       const user = await User.findOne({ _id: id })
+     socket.on('sendSignal', async data => {
+       const user = await User.findOne({ _id: data.id })
 
-       socket.to(user.socketId).emit('getPing', 'Hello!')
+       socket.to(user.socketId).emit('recieveSignal', data.peerId)
      })
    })
 

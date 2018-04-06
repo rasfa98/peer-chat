@@ -12,10 +12,11 @@ export class ChatComponent implements OnInit {
   onlineUsers: object[]
   socket: any
   peer: any
+  peerId: any
   currentUser: CurrentUser
 
   constructor(private userService: UserService) {
-    this.socket = io('http://localhost:8000')
+    this.socket = io()
   }
 
   ngOnInit() {
@@ -27,24 +28,32 @@ export class ChatComponent implements OnInit {
     this.userService.getCurrentUser()
     .subscribe(currentUser => {
       this.currentUser = currentUser
+
       this.socket.emit('newUser', currentUser)
     })
 
-    this.socket.on('getPing', message => console.log(message))
+    this.socket.on('recieveSignal', data => {
+      this.peer.signal(data)
+    })
 
     //Setup simple-peer.
-    this.peer = new SimplePeer({ initiator: location.hash === '#1', trickle: false })
+    this.peer = new SimplePeer({ initiator: location.hash === '#1', trickle: false, objectMode: true })
 
     this.peer.on('error', err => console.log(err))
 
-    this.peer.on('signal', data => this.userService.savePeerId(this.currentUser.id, data).subscribe())
+    this.peer.on('signal', data => this.peerId = data)
 
-    // this.peer.on('connect')
+    this.peer.on('connect', () => console.log('Peer2Peer connection established!'))
+
+    this.peer.on('data', data => console.log(data))
   }
 
   signal(id) {
-    console.log(id)
-    // this.socket.emit('pingUser', id)
+    this.socket.emit('sendSignal', { id: id, peerId: this.peerId })
+  }
+
+  send(message) {
+    this.peer.send(message)
   }
 }
 

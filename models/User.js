@@ -13,12 +13,14 @@
  const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
 
  const userSchema = mongoose.Schema({
-   fullName: { type: String, required: '"Full name" is required!"', trim: true },
-   username: { type: String, trim: true, unique: true },
+   fullName: { type: String, required: 'Full name is required!', trim: true },
+   email: { type: String, required: 'Email is required!' },
+   password: { type: String, required: 'Password is required!', trim: true },
    googleId: { type: String, default: null },
    facebookId: { type: String, default: null },
-   password: { type: String, trim: true, default: null },
-   status: { type: String, default: 'offline' }
+   status: { type: String, default: 'offline' },
+   friends: { type: [Object], default: null },
+   socketId: { type: String, default: null }
  })
 
  // Hashing of password.

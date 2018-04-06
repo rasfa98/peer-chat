@@ -1,3 +1,4 @@
 <ul>
-  <li *ngFor="let user of onlineUsers">{{user.fullName}}<button (click)="signal(user.id)">Ping</button></li>
+  <li *ngFor="let user of onlineUsers">{{user.fullName}}<button (click)="signal(user.id)">Signal</button>
+    <button (click)="send(message.value)">Send</button><input type="text" #message></li>
 </ul>

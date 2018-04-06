@@ -14,7 +14,7 @@
  const passport = require('passport')
  const session = require('express-session')
  const MongoStore = require('connect-mongo')(session)
- const csrf = require('csurf')
+//  const csrf = require('csurf')
 
  const app = express.run()
 
@@ -35,18 +35,18 @@
    }
  }))
 
- app.use(csrf())
+//  app.use(csrf())
 
- app.use((req, res, next) => {
-   res.locals.csrfToken = req.csrfToken()
-   next()
- })
+//  app.use((req, res, next) => {
+//    res.locals.csrfToken = req.csrfToken()
+//    next()
+//  })
 
  app.use(passport.initialize())
 
  app.use((req, res, next) => {
    res.locals.login = req.session.login
-   res.locals.username = req.session.username
+   res.locals.userId = req.session.userId
    next()
  })
 
@@ -57,6 +57,7 @@
  })
 
  app.use('/', require('./routes/index'))
+ app.use('/user', require('./routes/user'))
  app.use('/chat', require('./routes/chat'))
  app.use('/login', require('./routes/login'))
  app.use('/signout', require('./routes/signout'))

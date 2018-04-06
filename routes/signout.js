@@ -13,7 +13,7 @@ const User = require('../models/User')
 
 router.route('/')
     .get(async (req, res) => {
-      await User.findOneAndUpdate({ username: req.session.username, status: 'offline' })
+      await User.findOneAndUpdate({ _id: res.locals.userId }, { status: 'offline', peerId: null })
 
       req.session.destroy()
 

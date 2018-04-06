@@ -12,6 +12,7 @@
  const GoogleStrategy = require('passport-google-oauth20')
  const FacebookStrategy = require('passport-facebook')
  const User = require('../models/User')
+ const uniqId = require('uniqid')
 
  /**
   * Configures the different strategies.
@@ -37,10 +38,10 @@
          done(null, currentUser)
        } else {
          new User({
-           username: null,
            fullName: profile.displayName,
+           email: profile.email,
+           password: uniqId(),
            googleId: profile.id,
-           password: null,
            status: 'online'
          }).save().then(newUser => {
            done(null, newUser)
@@ -59,10 +60,10 @@
          done(null, currentUser)
        } else {
          new User({
-           username: null,
            fullName: profile.displayName,
+           email: profile.email,
+           password: uniqId(),
            facebookId: profile.id,
-           password: null,
            status: 'online'
          }).save().then(newUser => {
            done(null, newUser)

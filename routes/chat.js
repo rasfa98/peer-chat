@@ -14,9 +14,8 @@ const authorize = require('../lib/authorize')
 
 router.route('/')
     .get(authorize, (req, res) => {
-      require('../models/User').find({}).then(x => console.log(x))
-
-      res.sendFile(path.join(__dirname, '../client/src', 'chat.html'))
+      // res.redirect('http://localhost:4200/chat')
+      res.sendFile(path.join(__dirname, '../public', 'chat.html'))
     })
 
 // Exports
