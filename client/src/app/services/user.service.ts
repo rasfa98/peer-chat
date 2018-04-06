@@ -12,4 +12,9 @@ export class UserService {
     .map(user => user.json())
   }
 
+  savePeerId(userId, peerId) {
+    return this.http.post('http://localhost:8000/user/savePeerId', { userId: userId, peerId: peerId })
+    .map(res => res.json())
+  }
+
 }

@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
-import * as io from 'socket.io-client'; 
 import { UserService } from '../../services/user.service';
+import * as io from 'socket.io-client'; 
+import * as SimplePeer from 'simple-peer';
 
 @Component({
   selector: 'app-chat',
@@ -9,24 +10,44 @@ import { UserService } from '../../services/user.service';
 })
 export class ChatComponent implements OnInit {
   onlineUsers: object[]
-  socket
+  socket: any
+  peer: any
+  currentUser: CurrentUser
 
   constructor(private userService: UserService) {
-    this.socket = io()
+    this.socket = io('http://localhost:8000')
   }
 
   ngOnInit() {
+    // Setup websocket server.
     this.socket.on('updateOnlineUsers', users => {
       this.onlineUsers = users
     })
 
     this.userService.getCurrentUser()
-    .subscribe(currentUser => this.socket.emit('newUser', currentUser))
+    .subscribe(currentUser => {
+      this.currentUser = currentUser
+      this.socket.emit('newUser', currentUser)
+    })
 
     this.socket.on('getPing', message => console.log(message))
+
+    //Setup simple-peer.
+    this.peer = new SimplePeer({ initiator: location.hash === '#1', trickle: false })
+
+    this.peer.on('error', err => console.log(err))
+
+    this.peer.on('signal', data => this.userService.savePeerId(this.currentUser.id, data).subscribe())
+
+    // this.peer.on('connect')
   }
 
-  pingUser(id) {
-    this.socket.emit('pingUser', id)
+  signal(id) {
+    console.log(id)
+    // this.socket.emit('pingUser', id)
   }
+}
+
+interface CurrentUser {
+  id: string
 }
