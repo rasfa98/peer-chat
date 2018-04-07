@@ -8,7 +8,7 @@ export class UserService {
   constructor(private http: Http) { }
 
   getCurrentUser() {
-    return this.http.get('https://rasmusfalk.se/user/current')
+    return this.http.get('http://localhost:8000/user/current')
     .map(user => user.json())
   }
 }

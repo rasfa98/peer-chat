@@ -19,23 +19,39 @@
   */
  module.exports.run = (server) => {
    const io = socket(server)
+   let onlineUsers = []
 
-   io.on('connection', socket => {
-     User.find({ status: 'online' })
-     .then(onlineUsers => {
-       const data = onlineUsers.map(x => { return { id: x._id, fullName: x.fullName, email: x.email } })
+   io.on('connection', async socket => {
+     onlineUsers = await User.find({ status: 'online' })
 
-       io.emit('updateOnlineUsers', data)
-     })
+     onlineUsers = onlineUsers.map(x => { return { id: x._id, fullName: x.fullName, email: x.email } })
+
+     io.emit('updateOnlineUsers', onlineUsers)
 
      socket.on('newUser', async user => {
-       await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id })
+       await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id, status: 'online' })
+
+       onlineUsers = await User.find({ status: 'online' })
+
+       onlineUsers = onlineUsers.map(x => { return { id: x._id, fullName: x.fullName, email: x.email } })
+
+       io.emit('updateOnlineUsers', onlineUsers)
      })
 
      socket.on('sendSignal', async data => {
        const user = await User.findOne({ _id: data.id })
 
        socket.to(user.socketId).emit('recieveSignal', data.peerId)
+     })
+
+     socket.on('disconnect', async () => {
+       await User.findOneAndUpdate({ socketId: socket.id }, { status: 'offline' })
+
+       onlineUsers = await User.find({ status: 'online' })
+
+       onlineUsers = onlineUsers.map(x => { return { id: x._id, fullName: x.fullName, email: x.email } })
+
+       io.emit('updateOnlineUsers', onlineUsers)
      })
    })
 

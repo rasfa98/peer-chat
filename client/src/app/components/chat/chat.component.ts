@@ -9,7 +9,7 @@ import * as SimplePeer from 'simple-peer';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  onlineUsers: object[]
+  onlineUsers: OnlineUsers[]
   socket: any
   peer: any
   peerId: any
@@ -17,12 +17,19 @@ export class ChatComponent implements OnInit {
 
   constructor(private userService: UserService) {
     this.socket = io()
+    this.onlineUsers = []
   }
 
   ngOnInit() {
     // Setup websocket server.
     this.socket.on('updateOnlineUsers', users => {
       this.onlineUsers = users
+
+      for (let i = 0; i < this.onlineUsers.length; i++) {
+        if (this.onlineUsers[i].id === this.currentUser.id) {
+          this.onlineUsers.splice(i, 1)
+        }
+      }
     })
 
     this.userService.getCurrentUser()
@@ -50,6 +57,8 @@ export class ChatComponent implements OnInit {
           'stun:stun3.l.google.com:19302',
           'stun:stun4.l.google.com:19302' ]} 
         ]}
+
+        
     })
 
     this.peer.on('error', err => console.log(err))
@@ -72,4 +81,10 @@ export class ChatComponent implements OnInit {
 
 interface CurrentUser {
   id: string
+}
+
+interface OnlineUsers {
+  id: string,
+  fullName: string,
+  email: string
 }
