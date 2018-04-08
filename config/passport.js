@@ -18,57 +18,57 @@
   * Configures the different strategies.
   */
  module.exports.run = () => {
-   passport.serializeUser((user, done) => {
-     done(null, user.id)
-   })
+   passport.serializeUser((user, done) => done(null, user.id))
 
-   passport.deserializeUser((id, done) => {
-     User.findById(id).then(user => {
-       done(null, user)
-     })
+   passport.deserializeUser(async (id, done) => {
+     const user = await User.findById(id)
+
+     done(null, user)
    })
 
    passport.use(new GoogleStrategy({
      callbackURL: 'https://rasmusfalk.se/auth/google/redirect',
      clientID: process.env.GOOGLE_CLIENT_ID,
      clientSecret: process.env.GOOGLE_CLIENT_SECRET
-   }, (accessToken, refreshToken, profile, done) => {
-     User.findOne({ googleId: profile.id }).then(currentUser => {
-       if (currentUser) {
-         done(null, currentUser)
-       } else {
-         new User({
-           fullName: profile.displayName,
-           email: profile.email,
-           password: uniqId(),
-           googleId: profile.id,
-           status: 'online'
-         }).save().then(newUser => {
-           done(null, newUser)
-         })
-       }
-     })
+   }, async (accessToken, refreshToken, profile, done) => {
+     const currentUser = await User.findOne({ email: profile.email })
+
+     if (currentUser) {
+       done(null, currentUser)
+     } else {
+       const newUser = new User({
+         fullName: profile.displayName,
+         email: profile.email,
+         password: uniqId(),
+         googleId: profile.id
+       })
+
+       await newUser.save.save()
+
+       done(null, newUser)
+     }
    }))
 
    passport.use(new FacebookStrategy({
      callbackURL: 'https://rasmusfalk.se/auth/facebook/redirect',
      clientID: process.env.FACEBOOK_APP_ID,
      clientSecret: process.env.FACEBOOK_APP_SECRET
-   }, (accessToken, refreshToken, profile, done) => {
-     User.findOne({ facebookId: profile.id }).then(currentUser => {
-       if (currentUser) {
-         done(null, currentUser)
-       } else {
-         new User({
-           fullName: profile.displayName,
-           email: profile.email,
-           password: uniqId(),
-           facebookId: profile.id,
-           status: 'online'
-         }).save().then(newUser => {
-           done(null, newUser)
-         })
-       }
-     })
+   }, async (accessToken, refreshToken, profile, done) => {
+     const currentUser = await User.findOne({ email: profile.email })
+
+     if (currentUser) {
+       done(null, currentUser)
+     } else {
+       const newUser = new User({
+         fullName: profile.displayName,
+         email: profile.email,
+         password: uniqId(),
+         facebookId: profile.id
+       })
+
+       await newUser.save()
+
+       done(null, newUser)
+     }
    }))
  }

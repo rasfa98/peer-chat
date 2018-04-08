@@ -14,7 +14,7 @@
 
  const userSchema = mongoose.Schema({
    fullName: { type: String, required: 'Full name is required!', trim: true },
-   email: { type: String, required: 'Email is required!' },
+   email: { type: String, required: 'Email is required!', unique: true },
    password: { type: String, required: 'Password is required!', trim: true },
    googleId: { type: String, default: null },
    facebookId: { type: String, default: null },
