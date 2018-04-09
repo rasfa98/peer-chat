@@ -6,7 +6,11 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class UserService {
 
-  private onlineUsersSource = new BehaviorSubject('Hello World')
+  private onlineUsersSource = new BehaviorSubject([
+    { id: 1, fullName: 'Kalle'},
+    { id: 2, fullName: 'Rasmus'},
+    { id: 3, fullName: 'Emil'}
+  ])
   currentOnlineUsers = this.onlineUsersSource.asObservable()
 
   constructor(private http: Http) { }
