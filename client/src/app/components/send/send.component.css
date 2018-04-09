@@ -1,0 +1,9 @@
+:host {
+    position: fixed;
+    bottom: 33px;
+    margin-left: 12px;
+}
+
+:host input {
+    width: 60vw;
+}

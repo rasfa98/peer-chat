@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
+import { User } from '../../models/user.model';
 import * as io from 'socket.io-client'; 
 import * as SimplePeer from 'simple-peer';
 
@@ -9,14 +10,14 @@ import * as SimplePeer from 'simple-peer';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  onlineUsers: OnlineUsers[]
+  onlineUsers: User[]
   socket: any
   peer: any
   peerId: any
-  currentUser: CurrentUser
+  currentUser: any
 
   constructor(private userService: UserService) {
-    this.socket = io()
+    // this.socket = io()
     this.onlineUsers = []
   }
 
@@ -33,10 +34,9 @@ export class ChatComponent implements OnInit {
     })
 
     this.userService.getCurrentUser()
-    .subscribe(currentUser => {
-      this.currentUser = currentUser
-
-      this.socket.emit('newUser', currentUser)
+    .subscribe(user => {
+      this.currentUser = user
+      this.socket.emit('newUser', user)
     })
 
     this.socket.on('recieveSignal', data => {
@@ -57,34 +57,14 @@ export class ChatComponent implements OnInit {
           'stun:stun3.l.google.com:19302',
           'stun:stun4.l.google.com:19302' ]} 
         ]}
-
-        
     })
 
     this.peer.on('error', err => console.log(err))
-
     this.peer.on('signal', data => this.peerId = data)
-
     this.peer.on('connect', () => console.log('Peer2Peer connection established!'))
-
     this.peer.on('data', data => console.log(data))
   }
 
-  signal(id) {
-    this.socket.emit('sendSignal', { id: id, peerId: this.peerId })
-  }
-
-  send(message) {
-    this.peer.send(message)
-  }
-}
-
-interface CurrentUser {
-  id: string
-}
-
-interface OnlineUsers {
-  id: string,
-  fullName: string,
-  email: string
+  signal(id) { this.socket.emit('sendSignal', { id: id, peerId: this.peerId }) }
+  send(message) { this.peer.send(message) }
 }
