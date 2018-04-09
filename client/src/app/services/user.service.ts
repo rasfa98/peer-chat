@@ -1,15 +1,22 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { User } from '../models/user.model';
+import { BehaviorSubject } from 'rxjs/BehaviorSubject';
+import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
 
 @Injectable()
 export class UserService {
-  ROOT_URL = 'http://localhost:8000'
 
-  constructor(private http: HttpClient) { }
+  private onlineUsersSource = new BehaviorSubject('Hello World')
+  currentOnlineUsers = this.onlineUsersSource.asObservable()
+
+  constructor(private http: Http) { }
+
+  changeOnlineUsers(onlineUsers) {
+    this.onlineUsersSource.next(onlineUsers)
+  }
 
   getCurrentUser() {
-    return this.http.get<User>(`${this.ROOT_URL}/user/current`)
+    return this.http.get('http://localhost:8000/user/current')
+    .map(res => res.json())
   }
 }

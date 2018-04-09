@@ -21,15 +21,21 @@ describe('UserService', () => {
         httpMock.verify()
     })
 
+    it('should be created', () => {
+        expect(service).toBeTruthy()
+    })
+
     it('should get the current user', () => {
         const dummyUser: User = {
             id: '1234',
-            fullName: null,
-            email: null
+            fullName: 'John Doe',
+            email: 'john.doe@gmail.com'
         }
 
         service.getCurrentUser().subscribe(res => {
             expect(res.id).toEqual('1234')
+            expect(res.fullName).toEqual('John Doe')
+            expect(res.email).toEqual('john.doe@gmail.com')
         })
 
         const request = httpMock.expectOne(`${service.ROOT_URL}/user/current`)
