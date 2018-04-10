@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
-import { User } from '../../models/user.model';
+import { ChatService } from '../../services/chat.service';
 import * as io from 'socket.io-client'; 
 import * as SimplePeer from 'simple-peer';
 
@@ -10,19 +10,27 @@ import * as SimplePeer from 'simple-peer';
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  onlineUsers: User[]
+  @ViewChild('videoChat') videoChat: any
+
+  onlineUsers: any
+  activeUserItem: any
   socket: any
   peer: any
   peerId: any
   currentUser: any
+  n = <any>navigator
 
-  constructor(private userService: UserService) {
-    // this.socket = io()
+  constructor(private userService: UserService, private chatService: ChatService) {
+    this.socket = io('http://localhost:8000')
     this.onlineUsers = []
   }
 
   ngOnInit() {
-    // Setup websocket server.
+    this.userService.currentOnlineUsers.subscribe(onlineUsers => this.onlineUsers = onlineUsers)
+    this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
+
+    this.chatService.changeActiveUserItem(this.onlineUsers[0])
+
     this.socket.on('updateOnlineUsers', users => {
       this.onlineUsers = users
 
@@ -31,6 +39,8 @@ export class ChatComponent implements OnInit {
           this.onlineUsers.splice(i, 1)
         }
       }
+
+      this.userService.changeOnlineUsers(this.onlineUsers)
     })
 
     this.userService.getCurrentUser()
@@ -43,28 +53,43 @@ export class ChatComponent implements OnInit {
       this.peer.signal(data)
     })
 
-    //Setup simple-peer.
-    this.peer = new SimplePeer({
-      initiator: location.hash === '#1',
-      trickle: false,
-      objectMode: true,
-      reconnectTimer: 150,
-      config: {
-        iceServers: [{ urls:  [
-          'stun:stun.l.google.com:19302',
-          'stun:stun1.l.google.com:19302',
-          'stun:stun2.l.google.com:19302',
-          'stun:stun3.l.google.com:19302',
-          'stun:stun4.l.google.com:19302' ]} 
-        ]}
-    })
+    // this.peer.on('data', data => console.log(data))
 
-    this.peer.on('error', err => console.log(err))
-    this.peer.on('signal', data => this.peerId = data)
-    this.peer.on('connect', () => console.log('Peer2Peer connection established!'))
-    this.peer.on('data', data => console.log(data))
+    let peerx: any
+    let video = this.videoChat.nativeElement
+    this.n.getUserMedia({ video: true, audio: true }, (stream) => {
+      peerx = new SimplePeer({
+        initiator: location.hash === '#1',
+        trickle: false,
+        stream: stream,
+        objectMode: true,
+        reconnectTimer: 150,
+        config: {
+          iceServers: [{ urls:  [
+            'stun:stun.l.google.com:19302',
+            'stun:stun1.l.google.com:19302',
+            'stun:stun2.l.google.com:19302',
+            'stun:stun3.l.google.com:19302',
+            'stun:stun4.l.google.com:19302' ]}
+          ]}
+      })
+      
+      peerx.on('error', err => console.log(err))
+      peerx.on('connect', () => console.log('Peer2Peer connection established!'))
+      peerx.on('signal', data => this.peerId = data)
+      peerx.on('stream', (stream => {
+        video.src = window.URL.createObjectURL(stream)
+        video.play()
+      }))
+    }, err => console.log('ERROR:', err))
+
+    setTimeout(() => {
+      this.peer = peerx
+      console.log(this.peer)
+    }, 5000)
+}
+
+  signal(id) {
+    this.socket.emit('sendSignal', { id: id, peerId: this.peerId })
   }
-
-  signal(id) { this.socket.emit('sendSignal', { id: id, peerId: this.peerId }) }
-  send(message) { this.peer.send(message) }
 }

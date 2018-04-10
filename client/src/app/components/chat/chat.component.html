@@ -2,17 +2,17 @@
   <div class="column is-one-fourth">
     <app-user-list class="box"></app-user-list>
   </div>
+
+  <ul>
+    <li *ngFor="let user of onlineUsers">{{user.fullName}}<button type="button" class="button" (click)="signal(user.id)"></button></li>
+  </ul>
+
+  <video #videoChat></video>
+
   <div class="columns">
     <div class="column">
-        <app-feed class="box"></app-feed>
-        <app-send></app-send>
+      <app-feed class="box"></app-feed>
+      <app-send></app-send>
     </div>
   </div>
 </div>
-
-<!-- <h1>Online Users</h1>
-
-<ul>
-  <li *ngFor="let user of onlineUsers">{{user.fullName}}<button (click)="signal(user.id)">Signal</button>
-    <button (click)="send(message.value)">Send</button><input type="text" #message></li>
-</ul> -->
