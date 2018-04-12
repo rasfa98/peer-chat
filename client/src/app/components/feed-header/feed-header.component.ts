@@ -29,7 +29,11 @@ export class FeedHeaderComponent implements OnInit {
 
     this.socket.on('recieveSignal', data => {
       if (data.type === 'offer') {
-        this.createPeer({ audio: true, video: true }, data.id, 'answer', data.peerId)
+        if (data.chatType === 'video') {
+          this.createPeer({ audio: true, video: true }, data.id, 'answer', null, data.peerId)
+        } else {
+          this.createPeer({ audio: true, video: false }, data.id, 'answer', null, data.peerId)
+        } 
       } else {
         this.peer.signal(data.peerId)
       }
@@ -38,14 +42,14 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   startVideoCall(id) {
-    this.createPeer({ audio: true, video: true }, id, 'offer')
+    this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
   }
 
   startVoiceCall(id) {
-    this.createPeer({ audio: true, video: false }, id, 'offer')
+    this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
   }
 
-  createPeer(options, id, type, peerId = null) {
+  createPeer(options, id, type, chatType, peerId) {
     let peerx
 
     navigator.getUserMedia({ video: options.video, audio: options.audio }, stream => {
@@ -72,7 +76,7 @@ export class FeedHeaderComponent implements OnInit {
       })
       peerx.on('signal', data => {
         this.peerId = data
-        this.socket.emit('sendSignal', { id: id, peerId: data, type: type })
+        this.socket.emit('sendSignal', { id: id, peerId: data, chatType: chatType, type: type })
       })
       peerx.on('stream', stream => this.chatService.changeStream(stream))
 
