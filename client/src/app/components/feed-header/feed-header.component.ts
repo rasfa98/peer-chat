@@ -22,16 +22,33 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   ngOnInit() {
-    let peerx
-
     this.socket = this.websocketService.socket
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.userService.currentOnlineUsers.subscribe(onlineUsers => this.onlineUsers = this.onlineUsers)
 
-    this.socket.on('recieveSignal', data => this.peer.signal(data.peerId))
+    this.socket.on('recieveSignal', data => {
+      if (data.type === 'offer') {
+        this.createPeer({ audio: true, video: true }, data.id, 'answer', data.peerId)
+      } else {
+        this.peer.signal(data.peerId)
+      }
+    })
 
-    navigator.getUserMedia({ video: true, audio: true }, stream => {
+  }
+
+  startVideoCall(id) {
+    this.createPeer({ audio: true, video: true }, id, 'offer')
+  }
+
+  startVoiceCall(id) {
+    this.createPeer({ audio: true, video: false }, id, 'offer')
+  }
+
+  createPeer(options, id, type, peerId = null) {
+    let peerx
+
+    navigator.getUserMedia({ video: options.video, audio: options.audio }, stream => {
       peerx = new SimplePeer({
         initiator: location.hash === '#available',
         trickle: false,
@@ -53,29 +70,20 @@ export class FeedHeaderComponent implements OnInit {
         this.chatService.changePeer(this.peer)
         this.router.navigate(['peer'])
       })
-      peerx.on('signal', data => this.peerId = data)
-      peerx.on('stream', stream => {
-        this.chatService.changeStream(stream)
+      peerx.on('signal', data => {
+        this.peerId = data
+        this.socket.emit('sendSignal', { id: id, peerId: data, type: type })
       })
+      peerx.on('stream', stream => this.chatService.changeStream(stream))
+
       peerx.on('close', () => this.router.navigate(['']))
     }, err => console.log(err))
 
     setTimeout(() => {
       this.peer = peerx
-      console.log(this.peer)
+
+      if (type === 'answer') { this.peer.signal(peerId) }
     }, 3000)
-
-  }
-
-  startVideoCall(id) {
-    this.socket.emit('sendSignal', { id: id, peerId: this.peerId })
-  }
-
-  startVoiceCall() {
-    navigator.getUserMedia({ video: false, audio: true }, stream => {
-      this.chatService.changeStream(stream)
-      this.router.navigate(['peer'])
-    }, err => console.log(err))
   }
 
 }
