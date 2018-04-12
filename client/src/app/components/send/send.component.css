@@ -1,9 +1,13 @@
 :host {
     position: fixed;
-    bottom: 33px;
-    margin-left: 12px;
+    bottom: 40px;
+    height: 5vh;
+    width: 65vw;
+    margin-right: 25px;
+    margin-top: 25px;
 }
 
 :host input {
+    margin-left: 140px;
     width: 60vw;
 }
