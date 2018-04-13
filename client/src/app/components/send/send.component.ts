@@ -18,4 +18,8 @@ export class SendComponent implements OnInit {
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
   }
+
+  sendMessage(message, id) {
+    this.socket.emit('sendMessage', { message: message, id: id })
+  }
 }

@@ -3,6 +3,6 @@
     <input type="text" placeholder="Enter message..." class="input" #message>
   </div>
   <div class="control">
-    <button type="btn" class="button is-link" (click)="sendMessage(message.value)">Send</button>
+    <button type="btn" class="button is-link" (click)="sendMessage(message.value, activeUserItem.id)">Send</button>
   </div>
 </div>
