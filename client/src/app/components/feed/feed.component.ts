@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { WebsocketService } from '../../services/websocket.service';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-feed',
@@ -6,10 +8,31 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./feed.component.css']
 })
 export class FeedComponent implements OnInit {
+  socket: any
+  activeUserItem: any
+  conversations: any
+  activeConversation: any
 
-  constructor() { }
+  constructor(private websocketService: WebsocketService, private chatService: ChatService) {
+    this.conversations = []
+  }
 
   ngOnInit() {
+    this.socket = this.websocketService.socket
+
+    this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
+
+    this.chatService.currentActiveConversation.subscribe(id => {
+      this.activeConversation = this.conversations[id]
+    })
+
+    this.socket.on('newMessage', data => {
+      if (this.conversations[data.id]) {
+        this.conversations[data.id].push({ message: data.message })
+      } else {
+        this.conversations[data.id] = [{ message: data.message }]
+      }
+    })
   }
 
 }
