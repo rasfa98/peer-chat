@@ -36,12 +36,6 @@ export class UserListComponent implements OnInit {
         }
       }
     })
-
-    this.onlineUsers = [
-      { fullName: 'Kalle' },
-      { fullName: 'Sven' },
-      { fullName: 'Erik' }
-    ]
   }
 
   changeItem(user) {
