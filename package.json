@@ -4,7 +4,8 @@
   "description": "Projektkatalog tillhörande Rasmus Falk",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start": "docker-compose up",
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -36,6 +37,7 @@
   },
   "devDependencies": {
     "chai": "^4.1.2",
-    "mocha": "^5.1.0"
+    "mocha": "^5.1.0",
+    "supertest": "^3.0.0"
   }
 }
