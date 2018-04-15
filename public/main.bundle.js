@@ -635,11 +635,6 @@ var UserListComponent = /** @class */ (function () {
                 }
             }
         });
-        this.onlineUsers = [
-            { fullName: 'Kalle' },
-            { fullName: 'Sven' },
-            { fullName: 'Erik' }
-        ];
     };
     UserListComponent.prototype.changeItem = function (user) {
         this.chatService.changeActiveUserItem(user);
@@ -744,7 +739,7 @@ var UserService = /** @class */ (function () {
         this.onlineUsersSource.next(onlineUsers);
     };
     UserService.prototype.getCurrentUser = function () {
-        return this.http.get('http://localhost:8000/user/current')
+        return this.http.get('https://rasmusfalk.se/user/current')
             .map(function (res) { return res.json(); });
     };
     UserService = __decorate([
@@ -781,7 +776,7 @@ var WebsocketService = /** @class */ (function () {
     function WebsocketService() {
     }
     WebsocketService.prototype.connect = function () {
-        this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__["connect"]('http://localhost:8000');
+        this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__["connect"]('https://rasmusfalk.se');
     };
     WebsocketService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
