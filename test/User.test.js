@@ -1,7 +1,20 @@
 const expect = require('chai').expect
 const User = require('../models/User')
 
-describe('Register', () => {
+describe('User model', () => {
+
+  it('should be able to register a user if all details are provided', done => {
+    const user = new User({
+      fullName: 'test',
+      password: 'test',
+      email: 'test@test.se'
+    })
+
+    user.validate(err => {
+      expect(err).to.not.exist
+      done()
+    })
+  })
 
   it('should not be able to register a user without a full name', done => {
     const user = new User({
@@ -41,4 +54,17 @@ describe('Register', () => {
       done()
     })
   })
+
+  // it('should set the defaut values for friends, socketId and status', done => {
+  //   const user = new User({
+  //     fullName: 'test',
+  //     password: 'test',
+  //     email: 'test@test.se'
+  //   })
+
+  //   user.validate(err => {
+  //     expect(err.errors.firends).to.not.exist
+  //     done()
+  //   })
+  // })
 })
