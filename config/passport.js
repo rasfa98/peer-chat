@@ -39,8 +39,7 @@
        const newUser = new User({
          fullName: profile.displayName,
          email: profile.email,
-         password: uniqId(),
-         googleId: profile.id
+         password: uniqId()
        })
 
        await newUser.save.save()
@@ -62,8 +61,7 @@
        const newUser = new User({
          fullName: profile.displayName,
          email: profile.email,
-         password: uniqId(),
-         facebookId: profile.id
+         password: uniqId()
        })
 
        await newUser.save()

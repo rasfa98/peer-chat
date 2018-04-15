@@ -13,10 +13,7 @@ const path = require('path')
 const authorize = require('../lib/authorize')
 
 router.route('/')
-    .get(authorize, (req, res) => {
-      // res.redirect('http://localhost:4200/chat')
-      res.sendFile(path.join(__dirname, '../public', 'chat.html'))
-    })
+    .get(authorize, (req, res) => res.sendFile(path.join(__dirname, '../public', 'chat.html')))
 
 // Exports
 module.exports = router

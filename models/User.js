@@ -16,8 +16,6 @@
    fullName: { type: String, required: 'Full name is required!', trim: true },
    email: { type: String, required: 'Email is required!', unique: true },
    password: { type: String, required: 'Password is required!', trim: true },
-   googleId: { type: String, default: null },
-   facebookId: { type: String, default: null },
    status: { type: String, default: 'offline' },
    friends: { type: [Object], default: null },
    socketId: { type: String, default: null }

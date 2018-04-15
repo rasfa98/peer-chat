@@ -16,7 +16,6 @@ router.route('/')
       await User.findOneAndUpdate({ _id: res.locals.userId }, { status: 'offline', peerId: null })
 
       req.session.destroy()
-
       res.redirect('/')
     })
 

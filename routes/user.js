@@ -11,9 +11,7 @@
 const router = require('express').Router()
 
 router.route('/current')
-    .get((req, res) => {
-      res.send({ id: res.locals.userId })
-    })
+    .get((req, res) => res.send({ id: res.locals.userId }))
 
 // Exports
 module.exports = router

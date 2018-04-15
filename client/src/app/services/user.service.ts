@@ -6,11 +6,8 @@ import 'rxjs/add/operator/map';
 @Injectable()
 export class UserService {
 
-  private onlineUsersSource = new BehaviorSubject([
-    { id: 1, fullName: 'Kalle'},
-    { id: 2, fullName: 'Rasmus'},
-    { id: 3, fullName: 'Emil'}
-  ])
+  private onlineUsersSource = new BehaviorSubject(null)
+
   currentOnlineUsers = this.onlineUsersSource.asObservable()
 
   constructor(private http: Http) { }
@@ -20,7 +17,7 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.http.get('http://localhost:8000/user/current')
+    return this.http.get('https://rasmusfalk.se/user/current')
     .map(res => res.json())
   }
 }

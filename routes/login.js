@@ -22,8 +22,6 @@ router.route('/')
         if (match) {
           req.session.login = true
           req.session.userId = user._id
-          await User.findOneAndUpdate({ _id: user._id }, { status: 'online' })
-
           res.redirect('/chat')
         } else {
           req.session.flash = {

@@ -46,6 +46,7 @@ export class UserListComponent implements OnInit {
 
   changeItem(user) {
     this.chatService.changeActiveUserItem(user)
+    this.chatService.changeActiveConversation(user.id)
   }
 
 }
