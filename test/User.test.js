@@ -54,17 +54,4 @@ describe('User model', () => {
       done()
     })
   })
-
-  // it('should set the defaut values for friends, socketId and status', done => {
-  //   const user = new User({
-  //     fullName: 'test',
-  //     password: 'test',
-  //     email: 'test@test.se'
-  //   })
-
-  //   user.validate(err => {
-  //     expect(err.errors.firends).to.not.exist
-  //     done()
-  //   })
-  // })
 })
