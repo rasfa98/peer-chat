@@ -15,4 +15,17 @@ describe('Register', () => {
       done()
     })
   })
+
+  it('should not be able to register a user without a email address', done => {
+    const user = new User({
+      fullName: 'test',
+      password: 'test',
+      email: null
+    })
+
+    user.validate(err => {
+      expect(err.errors.email).to.exist
+      done()
+    })
+  })
 })
