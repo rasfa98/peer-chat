@@ -1,5 +1,13 @@
 <h1 class="title">Online Users</h1>
 
-<ul>
-  <li *ngFor="let user of onlineUsers"><a (click)="changeItem(user)">{{user.fullName}}</a></li>
-</ul>
+<div *ngIf="!onlineUsers">
+  <p>There are no users online...</p>
+</div>
+
+<div *ngIf="onlineUsers">
+  <ul>
+    <li *ngFor="let user of onlineUsers">
+      <a (click)="changeItem(user)">{{user.fullName}}</a>
+    </li>
+  </ul>
+</div>
