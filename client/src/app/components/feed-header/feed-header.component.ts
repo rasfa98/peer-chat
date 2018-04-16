@@ -19,6 +19,7 @@ export class FeedHeaderComponent implements OnInit {
   peer: any
   calling: any
   data: any
+  localStream: any
 
   constructor(private chatService: ChatService, private websocketService: WebsocketService, private userService: UserService, private router: Router) {
     this.calling = false
@@ -37,6 +38,13 @@ export class FeedHeaderComponent implements OnInit {
       } else {
         this.peer.signal(data.peerId)
       }
+    })
+
+    this.socket.on('hangUp', () => {
+      this.localStream.getTracks()
+      .forEach(x => {
+        x.stop()
+      })
     })
   }
 
@@ -58,6 +66,7 @@ export class FeedHeaderComponent implements OnInit {
 
   hangUp() {
     this.calling = false
+    this.socket.emit('hangUp', this.data.id)
   }
 
   createPeer(options, id, type, chatType, peerId) {
@@ -71,6 +80,8 @@ export class FeedHeaderComponent implements OnInit {
     }
 
     navigator.getUserMedia({ video: options.video, audio: options.audio }, stream => {
+      this.localStream = stream
+
       peerx = new SimplePeer({
         initiator: init,
         trickle: false,
