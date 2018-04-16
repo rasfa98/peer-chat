@@ -57,6 +57,7 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   hangUp() {
+    this.calling = false
   }
 
   createPeer(options, id, type, chatType, peerId) {
