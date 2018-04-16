@@ -42,9 +42,7 @@ export class FeedHeaderComponent implements OnInit {
 
     this.socket.on('hangUp', () => {
       this.localStream.getTracks()
-      .forEach(x => {
-        x.stop()
-      })
+      .forEach(x => x.stop())
     })
   }
 
@@ -109,7 +107,12 @@ export class FeedHeaderComponent implements OnInit {
       })
       peerx.on('stream', stream => this.chatService.changeStream(stream))
 
-      peerx.on('close', () => this.router.navigate(['']))
+      peerx.on('close', () => {
+        this.router.navigate([''])
+        
+        this.localStream.getTracks()
+        .forEach(x => x.stop())
+      })
     }, err => console.log(err))
 
     setTimeout(() => {
