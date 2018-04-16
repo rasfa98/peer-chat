@@ -18,9 +18,10 @@ export class FeedHeaderComponent implements OnInit {
   peerId: any
   peer: any
   calling: any
+  data: any
 
   constructor(private chatService: ChatService, private websocketService: WebsocketService, private userService: UserService, private router: Router) {
-    this.calling = true
+    this.calling = false
   }
 
   ngOnInit() {
@@ -31,16 +32,12 @@ export class FeedHeaderComponent implements OnInit {
 
     this.socket.on('recieveSignal', data => {
       if (data.type === 'offer') {
-        if (data.chatType === 'video') {
-          this.createPeer({ audio: true, video: true }, data.id, 'answer', null, data.peerId)
-        } else {
-          this.createPeer({ audio: true, video: false }, data.id, 'answer', null, data.peerId)
-        } 
+        this.calling = true
+        this.data = data
       } else {
         this.peer.signal(data.peerId)
       }
     })
-
   }
 
   startVideoCall(id) {
@@ -49,6 +46,17 @@ export class FeedHeaderComponent implements OnInit {
 
   startVoiceCall(id) {
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+  }
+
+  answerCall() {
+    if (this.data.chatType === 'video') {
+      this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId)
+    } else {
+      this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId)
+    } 
+  }
+
+  hangUp() {
   }
 
   createPeer(options, id, type, chatType, peerId) {
@@ -89,7 +97,7 @@ export class FeedHeaderComponent implements OnInit {
       this.peer = peerx
 
       if (type === 'answer') { this.peer.signal(peerId) }
-    }, 3000)
+    }, 1000)
   }
 
 }
