@@ -17,8 +17,10 @@ export class FeedHeaderComponent implements OnInit {
   stream: any
   peerId: any
   peer: any
+  calling: any
 
   constructor(private chatService: ChatService, private websocketService: WebsocketService, private userService: UserService, private router: Router) {
+    this.calling = true
   }
 
   ngOnInit() {
