@@ -62,10 +62,17 @@ export class FeedHeaderComponent implements OnInit {
 
   createPeer(options, id, type, chatType, peerId) {
     let peerx
+    let init
+
+    if (type === 'offer') {
+      init = true
+    } else {
+      init = false
+    }
 
     navigator.getUserMedia({ video: options.video, audio: options.audio }, stream => {
       peerx = new SimplePeer({
-        initiator: location.hash === '#available',
+        initiator: init,
         trickle: false,
         stream: stream,
         objectMode: true,
