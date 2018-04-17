@@ -21,7 +21,7 @@ router.route('/google/redirect')
     })
 
 router.route('/facebook')
-    .get(passport.authenticate('facebook', { scope: ['public_profile', 'email'] }))
+    .get(passport.authenticate('facebook', { authType: 'rerequest', scope: ['public_profile', 'email'] }))
 
 router.route('/facebook/redirect')
     .get(passport.authenticate('facebook'), (req, res) => {
