@@ -32,7 +32,10 @@ export class FeedComponent implements OnInit {
       } else {
         this.conversations[data.id] = []
         this.conversations[data.id].push({ message: data.message, sender: data.name })
-        this.activeConversation = this.conversations[data.id]
+
+        if (this.activeUserItem.id === data.id) {
+          this.activeConversation = this.conversations[data.id]
+        }
       }
     })
   }

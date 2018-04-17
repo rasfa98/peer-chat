@@ -42,7 +42,7 @@
          password: uniqId()
        })
 
-       await newUser.save.save()
+       await newUser.save()
 
        done(null, newUser)
      }

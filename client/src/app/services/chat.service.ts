@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 
 @Injectable()
 export class ChatService {
-  private activeUserItem = new BehaviorSubject({ id: null, fullName: 'none' })
+  private activeUserItem = new BehaviorSubject({ id: null, fullName: 'no user selected' })
   private stream = new BehaviorSubject(null)
   private peer = new BehaviorSubject(null)
   private activeConversation = new BehaviorSubject(null)

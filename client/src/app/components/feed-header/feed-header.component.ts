@@ -85,7 +85,7 @@ export class FeedHeaderComponent implements OnInit {
         trickle: false,
         stream: stream,
         objectMode: true,
-        reconnectTimer: 150,
+        reconnectTimer: 250,
         config: {
           iceServers: [{ urls:  [
             'stun:stun.l.google.com:19302',

@@ -1,10 +1,10 @@
 <h1 class="title">Online Users</h1>
 
-<div *ngIf="onlineUsers.length === 0">
+<div *ngIf="!onlineUsers">
   <p>There are no users online...</p>
 </div>
 
-<div *ngIf="onlineUsers.length > 0">
+<div *ngIf="onlineUsers">
   <ul>
     <li *ngFor="let user of onlineUsers">
       <a (click)="changeItem(user)">{{user.fullName}}</a>

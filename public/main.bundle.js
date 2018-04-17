@@ -82,12 +82,14 @@ var AppComponent = /** @class */ (function () {
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_13__components_chatroom_chatroom_component__ = __webpack_require__("./src/app/components/chatroom/chatroom.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_14__components_feed_header_feed_header_component__ = __webpack_require__("./src/app/components/feed-header/feed-header.component.ts");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_15__components_peer_chat_peer_chat_component__ = __webpack_require__("./src/app/components/peer-chat/peer-chat.component.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_16__components_welcome_welcome_component__ = __webpack_require__("./src/app/components/welcome/welcome.component.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
     else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
     return c > 3 && r && Object.defineProperty(target, key, r), r;
 };
+
 
 
 
@@ -121,7 +123,8 @@ var AppModule = /** @class */ (function () {
                 __WEBPACK_IMPORTED_MODULE_12__components_send_send_component__["a" /* SendComponent */],
                 __WEBPACK_IMPORTED_MODULE_13__components_chatroom_chatroom_component__["a" /* ChatroomComponent */],
                 __WEBPACK_IMPORTED_MODULE_14__components_feed_header_feed_header_component__["a" /* FeedHeaderComponent */],
-                __WEBPACK_IMPORTED_MODULE_15__components_peer_chat_peer_chat_component__["a" /* PeerChatComponent */]
+                __WEBPACK_IMPORTED_MODULE_15__components_peer_chat_peer_chat_component__["a" /* PeerChatComponent */],
+                __WEBPACK_IMPORTED_MODULE_16__components_welcome_welcome_component__["a" /* WelcomeComponent */]
             ],
             imports: [
                 __WEBPACK_IMPORTED_MODULE_0__angular_platform_browser__["a" /* BrowserModule */],
@@ -143,14 +146,14 @@ var AppModule = /** @class */ (function () {
 /***/ "./src/app/components/chatroom/chatroom.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ""
+module.exports = ".show {\n    display: block;\n}\n\n.hide {\n    display: none;\n}"
 
 /***/ }),
 
 /***/ "./src/app/components/chatroom/chatroom.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"columns\">\n  <div class=\"column is-one-fifth\">\n    <app-user-list class=\"box\"></app-user-list>\n  </div>\n\n  <div class=\"columns\">\n    <div class=\"column\">\n      <app-feed-header class=\"box\"></app-feed-header>\n      <app-feed class=\"box\"></app-feed>\n      <app-send></app-send>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div class=\"columns\">\n  <div class=\"column is-one-fifth\">\n    <app-user-list class=\"box\"></app-user-list>\n  </div>\n\n  <div class=\"columns\">\n    <div class=\"column\">\n\n      <app-welcome [style.display]=\"displayWelcome\" class=\"box\"></app-welcome>\n\n      <div [style.display]=\"displayChatComponents\">\n          <app-feed-header class=\"box\"></app-feed-header>\n          <app-feed class=\"box\"></app-feed>\n          <app-send></app-send>\n      </div>\n\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -161,6 +164,7 @@ module.exports = "<div class=\"columns\">\n  <div class=\"column is-one-fifth\">
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return ChatroomComponent; });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__services_websocket_service__ = __webpack_require__("./src/app/services/websocket.service.ts");
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__services_chat_service__ = __webpack_require__("./src/app/services/chat.service.ts");
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -172,12 +176,24 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 
 
+
 var ChatroomComponent = /** @class */ (function () {
-    function ChatroomComponent(websocketService) {
+    function ChatroomComponent(websocketService, chatService) {
         this.websocketService = websocketService;
+        this.chatService = chatService;
+        this.displayWelcome = 'block';
+        this.displayChatComponents = 'none';
     }
     ChatroomComponent.prototype.ngOnInit = function () {
+        var _this = this;
         this.socket = this.websocketService.connect();
+        this.chatService.currentActiveUserItem.subscribe(function (activeUserItem) {
+            _this.activeUserItem = activeUserItem;
+            if (activeUserItem.id !== null) {
+                _this.displayWelcome = 'none';
+                _this.displayChatComponents = 'block';
+            }
+        });
     };
     ChatroomComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
@@ -185,7 +201,7 @@ var ChatroomComponent = /** @class */ (function () {
             template: __webpack_require__("./src/app/components/chatroom/chatroom.component.html"),
             styles: [__webpack_require__("./src/app/components/chatroom/chatroom.component.css")]
         }),
-        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_websocket_service__["a" /* WebsocketService */]])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1__services_websocket_service__["a" /* WebsocketService */], __WEBPACK_IMPORTED_MODULE_2__services_chat_service__["a" /* ChatService */]])
     ], ChatroomComponent);
     return ChatroomComponent;
 }());
@@ -197,14 +213,14 @@ var ChatroomComponent = /** @class */ (function () {
 /***/ "./src/app/components/feed-header/feed-header.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n    height: 12vh;\n    width: 79vw;\n    margin-right: 25px;\n    margin-left: 10px;\n    margin-top: 25px;\n}"
+module.exports = ":host {\n    height: 8em;\n    width: 80em;\n    margin-right: 2em;\n    margin-left: 1em;\n    margin-top: 2.3em;\n}"
 
 /***/ }),
 
 /***/ "./src/app/components/feed-header/feed-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1 class=\"subtitle\">{{activeUserItem.fullName}}</h1>\n<button class=\"button\" (click)=\"startVideoCall(activeUserItem.id)\">Video call</button> \n<button class=\"button\" (click)=\"startVoiceCall(activeUserItem.id)\">Voice call</button> \n"
+module.exports = "<div *ngIf=\"!calling\">\n  <h1 class=\"subtitle\">{{activeUserItem.fullName}}</h1>\n  <button class=\"button is-success\" (click)=\"startVideoCall(activeUserItem.id)\">Video call</button>\n  <button class=\"button is-success\" (click)=\"startVoiceCall(activeUserItem.id)\">Voice call</button>\n</div>\n\n<div *ngIf=\"calling\">\n  <button class=\"button is-success\" (click)=\"answerCall()\">Answer call</button>\n  <button class=\"button is-danger\" (click)=\"hangUp()\">Hang up</button>\n</div>\n"
 
 /***/ }),
 
@@ -241,6 +257,7 @@ var FeedHeaderComponent = /** @class */ (function () {
         this.websocketService = websocketService;
         this.userService = userService;
         this.router = router;
+        this.calling = false;
     }
     FeedHeaderComponent.prototype.ngOnInit = function () {
         var _this = this;
@@ -249,16 +266,16 @@ var FeedHeaderComponent = /** @class */ (function () {
         this.userService.currentOnlineUsers.subscribe(function (onlineUsers) { return _this.onlineUsers = _this.onlineUsers; });
         this.socket.on('recieveSignal', function (data) {
             if (data.type === 'offer') {
-                if (data.chatType === 'video') {
-                    _this.createPeer({ audio: true, video: true }, data.id, 'answer', null, data.peerId);
-                }
-                else {
-                    _this.createPeer({ audio: true, video: false }, data.id, 'answer', null, data.peerId);
-                }
+                _this.calling = true;
+                _this.data = data;
             }
             else {
                 _this.peer.signal(data.peerId);
             }
+        });
+        this.socket.on('hangUp', function () {
+            _this.localStream.getTracks()
+                .forEach(function (x) { return x.stop(); });
         });
     };
     FeedHeaderComponent.prototype.startVideoCall = function (id) {
@@ -267,12 +284,32 @@ var FeedHeaderComponent = /** @class */ (function () {
     FeedHeaderComponent.prototype.startVoiceCall = function (id) {
         this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null);
     };
+    FeedHeaderComponent.prototype.answerCall = function () {
+        if (this.data.chatType === 'video') {
+            this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId);
+        }
+        else {
+            this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId);
+        }
+    };
+    FeedHeaderComponent.prototype.hangUp = function () {
+        this.calling = false;
+        this.socket.emit('hangUp', this.data.id);
+    };
     FeedHeaderComponent.prototype.createPeer = function (options, id, type, chatType, peerId) {
         var _this = this;
         var peerx;
+        var init;
+        if (type === 'offer') {
+            init = true;
+        }
+        else {
+            init = false;
+        }
         navigator.getUserMedia({ video: options.video, audio: options.audio }, function (stream) {
+            _this.localStream = stream;
             peerx = new __WEBPACK_IMPORTED_MODULE_5_simple_peer__({
-                initiator: location.hash === '#available',
+                initiator: init,
                 trickle: false,
                 stream: stream,
                 objectMode: true,
@@ -298,14 +335,18 @@ var FeedHeaderComponent = /** @class */ (function () {
                 _this.socket.emit('sendSignal', { id: id, peerId: data, chatType: chatType, type: type });
             });
             peerx.on('stream', function (stream) { return _this.chatService.changeStream(stream); });
-            peerx.on('close', function () { return _this.router.navigate(['']); });
+            peerx.on('close', function () {
+                _this.router.navigate(['']);
+                _this.localStream.getTracks()
+                    .forEach(function (x) { return x.stop(); });
+            });
         }, function (err) { return console.log(err); });
         setTimeout(function () {
             _this.peer = peerx;
             if (type === 'answer') {
                 _this.peer.signal(peerId);
             }
-        }, 3000);
+        }, 1000);
     };
     FeedHeaderComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
@@ -325,14 +366,14 @@ var FeedHeaderComponent = /** @class */ (function () {
 /***/ "./src/app/components/feed/feed.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n    height: 69vh;\n    width: 79vw;\n    margin-right: 25px;\n    margin-left: 10px;\n    margin-top: 25px;\n}"
+module.exports = ":host {\n    height: 35em;\n    width: 80em;\n    margin-right: 2em;\n    margin-left: 1em;\n    margin-top: 2em;\n}"
 
 /***/ }),
 
 /***/ "./src/app/components/feed/feed.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ul>\n  <li *ngFor=\"let message of activeConversation\">{{message.message}}</li>\n</ul>\n"
+module.exports = "<ul>\n  <li *ngFor=\"let message of activeConversation\">{{message.sender}}: {{message.message}}</li>\n</ul>\n"
 
 /***/ }),
 
@@ -371,10 +412,14 @@ var FeedComponent = /** @class */ (function () {
         });
         this.socket.on('newMessage', function (data) {
             if (_this.conversations[data.id]) {
-                _this.conversations[data.id].push({ message: data.message });
+                _this.conversations[data.id].push({ message: data.message, sender: data.name });
             }
             else {
-                _this.conversations[data.id] = [{ message: data.message }];
+                _this.conversations[data.id] = [];
+                _this.conversations[data.id].push({ message: data.message, sender: data.name });
+                if (_this.activeUserItem.id === data.id) {
+                    _this.activeConversation = _this.conversations[data.id];
+                }
             }
         });
     };
@@ -403,7 +448,7 @@ module.exports = ""
 /***/ "./src/app/components/navbar/navbar.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n  <div class=\"navbar-brand\">\n    <a class=\"navbar-item\" href=\"/\">\n      <h1 class=\"title is-4 has-text-white\">PeerChat</h1>\n    </a>\n  </div>\n\n  <div class=\"navbar-menu\">\n    <div class=\"navbar-end\">\n    </div>\n  </div>\n</nav>\n"
+module.exports = "<nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n  <div class=\"navbar-brand\">\n    <a class=\"navbar-item\" href=\"/\">\n      <h1 class=\"title is-4 has-text-white\">PeerChat</h1>\n    </a>\n  </div>\n\n  <div class=\"navbar-menu\">\n    <div class=\"navbar-end\">\n        <a class=\"navbar-item\" href=\"/signout\">Sign out</a>\n    </div>\n  </div>\n</nav>\n"
 
 /***/ }),
 
@@ -446,14 +491,14 @@ var NavbarComponent = /** @class */ (function () {
 /***/ "./src/app/components/peer-chat/peer-chat.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host div {\n    height: 80vh;\n}"
+module.exports = ":host video {\n    width: 60%;\n}\n\n:host .background {\n    width: 100%;\n    height: 100%;\n    margin: 0px;\n    padding: 0px;\n    background-color: rgb(59, 59, 59);\n}"
 
 /***/ }),
 
 /***/ "./src/app/components/peer-chat/peer-chat.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div class=\"has-text-centered\">\n<div class=\"box\">\n  <video #videoChat></video>\n</div>\n\n<button class=\"button\" (click)=\"endCall()\">End call</button>\n</div>"
+module.exports = "<div class=\"has-text-centered background\">\n<div>\n  <video #videoChat></video>\n</div>\n\n<button class=\"button is-danger\" (click)=\"endCall()\">End call</button>\n</div>"
 
 /***/ }),
 
@@ -517,7 +562,7 @@ var PeerChatComponent = /** @class */ (function () {
 /***/ "./src/app/components/send/send.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n    position: fixed;\n    bottom: 40px;\n    height: 5vh;\n    width: 65vw;\n    margin-right: 25px;\n    margin-top: 25px;\n}\n\n:host input {\n    margin-left: 140px;\n    width: 60vw;\n}"
+module.exports = ":host {\n    position: fixed;\n    bottom: 3em;\n    height: 2em;\n    width: 50em;\n    margin-right: 2.5em;\n    margin-top: 2em;\n}\n\n:host input {\n    margin-left:8em;\n    width: 60em;\n}"
 
 /***/ }),
 
@@ -579,14 +624,14 @@ var SendComponent = /** @class */ (function () {
 /***/ "./src/app/components/user-list/user-list.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n    height: 88.5vh;\n    margin-top: 14px;\n    margin-left: 14px;\n}\n\n:host a {\n    font-size: 20px;\n}"
+module.exports = ":host {\n    height: 50em;\n    margin-top: 1.5em;\n    margin-left: 1.5em;\n}\n\n:host a {\n    font-size: 20px;\n}"
 
 /***/ }),
 
 /***/ "./src/app/components/user-list/user-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<h1 class=\"title\">Online Users</h1>\n\n<ul>\n  <li *ngFor=\"let user of onlineUsers\"><a (click)=\"changeItem(user)\">{{user.fullName}}</a></li>\n</ul>\n"
+module.exports = "<h1 class=\"title\">Online Users</h1>\n\n<div *ngIf=\"!onlineUsers\">\n  <p>There are no users online...</p>\n</div>\n\n<div *ngIf=\"onlineUsers\">\n  <ul>\n    <li *ngFor=\"let user of onlineUsers\">\n      <a (click)=\"changeItem(user)\">{{user.fullName}}</a>\n    </li>\n  </ul>\n</div>\n"
 
 /***/ }),
 
@@ -655,6 +700,56 @@ var UserListComponent = /** @class */ (function () {
 
 /***/ }),
 
+/***/ "./src/app/components/welcome/welcome.component.css":
+/***/ (function(module, exports) {
+
+module.exports = ":host {\n    height: 50em;\n    width: 80em;\n    margin-right: 2em;\n    margin-left: 1em;\n    margin-top: 2.32em;\n}"
+
+/***/ }),
+
+/***/ "./src/app/components/welcome/welcome.component.html":
+/***/ (function(module, exports) {
+
+module.exports = "<h1 class=\"title\">Welcome to PeerChat!</h1>\n<p>We are glad to the that you choose to use our brand new chat application! Select an online user from the list to the left and start chating. You can make video or voice calls, aswell as writing regular textmessages.</p>\n<br>\n<h2 class=\"subtitle\">Have fun!</h2>\n"
+
+/***/ }),
+
+/***/ "./src/app/components/welcome/welcome.component.ts":
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return WelcomeComponent; });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__angular_core__ = __webpack_require__("./node_modules/@angular/core/esm5/core.js");
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+
+var WelcomeComponent = /** @class */ (function () {
+    function WelcomeComponent() {
+    }
+    WelcomeComponent.prototype.ngOnInit = function () {
+    };
+    WelcomeComponent = __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
+            selector: 'app-welcome',
+            template: __webpack_require__("./src/app/components/welcome/welcome.component.html"),
+            styles: [__webpack_require__("./src/app/components/welcome/welcome.component.css")]
+        }),
+        __metadata("design:paramtypes", [])
+    ], WelcomeComponent);
+    return WelcomeComponent;
+}());
+
+
+
+/***/ }),
+
 /***/ "./src/app/services/chat.service.ts":
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -675,7 +770,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 
 var ChatService = /** @class */ (function () {
     function ChatService() {
-        this.activeUserItem = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */]({ id: null, fullName: 'none' });
+        this.activeUserItem = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */]({ id: null, fullName: 'no user selected' });
         this.stream = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
         this.peer = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
         this.activeConversation = new __WEBPACK_IMPORTED_MODULE_1_rxjs_BehaviorSubject__["a" /* BehaviorSubject */](null);
@@ -739,7 +834,7 @@ var UserService = /** @class */ (function () {
         this.onlineUsersSource.next(onlineUsers);
     };
     UserService.prototype.getCurrentUser = function () {
-        return this.http.get('https://rasmusfalk.se/user/current')
+        return this.http.get('http://localhost:8000/user/current')
             .map(function (res) { return res.json(); });
     };
     UserService = __decorate([
@@ -776,7 +871,7 @@ var WebsocketService = /** @class */ (function () {
     function WebsocketService() {
     }
     WebsocketService.prototype.connect = function () {
-        this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__["connect"]('https://rasmusfalk.se');
+        this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__["connect"]('http://localhost:8000');
     };
     WebsocketService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
