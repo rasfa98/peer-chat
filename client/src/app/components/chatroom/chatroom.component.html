@@ -5,9 +5,15 @@
 
   <div class="columns">
     <div class="column">
-      <app-feed-header class="box"></app-feed-header>
-      <app-feed class="box"></app-feed>
-      <app-send></app-send>
+
+      <app-welcome [style.display]="displayWelcome" class="box"></app-welcome>
+
+      <div [style.display]="displayChatComponents">
+          <app-feed-header class="box"></app-feed-header>
+          <app-feed class="box"></app-feed>
+          <app-send></app-send>
+      </div>
+
     </div>
   </div>
 </div>

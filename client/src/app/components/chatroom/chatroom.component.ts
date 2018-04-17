@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { WebsocketService } from '../../services/websocket.service'
+import { ChatService } from '../../services/chat.service'
 
 @Component({
   selector: 'app-chatroom',
@@ -8,11 +9,26 @@ import { WebsocketService } from '../../services/websocket.service'
 })
 export class ChatroomComponent implements OnInit {
   socket: any
+  activeUserItem: any
+  displayWelcome: any
+  displayChatComponents: any
 
-  constructor(private websocketService: WebsocketService) { }
+  constructor(private websocketService: WebsocketService, private chatService: ChatService) {
+    this.displayWelcome = 'block'
+    this.displayChatComponents = 'none'
+  }
 
   ngOnInit() {
     this.socket = this.websocketService.connect()
+
+    this.chatService.currentActiveUserItem.subscribe(activeUserItem => {
+      this.activeUserItem = activeUserItem
+
+      if (activeUserItem.id !== null) {
+        this.displayWelcome = 'none'
+        this.displayChatComponents = 'block'
+      }
+    })
   }
 
 }
