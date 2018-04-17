@@ -28,10 +28,10 @@ export class FeedComponent implements OnInit {
 
     this.socket.on('newMessage', data => {
       if (this.conversations[data.id]) {
-        this.conversations[data.id].push({ message: data.message })
+        this.conversations[data.id].push({ message: data.message, sender: data.name })
       } else {
         this.conversations[data.id] = []
-        this.conversations[data.id].push({ message: data.message })
+        this.conversations[data.id].push({ message: data.message, sender: data.name })
         this.activeConversation = this.conversations[data.id]
       }
     })

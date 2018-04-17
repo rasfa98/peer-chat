@@ -41,16 +41,22 @@
        socket.to(user.socketId).emit('recieveSignal', { peerId: data.peerId, id: sender.id, type: data.type, chatType: data.chatType })
      })
 
-     socket.on('sendMessage', async data => {
-       const user = await User.findOne({ _id: data.id })
-       const sender = await User.findOne({ socketId: socket.id })
+     socket.on('hangUp', async id => {
+       const user = await User.findOne({ _id: id })
 
-       socket.emit('newMessage', { message: data.message, id: user.id })
-       socket.to(user.socketId).emit('newMessage', { message: data.message, id: sender._id })
+       socket.to(user.socketId).emit('hangUp')
+     })
+
+     socket.on('sendMessage', async data => {
+       const sendTo = await User.findOne({ _id: data.id })
+       const from = await User.findOne({ socketId: socket.id })
+
+       socket.emit('newMessage', { message: data.message, id: sendTo.id, name: 'you' })
+       socket.to(sendTo.socketId).emit('newMessage', { message: data.message, id: from._id, name: from.fullName })
      })
 
      socket.on('disconnect', async () => {
-       await User.findOneAndUpdate({ socketId: socket.id }, { status: 'offline' })
+       await User.findOneAndUpdate({ socketId: socket.id }, { status: 'offline', socketId: null })
 
        updateOnlineUsers(io)
      })
