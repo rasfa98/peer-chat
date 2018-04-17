@@ -26,6 +26,8 @@
 
  app.use((req, res, next) => {
    passportConfig.run(req)
+
+   next()
  })
 
  app.use(session({
