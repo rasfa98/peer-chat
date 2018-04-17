@@ -17,11 +17,13 @@
  /**
   * Configures the different strategies.
   */
- module.exports.run = () => {
+ module.exports.run = (req) => {
    passport.serializeUser((user, done) => done(null, user.id))
 
    passport.deserializeUser(async (id, done) => {
      const user = await User.findById(id)
+
+     req.session.userId = id
 
      done(null, user)
    })

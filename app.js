@@ -11,6 +11,7 @@
  const mongoose = require('./config/mongoose')
  const express = require('./config/express')
  const path = require('path')
+ const passportConfig = require('./passport')
  const passport = require('passport')
  const session = require('express-session')
  const MongoStore = require('connect-mongo')(session)
@@ -21,6 +22,10 @@
  mongoose.run(app).catch(err => {
    console.log(err)
    process.exit(1)
+ })
+
+ app.use((req, res, next) => {
+   passportConfig.run(req)
  })
 
  app.use(session({

@@ -14,7 +14,7 @@ const User = require('../models/User')
 router.route('/')
     .get((req, res) => res.render('login'))
     .post(async (req, res) => {
-      const user = await User.findOne({ email: req.body.email, googleId: null, facebookId: null })
+      const user = await User.findOne({ email: req.body.email })
 
       if (user) {
         const match = await user.compare(req.body.password)

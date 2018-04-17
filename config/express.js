@@ -9,7 +9,6 @@
  'use strict'
 
  const express = require('express')
- const passport = require('./passport')
  const path = require('path')
  const cors = require('cors')
  const bodyParser = require('body-parser')
@@ -27,7 +26,6 @@
    const port = 8000
 
    dotenv.config()
-   passport.run()
 
    app.use(cors())
 
