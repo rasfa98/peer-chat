@@ -15,7 +15,7 @@
  const passport = require('passport')
  const session = require('express-session')
  const MongoStore = require('connect-mongo')(session)
-//  const csrf = require('csurf')
+ const csrf = require('csurf')
 
  const app = express.run()
 
@@ -42,12 +42,12 @@
    next()
  })
 
-//  app.use(csrf())
+ app.use(csrf())
 
-//  app.use((req, res, next) => {
-//    res.locals.csrfToken = req.csrfToken()
-//    next()
-//  })
+ app.use((req, res, next) => {
+   res.locals.csrfToken = req.csrfToken()
+   next()
+ })
 
  app.use(passport.initialize())
 
