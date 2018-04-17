@@ -24,12 +24,6 @@
    process.exit(1)
  })
 
- app.use((req, res, next) => {
-   passportConfig.run(req)
-
-   next()
- })
-
  app.use(session({
    name: 'PeerChat',
    secret: process.env.SESSION_SECRET,
@@ -41,6 +35,12 @@
      expires: 900000
    }
  }))
+
+ app.use((req, res, next) => {
+   passportConfig.run(req)
+
+   next()
+ })
 
  app.use(csrf())
 
