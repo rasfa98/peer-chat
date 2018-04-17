@@ -27,18 +27,19 @@
    })
 
    passport.use(new GoogleStrategy({
-     callbackURL: 'https://rasmusfalk.se/auth/google/redirect',
+     callbackURL: 'http://localhost:8000/auth/google/redirect',
      clientID: process.env.GOOGLE_CLIENT_ID,
      clientSecret: process.env.GOOGLE_CLIENT_SECRET
    }, async (accessToken, refreshToken, profile, done) => {
-     const currentUser = await User.findOne({ email: profile.email })
+     const email = profile.emails[0].value
+     const currentUser = await User.findOne({ email: email })
 
      if (currentUser) {
        done(null, currentUser)
      } else {
        const newUser = new User({
          fullName: profile.displayName,
-         email: profile.email,
+         email: email,
          password: uniqId()
        })
 

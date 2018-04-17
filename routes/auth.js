@@ -12,7 +12,7 @@ const router = require('express').Router()
 const passport = require('passport')
 
 router.route('/google')
-    .get(passport.authenticate('google', { scope: ['profile'] }))
+    .get(passport.authenticate('google', { scope: ['profile', 'email'] }))
 
 router.route('/google/redirect')
     .get(passport.authenticate('google'), (req, res) => {
@@ -21,7 +21,7 @@ router.route('/google/redirect')
     })
 
 router.route('/facebook')
-    .get(passport.authenticate('facebook'))
+    .get(passport.authenticate('facebook', { scope: ['public_profile', 'email'] }))
 
 router.route('/facebook/redirect')
     .get(passport.authenticate('facebook'), (req, res) => {
