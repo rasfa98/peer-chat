@@ -1,6 +1,7 @@
 
 # Created by https://www.gitignore.io/api/node,macos,angular,visualstudiocode
 
+credentials.js
 ### Angular ###
 ## Angular ##
 # compiled output

@@ -92,7 +92,17 @@ export class FeedHeaderComponent implements OnInit {
             'stun:stun1.l.google.com:19302',
             'stun:stun2.l.google.com:19302',
             'stun:stun3.l.google.com:19302',
-            'stun:stun4.l.google.com:19302' ]}
+            'stun:stun4.l.google.com:19302' ]},
+            {
+              urls: 'stun:numb.viagenie.ca',
+              username: 'rasmus.falk@live.se',
+              credential: 'M581Z6DzR97BPSQltlbvq2jGXwObjoZB'
+            },
+            {
+              urls: 'turn:numb.viagenie.ca',
+              username: 'rasmus.falk@live.se',
+              credential: 'M581Z6DzR97BPSQltlbvq2jGXwObjoZB'
+            }
           ]}
       })
 
