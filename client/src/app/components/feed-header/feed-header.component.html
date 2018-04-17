@@ -1,10 +1,10 @@
 <div *ngIf="!calling">
   <h1 class="subtitle">{{activeUserItem.fullName}}</h1>
-  <button class="button" (click)="startVideoCall(activeUserItem.id)">Video call</button>
-  <button class="button" (click)="startVoiceCall(activeUserItem.id)">Voice call</button>
+  <button class="button is-success" (click)="startVideoCall(activeUserItem.id)">Video call</button>
+  <button class="button is-success" (click)="startVoiceCall(activeUserItem.id)">Voice call</button>
 </div>
 
 <div *ngIf="calling">
-  <button class="button" (click)="answerCall()">Answer call</button>
-  <button class="button" (click)="hangUp()">Hang up</button>
+  <button class="button is-success" (click)="answerCall()">Answer call</button>
+  <button class="button is-danger" (click)="hangUp()">Hang up</button>
 </div>
