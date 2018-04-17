@@ -313,7 +313,7 @@ var FeedHeaderComponent = /** @class */ (function () {
                 trickle: false,
                 stream: stream,
                 objectMode: true,
-                reconnectTimer: 150,
+                reconnectTimer: 250,
                 config: {
                     iceServers: [{ urls: [
                                 'stun:stun.l.google.com:19302',
@@ -491,7 +491,7 @@ var NavbarComponent = /** @class */ (function () {
 /***/ "./src/app/components/peer-chat/peer-chat.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host video {\n    width: 60%;\n}\n\n:host .background {\n    width: 100%;\n    height: 100%;\n    margin: 0px;\n    padding: 0px;\n    background-color: rgb(59, 59, 59);\n}"
+module.exports = ":host video {\n    width: 60%;\n}\n"
 
 /***/ }),
 
@@ -834,7 +834,7 @@ var UserService = /** @class */ (function () {
         this.onlineUsersSource.next(onlineUsers);
     };
     UserService.prototype.getCurrentUser = function () {
-        return this.http.get('http://localhost:8000/user/current')
+        return this.http.get('https://rasmusfalk.se/user/current')
             .map(function (res) { return res.json(); });
     };
     UserService = __decorate([
@@ -871,7 +871,7 @@ var WebsocketService = /** @class */ (function () {
     function WebsocketService() {
     }
     WebsocketService.prototype.connect = function () {
-        this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__["connect"]('http://localhost:8000');
+        this.socket = __WEBPACK_IMPORTED_MODULE_1_socket_io_client__["connect"]('https://rasmusfalk.se');
     };
     WebsocketService = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["A" /* Injectable */])(),
