@@ -30,7 +30,9 @@ export class FeedComponent implements OnInit {
       if (this.conversations[data.id]) {
         this.conversations[data.id].push({ message: data.message })
       } else {
-        this.conversations[data.id] = [{ message: data.message }]
+        this.conversations[data.id] = []
+        this.conversations[data.id].push({ message: data.message })
+        this.activeConversation = this.conversations[data.id]
       }
     })
   }
