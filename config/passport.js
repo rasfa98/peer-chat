@@ -27,7 +27,7 @@
    })
 
    passport.use(new GoogleStrategy({
-     callbackURL: 'http://localhost:8000/auth/google/redirect',
+     callbackURL: 'https://rasmusfalk.se/auth/google/redirect',
      clientID: process.env.GOOGLE_CLIENT_ID,
      clientSecret: process.env.GOOGLE_CLIENT_SECRET
    }, async (accessToken, refreshToken, profile, done) => {
@@ -52,7 +52,8 @@
    passport.use(new FacebookStrategy({
      callbackURL: 'https://rasmusfalk.se/auth/facebook/redirect',
      clientID: process.env.FACEBOOK_APP_ID,
-     clientSecret: process.env.FACEBOOK_APP_SECRET
+     clientSecret: process.env.FACEBOOK_APP_SECRET,
+     profileFields: ['displayName', 'email']
    }, async (accessToken, refreshToken, profile, done) => {
      const email = profile.emails[0].value
      const currentUser = await User.findOne({ email: email })
