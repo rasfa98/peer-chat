@@ -23,8 +23,6 @@
    passport.deserializeUser(async (id, done) => {
      const user = await User.findById(id)
 
-     req.session.userId = id
-
      done(null, user)
    })
 
@@ -37,6 +35,7 @@
      const currentUser = await User.findOne({ email: email })
 
      if (currentUser) {
+       req.session.userId = currentUser._id
        done(null, currentUser)
      } else {
        const newUser = new User({
@@ -46,6 +45,9 @@
        })
 
        await newUser.save()
+
+       const user = await User.findOne({ email: email })
+       req.session.userId = user._id
 
        done(null, newUser)
      }
