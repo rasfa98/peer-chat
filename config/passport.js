@@ -54,7 +54,7 @@
      clientID: process.env.FACEBOOK_APP_ID,
      clientSecret: process.env.FACEBOOK_APP_SECRET
    }, async (accessToken, refreshToken, profile, done) => {
-    const email = profile.emails[0].value
+     const email = profile.emails[0].value
      const currentUser = await User.findOne({ email: email })
 
      if (currentUser) {
