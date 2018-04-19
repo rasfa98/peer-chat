@@ -1,7 +1,18 @@
 :host {
-    height: 35em;
-    width: 80em;
-    margin-right: 2em;
-    margin-left: 1em;
-    margin-top: 2em;
+    margin: 0px;
+    padding: 0px;
+}
+
+:host .message {
+    background-color: rgb(106, 105, 194);
+    width: 30%;
+}
+
+:host .message .card-header {
+    font-size: 20px;
+    padding: 10px;
+}
+
+:host .message .card-content {
+    font-size: 16px;
 }

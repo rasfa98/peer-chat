@@ -1,7 +1,17 @@
 :host {
-    height: 8em;
-    width: 80em;
-    margin-right: 2em;
-    margin-left: 1em;
-    margin-top: 2.3em;
+    margin: 0px;
+    padding: 0px;
+}
+
+:host h1 {
+    font-size: 30px;
+    margin: 10px;
+}
+
+:host button {
+    margin: 10px;
+}
+
+:host .navbar {
+    background-color: white;
 }

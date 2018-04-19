@@ -5,3 +5,31 @@
 .hide {
     display: none;
 }
+
+.user-list {
+    background-color: rgb(72, 21, 78);
+    height: 100vh;
+    margin: 0px;
+    padding: 0px;
+}
+
+.welcome {
+    background-color: rgb(248, 246, 248);
+    height: 100vh;
+    padding: 20px;
+}
+
+.feed-header {
+    background-color: white;
+    height:8vh;
+}
+
+.feed {
+    background-color: rgb(248, 246, 248);
+    height: 87vh;
+}
+
+.send {
+    background-color: white;
+    height: 5vh;
+}

@@ -1,19 +1,31 @@
-<div class="columns">
+<div class="columns is-gapless">
   <div class="column is-one-fifth">
-    <app-user-list class="box"></app-user-list>
+    <div class="user-list">
+      <app-user-list></app-user-list>
+    </div>
   </div>
 
-  <div class="columns">
-    <div class="column">
-
-      <app-welcome [style.display]="displayWelcome" class="box"></app-welcome>
-
-      <div [style.display]="displayChatComponents">
-          <app-feed-header class="box"></app-feed-header>
-          <app-feed class="box"></app-feed>
-          <app-send></app-send>
+  <div class="column">
+    <div [style.display]="displayWelcome">
+      <div class="welcome">
+        <app-welcome></app-welcome>
       </div>
 
     </div>
+
+    <div [style.display]="displayChatComponents">
+      <div class="feed-header">
+        <app-feed-header></app-feed-header>
+      </div>
+
+      <div class="feed">
+        <app-feed></app-feed>
+      </div>
+
+      <div class="send">
+        <app-send></app-send>
+      </div>
+    </div>
+
   </div>
 </div>

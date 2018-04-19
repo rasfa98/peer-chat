@@ -1,9 +1,9 @@
 :host {
-    height: 50em;
-    margin-top: 1.5em;
-    margin-left: 1.5em;
+    margin: 0px;
+    padding: 0px;
 }
 
-:host a {
-    font-size: 20px;
+.user-item {
+    font-size: 30px;
+    margin-left: 20px;
 }

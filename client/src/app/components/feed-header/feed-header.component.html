@@ -1,10 +1,33 @@
 <div *ngIf="!calling">
-  <h1 class="subtitle">{{activeUserItem.fullName}}</h1>
-  <button class="button is-success" (click)="startVideoCall(activeUserItem.id)">Video call</button>
-  <button class="button is-success" (click)="startVoiceCall(activeUserItem.id)">Voice call</button>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <h1 class="title is-4">{{activeUserItem.fullName}}</h1>
+    </div>
+
+    <div class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <button class="button is-link" (click)="startVideoCall(activeUserItem.id)">Video call</button>
+          <button class="button is-link" (click)="startVoiceCall(activeUserItem.id)">Voice call</button>
+        </div>
+      </div>
+    </div>
+  </nav>
 </div>
 
 <div *ngIf="calling">
-  <button class="button is-success" (click)="answerCall()">Answer call</button>
-  <button class="button is-danger" (click)="hangUp()">Hang up</button>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <h1 class="title is-4">{{activeUserItem.fullName}}</h1>
+    </div>
+
+    <div class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <button class="button is-success" (click)="answerCall()">Answer call</button>
+          <button class="button is-danger" (click)="hangUp()">Hang up</button>
+        </div>
+      </div>
+    </div>
+  </nav>
 </div>
