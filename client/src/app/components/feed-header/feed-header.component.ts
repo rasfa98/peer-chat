@@ -77,7 +77,8 @@ export class FeedHeaderComponent implements OnInit {
       init = false
     }
 
-    navigator.getUserMedia({ video: options.video, audio: options.audio }, stream => {
+    navigator.mediaDevices.getUserMedia({ video: options.video, audio: options.audio })
+    .then(stream => {
       this.localStream = stream
 
       peerx = new SimplePeer({
@@ -123,13 +124,14 @@ export class FeedHeaderComponent implements OnInit {
         this.localStream.getTracks()
         .forEach(x => x.stop())
       })
-    }, err => console.log(err))
+    })
+    .catch(err => console.log(err))
 
     setTimeout(() => {
       this.peer = peerx
 
       if (type === 'answer') { this.peer.signal(peerId) }
-    }, 1000)
+    }, 2000)
   }
 
 }
