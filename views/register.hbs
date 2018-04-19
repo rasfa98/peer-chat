@@ -1,43 +1,51 @@
 {{>flash}}
 
-<form action="/register" method="post">
-<div class="field">
-    <label class="label">Full name</label>
-    <div class="control">
-      <input class="input" type="text" placeholder="Enter full name" name="fullName">
-    </div>
+<div class="card" id="register">
+  <div class="card-content">
+    <p class="title">Register</p>
+
+    <form action="/register" method="post">
+      <div class="field">
+        <label class="label">Full name</label>
+        <div class="control">
+          <input class="input" type="text" placeholder="Enter full name" name="fullName">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+          <input class="input" type="email" placeholder="Enter email" name="email">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input class="input" type="password" placeholder="Enter password" name="password">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Repeat password</label>
+        <div class="control">
+          <input class="input" type="password" placeholder="Repeat password" name="passwordRepeat">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control has-text-centered">
+          <button type="submit" class="button is-link" id="registerBtn">Register</button>
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control has-text-centered">
+          <a class="button is-text" href="/">Cancel</a>
+        </div>
+      </div>
+
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </form>
   </div>
-
-  <div class="field">
-    <label class="label">Email</label>
-    <div class="control">
-      <input class="input" type="email" placeholder="Enter email" name="email">
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Password</label>
-    <div class="control">
-      <input class="input" type="password" placeholder="Enter password" name="password">
-    </div>
-  </div>
-
-  <div class="field">
-    <label class="label">Repeat password</label>
-    <div class="control">
-      <input class="input" type="password" placeholder="Repeat password" name="passwordRepeat">
-    </div>
-  </div>
-
-  <div class="field is-grouped">
-    <div class="control">
-      <button type="submit" class="button is-link">Register</button>
-    </div>
-
-    <div class="control">
-      <a class="button is-text" href="/">Cancel</button>
-    </div>
-  </div>
-
-  <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
+</div>

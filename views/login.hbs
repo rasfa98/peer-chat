@@ -1,37 +1,40 @@
 {{>flash}}
 
-<form action="/login" method="post">
-  <div class="field">
-    <label class="label">Email</label>
-    <div class="control">
-      <input class="input" type="email" placeholder="Enter email" name="email">
+<div class="card" id="login">
+  <div class="card-content">
+    <p class="title">Welcome to PeerChat</p>
+    <p class="subtitle">Login to continue</p>
+
+    <form action="/login" method="post">
+      <div class="field">
+        <label class="label">Email</label>
+        <div class="control">
+          <input class="input" type="email" placeholder="Enter email" name="email">
+        </div>
+      </div>
+
+      <div class="field">
+        <label class="label">Password</label>
+        <div class="control">
+          <input class="input" type="password" placeholder="Enter password" name="password">
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="control has-text-centered">
+          <button type="submit" class="button is-link is-primary" id="loginBtn">Login</button>
+        </div>
+      </div>
+
+      <input type="hidden" name="_csrf" value="{{csrfToken}}">
+    </form>
+
+    <div class="has-text-centered">
+      <a class="button is-link is-info oauthBtn" href="/auth/facebook">Facebook</a>
+      <a class="button is-link is-warning oauthBtn" href="/auth/google">Google</a>
     </div>
   </div>
-
-  <div class="field">
-    <label class="label">Password</label>
-    <div class="control">
-      <input class="input" type="password" placeholder="Enter password" name="password">
+  <div class="card-footer">
+      <a class="card-footer-item" href="/register">Register</a>
     </div>
-  </div>
-
-  <div class="field">
-    <div class="control">
-      <button type="submit" class="button is-link is-primary">Login</button>
-    </div>
-  </div>
-
-  <div class="field">
-    <div class="control">
-      <a class="button is-link is-warning" href="/auth/google">Login with Google</a>
-    </div>
-  </div>
-
-  <div class="field">
-    <div class="control">
-      <a class="button is-link is-info" href="/auth/facebook">Login with Facebook</a>
-    </div>
-  </div>
-
-  <input type="hidden" name="_csrf" value="{{csrfToken}}">
-</form>
+</div>
