@@ -6,11 +6,14 @@
     display: none;
 }
 
+.search {
+    background-color: rgb(72, 21, 78);
+    height: 8vh;
+}
+
 .user-list {
     background-color: rgb(72, 21, 78);
-    height: 100vh;
-    margin: 0px;
-    padding: 0px;
+    height: 92vh;
 }
 
 .welcome {

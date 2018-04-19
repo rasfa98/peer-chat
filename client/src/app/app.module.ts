@@ -17,6 +17,7 @@ import { ChatroomComponent } from './components/chatroom/chatroom.component';
 import { FeedHeaderComponent } from './components/feed-header/feed-header.component';
 import { PeerChatComponent } from './components/peer-chat/peer-chat.component';
 import { WelcomeComponent } from './components/welcome/welcome.component';
+import { SearchComponent } from './components/search/search.component';
 
 const appRoutes: Routes = [
   { path: '', component: ChatroomComponent },
@@ -33,7 +34,8 @@ const appRoutes: Routes = [
     ChatroomComponent,
     FeedHeaderComponent,
     PeerChatComponent,
-    WelcomeComponent
+    WelcomeComponent,
+    SearchComponent
   ],
   imports: [
     BrowserModule,

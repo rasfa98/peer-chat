@@ -1,0 +1,12 @@
+.searchInput input {
+    margin-top: 2vh;
+    height: 4vh;
+    width: 14vw;
+    margin-left: 1vw
+}
+
+.searchInput button {
+    margin-top: 2vh;
+    height: 4vh;
+    width: 4vw;
+}

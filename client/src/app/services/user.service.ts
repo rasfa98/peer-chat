@@ -17,7 +17,7 @@ export class UserService {
   }
 
   getCurrentUser() {
-    return this.http.get('https://rasmusfalk.se/user/current')
+    return this.http.get('http://localhost:8000/user/current')
     .map(res => res.json())
   }
 }
