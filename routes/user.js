@@ -23,5 +23,12 @@ router.route('/fullName')
       res.send({ users: users })
     })
 
+router.route('/friendRequests')
+    .get(async (req, res) => {
+      const requests = await User.findOne({ _id: req.session.userId }).friendRequests
+
+      res.send({ requests: requests })
+    })
+
 // Exports
 module.exports = router
