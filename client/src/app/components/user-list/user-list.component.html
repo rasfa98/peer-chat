@@ -1,7 +1,15 @@
-<div *ngIf="onlineUsers">
+<div *ngIf="!search">
   <ul>
     <li *ngFor="let user of onlineUsers">
       <a (click)="changeItem(user)" class="has-text-white user-item">{{user.fullName}}</a>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="search">
+  <ul>
+    <li *ngFor="let user of searchUsers">
+      {{user.fullName}}
     </li>
   </ul>
 </div>

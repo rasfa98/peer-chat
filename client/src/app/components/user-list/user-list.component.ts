@@ -13,13 +13,21 @@ export class UserListComponent implements OnInit {
   socket: any
   currentUser: any
   activeUserItem: any
+  search: any
+  searchUsers: any
 
-  constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {}
+  constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {
+    this.onlineUsers = [{
+      fullName: 'Kalle'
+    }]
+  }
 
   ngOnInit() {
     this.socket = this.websocketService.socket
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
+    this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers.users)
+    this.chatService.currentSearch.subscribe(search => this.search = search)
 
     this.userService.getCurrentUser()
     .subscribe(user => {
