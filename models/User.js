@@ -18,6 +18,7 @@
    password: { type: String, required: 'Password is required!', trim: true },
    status: { type: String, default: 'offline' },
    friends: { type: [Object], default: null },
+   friendRequests: { type: [Object], default: null },
    socketId: { type: String, default: null }
  })
 
