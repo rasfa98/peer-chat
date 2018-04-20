@@ -8,12 +8,14 @@ export class ChatService {
   private peer = new BehaviorSubject(null)
   private activeConversation = new BehaviorSubject(null)
   private searchUsers = new BehaviorSubject(null)
+  private search = new BehaviorSubject(null)
 
   currentActiveUserItem = this.activeUserItem.asObservable()
   currentStream = this.stream.asObservable()
   currentPeer = this.peer.asObservable()
   currentActiveConversation = this.activeConversation.asObservable()
   currentSearchUsers = this.searchUsers.asObservable()
+  currentSearch = this.search.asObservable()
   
   constructor() { }
 
@@ -35,5 +37,9 @@ export class ChatService {
 
   changeSearchUsers(searchUsers) {
     this.searchUsers.next(searchUsers)
+  }
+
+  changeSearch(search) {
+    this.search.next(search)
   }
 }
