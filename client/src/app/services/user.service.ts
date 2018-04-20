@@ -22,7 +22,7 @@ export class UserService {
   }
 
   getUsersByFullName(name) {
-    return this.http.get('http://localhost:8000/user/fullName')
+    return this.http.post('http://localhost:8000/user/fullName', { fullName: name })
     .map(res => res.json())
   }
 }
