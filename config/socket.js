@@ -47,6 +47,25 @@
        socket.to(user.socketId).emit('hangUp')
      })
 
+     socket.on('addUser', async id => {
+       const user = await User.findOne({ _id: id })
+       const sender = await User.findOne({ socketId: socket.id })
+
+       const friendRequests = user.friendRequests
+
+       const newRequest = {
+         id: sender.id,
+         fullName: sender.fullName,
+         email: sender.email
+       }
+
+       friendRequests.push(newRequest)
+
+       await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
+
+       socket.to(user.socketId).emit('addUser', newRequest)
+     })
+
      socket.on('sendMessage', async data => {
        const sendTo = await User.findOne({ _id: data.id })
        const from = await User.findOne({ socketId: socket.id })
