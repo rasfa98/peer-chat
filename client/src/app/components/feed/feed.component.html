@@ -8,8 +8,8 @@
       </div>
     </div>
 
-    <div *ngIf="message.sender === 'peer'">
-        <div class="card message you">
+    <div *ngIf="message.sender !== 'you'">
+        <div class="card message peer">
           <div class="card-content">
             <p class="has-text-white">{{message.message}}</p>
           </div>

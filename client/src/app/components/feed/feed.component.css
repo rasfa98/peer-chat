@@ -5,6 +5,8 @@
 
 :host .message {
     width: 30%;
+    word-wrap: break-word;
+    clear: both;
 }
 
 :host .peer {
