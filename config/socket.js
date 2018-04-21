@@ -53,8 +53,6 @@
 
        const filteredRequests = user.friendRequests.filter(x => x.email === sender.email)
 
-       console.log(filteredRequests.length)
-
        if (!filteredRequests.length > 0 && user._id !== sender._id) {
          const friendRequests = user.friendRequests
 
@@ -77,6 +75,26 @@
 
        socket.emit('newMessage', { message: data.message, id: sendTo.id, name: 'you' })
        socket.to(sendTo.socketId).emit('newMessage', { message: data.message, id: from._id, name: from.fullName })
+     })
+
+     socket.on('acceptRequest', async email => {
+       const user = await User.findOne({ socketId: socket.id })
+       const sender = await User.findOne({ email: email })
+
+       const matchingRequests = user.friendRequests.filter(x => x.email === email)
+
+       if (matchingRequests) {
+         const userFriends = user.friends
+         const senderFriends = sender.friends
+
+         userFriends.push({ fullName: sender.fullName, email: sender.email })
+         senderFriends.push({ fullName: user.fullName, email: user.email })
+
+         User.findOneAndUpdate({ _id: user._id }, { friends: userFriends })
+         User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriends })
+
+         socket.to(sender.socketId).emit('acceptRequest', { fullName: user.fullName, email: user.email })
+       }
      })
 
      socket.on('disconnect', async () => {
