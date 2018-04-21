@@ -1,4 +1,4 @@
-<div *ngIf="!search">
+<div *ngIf="state === 'friendList'">
   <ul>
     <li *ngFor="let user of onlineUsers">
       <a (click)="changeItem(user)" class="has-text-white user-item">{{user.fullName}}</a>
@@ -6,10 +6,22 @@
   </ul>
 </div>
 
-<div *ngIf="search">
+<div *ngIf="state === 'search'">
+  <button class="button" (click)="state = 'friendList'">Go back</button>
   <ul>
     <li *ngFor="let user of searchUsers">
-      {{user.fullName}}
+      <span class="has-text-white user-item">{{user.fullName}}</span>
+      <button class="button is-info" (click)="addUser(user.id)">Add</button>
+    </li>
+  </ul>
+</div>
+
+<div *ngIf="state === 'friendRequest'">
+    <button class="button" (click)="state = 'friendList'">Go back</button>
+  <ul>
+    <li *ngFor="let request of friendRequestUsers">
+      <span class="has-text-white user-item">{{request.fullName}}</span>
+      <button class="button is-info" (click)="acceptUser(user.id)">Accept</button>
     </li>
   </ul>
 </div>

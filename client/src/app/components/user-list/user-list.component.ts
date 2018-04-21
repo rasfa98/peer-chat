@@ -13,8 +13,9 @@ export class UserListComponent implements OnInit {
   socket: any
   currentUser: any
   activeUserItem: any
-  search: any
   searchUsers: any
+  friendRequestUsers: any
+  state: any
 
   constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {
     this.onlineUsers = [{
@@ -27,7 +28,8 @@ export class UserListComponent implements OnInit {
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers.users)
-    this.chatService.currentSearch.subscribe(search => this.search = search)
+    this.chatService.currentState.subscribe(state => this.state = state)
+    this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
 
     this.userService.getCurrentUser()
     .subscribe(user => {
@@ -49,6 +51,11 @@ export class UserListComponent implements OnInit {
   changeItem(user) {
     this.chatService.changeActiveUserItem(user)
     this.chatService.changeActiveConversation(user.id)
+  }
+
+  addUser(id) {
+    this.socket.emit('addUser', id)
+    this.chatService.changeState("friendList")
   }
 
 }
