@@ -51,19 +51,24 @@
        const user = await User.findOne({ _id: id })
        const sender = await User.findOne({ socketId: socket.id })
 
-       const friendRequests = user.friendRequests
+       const filteredRequests = user.friendRequests.filter(x => x.email === sender.email)
 
-       const newRequest = {
-         id: sender.id,
-         fullName: sender.fullName,
-         email: sender.email
+       console.log(filteredRequests.length)
+
+       if (!filteredRequests.length > 0 && user._id !== sender._id) {
+         const friendRequests = user.friendRequests
+
+         const newRequest = {
+           fullName: sender.fullName,
+           email: sender.email
+         }
+
+         friendRequests.push(newRequest)
+
+         await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
+
+         socket.to(user.socketId).emit('addUser', newRequest)
        }
-
-       friendRequests.push(newRequest)
-
-       await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
-
-       socket.to(user.socketId).emit('addUser', newRequest)
      })
 
      socket.on('sendMessage', async data => {
