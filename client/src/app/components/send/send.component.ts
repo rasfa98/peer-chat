@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { WebsocketService } from '../../services/websocket.service'
 import { ChatService } from '../../services/chat.service';
 
@@ -8,6 +8,8 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./send.component.css']
 })
 export class SendComponent implements OnInit {
+  @ViewChild('message') input: any
+
   socket: any
   activeUserItem: any
 
@@ -21,5 +23,6 @@ export class SendComponent implements OnInit {
 
   sendMessage(message, id) {
     this.socket.emit('sendMessage', { message: message, id: id })
+    this.input.nativeElement.value = ""
   }
 }
