@@ -20,11 +20,9 @@
    friends: [{
      id: String,
      fullName: String,
-     email: String,
-     status: String
+     email: String
    }],
    friendRequests: [{
-     id: String,
      fullName: String,
      email: String
    }],

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { UserService } from '../../services/user.service';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-search',
@@ -7,9 +9,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class SearchComponent implements OnInit {
 
-  constructor() { }
+  constructor(private userService: UserService, private chatService: ChatService) { }
 
   ngOnInit() {
+  }
+
+  search(query) {
+    this.userService.getUsersByFullName(query)
+    .subscribe(users => {
+      this.chatService.changeState("search")
+      this.chatService.changeSearchUsers(users)
+    })
   }
 
 }

@@ -9,8 +9,9 @@ export class ChatService {
   private stream = new BehaviorSubject(null)
   private peer = new BehaviorSubject(null)
   private activeConversation = new BehaviorSubject(null)
-  private searchUsers = new BehaviorSubject({ users: null })
-  private friendRequestUsers = new BehaviorSubject({ requests: null })
+  private searchUsers = new BehaviorSubject(null)
+  private friendRequestUsers = new BehaviorSubject(null)
+  private friends = new BehaviorSubject(null)
   private state = new BehaviorSubject('friendList')
 
   currentActiveUserItem = this.activeUserItem.asObservable()
@@ -20,6 +21,7 @@ export class ChatService {
   currentSearchUsers = this.searchUsers.asObservable()
   currentState = this.state.asObservable()
   currentFriendRequestUsers = this.friendRequestUsers.asObservable()
+  currentFriends = this.friends.asObservable()
   
   constructor(private http: Http) { }
 
@@ -52,7 +54,16 @@ export class ChatService {
   }
 
   getFriendRequests() {
-    return this.http.get('http://localhost:8000/user/friendRequests')
+    return this.http.get('https://rasmusfalk.se/user/friendRequests')
     .map(res => res.json().requests)
+  }
+
+  changeFriends(friends) {
+    this.friends.next(friends)
+  }
+
+  getFriends() {
+    return this.http.get('https://rasmusfalk.se/user/friends')
+    .map(res => res.json().friends)
   }
 }

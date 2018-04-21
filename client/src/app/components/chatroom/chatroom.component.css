@@ -11,9 +11,14 @@
     height: 8vh;
 }
 
+.friend-requests {
+    background-color: rgb(72, 21, 78);
+    height: 8vh;
+}
+
 .user-list {
     background-color: rgb(72, 21, 78);
-    height: 92vh;
+    height: 84vh;
 }
 
 .welcome {

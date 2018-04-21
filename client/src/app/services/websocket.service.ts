@@ -8,6 +8,6 @@ export class WebsocketService {
   constructor() {}
 
   connect() {
-    this.socket = io.connect('http://localhost:8000')
+    this.socket = io.connect('https://rasmusfalk.se')
   }
 }

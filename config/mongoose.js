@@ -19,7 +19,7 @@
    let connectionString
 
    if (app.get('env') === 'development') {
-     connectionString = 'mongodb://db/test5'
+     connectionString = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@ds247479.mlab.com:47479/peer-chat`
    } else {
      connectionString = 'mongodb://localhost/test5'
    }

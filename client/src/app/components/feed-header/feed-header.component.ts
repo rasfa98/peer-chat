@@ -13,7 +13,6 @@ import * as SimplePeer from 'simple-peer';
 export class FeedHeaderComponent implements OnInit {
   socket: any
   activeUserItem: any
-  onlineUsers: any
   stream: any
   peerId: any
   peer: any
@@ -29,7 +28,6 @@ export class FeedHeaderComponent implements OnInit {
     this.socket = this.websocketService.socket
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
-    this.userService.currentOnlineUsers.subscribe(onlineUsers => this.onlineUsers = this.onlineUsers)
 
     this.socket.on('recieveSignal', data => {
       if (data.type === 'offer') {

@@ -11,7 +11,7 @@
 const router = require('express').Router()
 
 router.route('/')
-    .get((req, res) => res.render('index'))
+    .get((req, res) => res.redirect('/login'))
 
 // Exports
 module.exports = router

@@ -22,19 +22,22 @@
 
       <div class="field">
         <div class="control has-text-centered">
-          <button type="submit" class="button is-link is-primary" id="loginBtn">Login</button>
+          <button type="submit" class="button is-primary" id="loginBtn">Login</button>
         </div>
       </div>
 
       <input type="hidden" name="_csrf" value="{{csrfToken}}">
     </form>
 
+    <div class="field">
+      <div class="control has-text-centered">
+        <a class="button" href="/register" id="registerBtn">Register</a>
+      </div>
+    </div>
+
     <div class="has-text-centered">
-      <a class="button is-link is-info oauthBtn" href="/auth/facebook">Facebook</a>
-      <a class="button is-link is-warning oauthBtn" href="/auth/google">Google</a>
+      <a class="button is-info oauthBtn" href="/auth/facebook">Facebook</a>
+      <a class="button is-warning oauthBtn" href="/auth/google">Google</a>
     </div>
   </div>
-  <div class="card-footer">
-      <a class="card-footer-item" href="/register">Register</a>
-    </div>
 </div>

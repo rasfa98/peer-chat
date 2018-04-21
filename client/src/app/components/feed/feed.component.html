@@ -1,9 +1,19 @@
 <ul>
   <li *ngFor="let message of activeConversation">
-    <div class="card message">
-      <div class="card-content">
-        <p class="has-text-white">{{message.message}}</p>
+    <div *ngIf="message.sender === 'you'">
+      <div class="card message you">
+        <div class="card-content">
+          <p>{{message.message}}</p>
+        </div>
       </div>
     </div>
+
+    <div *ngIf="message.sender === 'peer'">
+        <div class="card message you">
+          <div class="card-content">
+            <p class="has-text-white">{{message.message}}</p>
+          </div>
+        </div>
+      </div>
   </li>
 </ul>

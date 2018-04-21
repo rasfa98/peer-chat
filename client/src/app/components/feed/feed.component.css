@@ -4,8 +4,17 @@
 }
 
 :host .message {
-    background-color: rgb(106, 105, 194);
     width: 30%;
+}
+
+:host .peer {
+    background-color: rgb(106, 105, 194);
+    float: right;
+}
+
+:host .you {
+    background-color: rgb(255, 255, 255);
+    float: left;
 }
 
 :host .message .card-content {

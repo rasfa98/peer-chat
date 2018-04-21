@@ -1,27 +1,28 @@
 <div *ngIf="state === 'friendList'">
+  <h1 class="title has-text-white friendTitle">Friend list</h1>
   <ul>
     <li *ngFor="let friend of friends">
-      <a (click)="changeItem(friend)" class="has-text-white user-item">{{friend.fullName}}</a>
+      <a (click)="changeItem(friend)" class="has-text-link user-item">{{friend.fullName}}</a>
     </li>
   </ul>
 </div>
 
 <div *ngIf="state === 'search'">
-  <button class="button" (click)="state = 'friendList'">Go back</button>
+  <button class="button back" (click)="state = 'friendList'">Go back</button>
   <ul>
     <li *ngFor="let user of searchUsers">
       <span class="has-text-white user-item">{{user.fullName}}</span>
-      <button class="button is-info" (click)="addUser(user.id)">Add</button>
+      <button class="button is-link" (click)="addUser(user.id)">Add</button>
     </li>
   </ul>
 </div>
 
 <div *ngIf="state === 'friendRequest'">
-  <button class="button" (click)="state = 'friendList'">Go back</button>
+  <button class="button back" (click)="state = 'friendList'">Go back</button>
   <ul>
     <li *ngFor="let request of friendRequestUsers">
       <span class="has-text-white user-item">{{request.fullName}}</span>
-      <button class="button is-info" (click)="acceptUser(request.email)">Accept</button>
+      <button class="button is-success" (click)="acceptUser(request.email)">Accept</button>
       <button class="button is-danger" (click)="declineRequest(request.email)">Decline</button>
     </li>
   </ul>
