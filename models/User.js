@@ -17,8 +17,17 @@
    email: { type: String, required: 'Email is required!', unique: true },
    password: { type: String, required: 'Password is required!', trim: true },
    status: { type: String, default: 'offline' },
-   friends: { type: [Object], default: null },
-   friendRequests: { type: [Object], default: null },
+   friends: [{
+     id: String,
+     fullName: String,
+     email: String,
+     status: String
+   }],
+   friendRequests: [{
+     id: String,
+     fullName: String,
+     email: String
+   }],
    socketId: { type: String, default: null }
  })
 
