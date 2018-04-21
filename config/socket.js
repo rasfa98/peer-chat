@@ -77,23 +77,47 @@
        socket.to(sendTo.socketId).emit('newMessage', { message: data.message, id: from._id, name: from.fullName })
      })
 
+     socket.on('declineRequest', async email => {
+       const user = await User.findOne({ socketId: socket.id })
+
+       const friendRequests = user.friendRequests
+
+       for (let i = 0; i < friendRequests.length; i++) {
+         if (friendRequests[i].email === email) {
+           friendRequests.splice(i, 1)
+         }
+       }
+
+       await User.findOneAndUpdate({ _id: user.id }, { friendRequests: friendRequests })
+     })
+
      socket.on('acceptRequest', async email => {
        const user = await User.findOne({ socketId: socket.id })
        const sender = await User.findOne({ email: email })
 
        const matchingRequests = user.friendRequests.filter(x => x.email === email)
+       const currentFriends = user.friends.filter(x => x.email === email)
 
-       if (matchingRequests) {
+       if (matchingRequests.length > 0 && !currentFriends.length > 0) {
          const userFriends = user.friends
          const senderFriends = sender.friends
 
-         userFriends.push({ fullName: sender.fullName, email: sender.email })
-         senderFriends.push({ fullName: user.fullName, email: user.email })
+         userFriends.push({ id: sender._id, fullName: sender.fullName, email: sender.email })
+         senderFriends.push({ id: user._id, fullName: user.fullName, email: user.email })
 
-         User.findOneAndUpdate({ _id: user._id }, { friends: userFriends })
-         User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriends })
+         const friendRequests = user.friendRequests
 
-         socket.to(sender.socketId).emit('acceptRequest', { fullName: user.fullName, email: user.email })
+         for (let i = 0; i < friendRequests.length; i++) {
+           if (friendRequests[i].email === email) {
+             friendRequests.splice(i, 1)
+           }
+         }
+
+         await User.findOneAndUpdate({ _id: user._id }, { friends: userFriends, friendRequests: friendRequests })
+         await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriends })
+
+         socket.emit('acceptRequest')
+         socket.to(sender.socketId).emit('acceptRequest')
        }
      })
 

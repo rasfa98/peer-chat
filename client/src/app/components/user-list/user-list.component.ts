@@ -9,7 +9,8 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  onlineUsers: any
+  // onlineUsers: any
+  friends: any
   socket: any
   currentUser: any
   activeUserItem: any
@@ -18,18 +19,16 @@ export class UserListComponent implements OnInit {
   state: any
 
   constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {
-    this.onlineUsers = [{
-      fullName: 'Kalle'
-    }]
   }
 
   ngOnInit() {
     this.socket = this.websocketService.socket
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
-    this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers.users)
+    this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers)
     this.chatService.currentState.subscribe(state => this.state = state)
     this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
+    this.chatService.currentFriends.subscribe(friends => this.friends = friends)
 
     this.userService.getCurrentUser()
     .subscribe(user => {
@@ -37,15 +36,20 @@ export class UserListComponent implements OnInit {
       this.socket.emit('newUser', user)
     })
 
-    this.socket.on('updateOnlineUsers', onlineUsers => {
-      this.onlineUsers = onlineUsers
-      
-      for (let i = 0; i < this.onlineUsers.length; i++) {
-        if (this.onlineUsers[i].id === this.currentUser.id) {
-          this.onlineUsers.splice(i, 1)
-        }
-      }
+    this.chatService.getFriends()
+    .subscribe(friends => {
+      this.friends = friends
     })
+
+    // this.socket.on('updateOnlineUsers', onlineUsers => {
+    //   this.onlineUsers = onlineUsers
+      
+    //   for (let i = 0; i < this.onlineUsers.length; i++) {
+    //     if (this.onlineUsers[i].id === this.currentUser.id) {
+    //       this.onlineUsers.splice(i, 1)
+    //     }
+    //   }
+    // })
   }
 
   changeItem(user) {
@@ -55,6 +59,16 @@ export class UserListComponent implements OnInit {
 
   addUser(id) {
     this.socket.emit('addUser', id)
+    this.chatService.changeState("friendList")
+  }
+
+  acceptUser(email) {
+    this.socket.emit('acceptRequest', email)
+    this.chatService.changeState("friendList")
+  }
+
+  declineRequest(email) {
+    this.socket.emit('declineRequest', email)
     this.chatService.changeState("friendList")
   }
 
