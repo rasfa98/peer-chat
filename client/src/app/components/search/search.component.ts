@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { ChatService } from '../../services/chat.service';
 
@@ -8,6 +8,7 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./search.component.css']
 })
 export class SearchComponent implements OnInit {
+  @ViewChild('query') input: any
 
   constructor(private userService: UserService, private chatService: ChatService) { }
 
@@ -19,7 +20,10 @@ export class SearchComponent implements OnInit {
     .subscribe(users => {
       this.chatService.changeState("search")
       this.chatService.changeSearchUsers(users)
+      console.log(users)
     })
+
+    this.input.nativeElement.value = ""
   }
 
 }

@@ -152,7 +152,7 @@ var AppModule = /** @class */ (function () {
 /***/ "./src/app/components/chatroom/chatroom.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ".show {\n    display: block;\n}\n\n.hide {\n    display: none;\n}\n\n.search {\n    background-color: rgb(72, 21, 78);\n    height: 8vh;\n}\n\n.friend-requests {\n    background-color: rgb(72, 21, 78);\n    height: 8vh;\n}\n\n.user-list {\n    background-color: rgb(72, 21, 78);\n    height: 84vh;\n}\n\n.welcome {\n    background-color: rgb(248, 246, 248);\n    height: 100vh;\n    padding: 20px;\n}\n\n.feed-header {\n    background-color: white;\n    height:8vh;\n}\n\n.feed {\n    background-color: rgb(248, 246, 248);\n    height: 87vh;\n}\n\n.send {\n    background-color: white;\n    height: 5vh;\n}"
+module.exports = ".show {\n    display: block;\n}\n\n.hide {\n    display: none;\n}\n\n.search {\n    background-color: rgb(72, 21, 78);\n    height: 8vh;\n}\n\n.friend-requests {\n    background-color: rgb(72, 21, 78);\n    height: 5vh;\n}\n\n.user-list {\n    background-color: rgb(72, 21, 78);\n    height: 87vh;\n}\n\n.welcome {\n    background-color: rgb(248, 246, 248);\n    height: 100vh;\n    padding: 20px;\n}\n\n.feed-header {\n    background-color: white;\n    height:8vh;\n}\n\n.feed {\n    background-color: rgb(248, 246, 248);\n    height: 87vh;\n    overflow-y: scroll;\n}\n\n.send {\n    background-color: white;\n    height: 5vh;\n}"
 
 /***/ }),
 
@@ -383,14 +383,14 @@ var FeedHeaderComponent = /** @class */ (function () {
 /***/ "./src/app/components/feed/feed.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n    margin: 0px;\n    padding: 0px;\n}\n\n:host .message {\n    width: 30%;\n}\n\n:host .peer {\n    background-color: rgb(106, 105, 194);\n    float: right;\n}\n\n:host .you {\n    background-color: rgb(255, 255, 255);\n    float: left;\n}\n\n:host .message .card-content {\n    font-size: 16px;\n}"
+module.exports = ":host {\n    margin: 0px;\n    padding: 0px;\n}\n\n:host .message {\n    width: 30%;\n    word-wrap: break-word;\n    clear: both;\n    margin: 10px;\n    word-break: break-all;\n}\n\n:host .peer {\n    background-color: rgb(106, 105, 194);\n    float: left;\n}\n\n:host .you {\n    background-color: rgb(255, 255, 255);\n    float: right;\n}\n\n:host .message .card-content {\n    font-size: 16px;\n}"
 
 /***/ }),
 
 /***/ "./src/app/components/feed/feed.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ul>\n  <li *ngFor=\"let message of activeConversation\">\n    <div *ngIf=\"message.sender === 'you'\">\n      <div class=\"card message you\">\n        <div class=\"card-content\">\n          <p>{{message.message}}</p>\n        </div>\n      </div>\n    </div>\n\n    <div *ngIf=\"message.sender === 'peer'\">\n        <div class=\"card message you\">\n          <div class=\"card-content\">\n            <p class=\"has-text-white\">{{message.message}}</p>\n          </div>\n        </div>\n      </div>\n  </li>\n</ul>\n"
+module.exports = "<ul>\n  <li *ngFor=\"let message of activeConversation\">\n    <div *ngIf=\"message.sender === 'you'\">\n      <div class=\"card message you\">\n        <div class=\"card-content\">\n          <p>{{message.message}}</p>\n        </div>\n      </div>\n    </div>\n\n    <div *ngIf=\"message.sender !== 'you'\">\n        <div class=\"card message peer\">\n          <div class=\"card-content\">\n            <p class=\"has-text-white\">{{message.message}}</p>\n          </div>\n        </div>\n      </div>\n  </li>\n</ul>\n"
 
 /***/ }),
 
@@ -699,8 +699,14 @@ var SearchComponent = /** @class */ (function () {
             .subscribe(function (users) {
             _this.chatService.changeState("search");
             _this.chatService.changeSearchUsers(users);
+            console.log(users);
         });
+        this.input.nativeElement.value = "";
     };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_9" /* ViewChild */])('query'),
+        __metadata("design:type", Object)
+    ], SearchComponent.prototype, "input", void 0);
     SearchComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-search',
@@ -762,7 +768,12 @@ var SendComponent = /** @class */ (function () {
     };
     SendComponent.prototype.sendMessage = function (message, id) {
         this.socket.emit('sendMessage', { message: message, id: id });
+        this.input.nativeElement.value = "";
     };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_9" /* ViewChild */])('message'),
+        __metadata("design:type", Object)
+    ], SendComponent.prototype, "input", void 0);
     SendComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-send',
@@ -781,14 +792,14 @@ var SendComponent = /** @class */ (function () {
 /***/ "./src/app/components/user-list/user-list.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n    margin: 0px;\n    padding: 0px;\n}\n\n.user-item {\n    font-size: 30px;\n    margin-left: 20px;\n    margin-right: 20px;\n}\n\n.friendTitle {\n    font-size: 40px;\n    margin-left: 20px;\n    margin-right: 20px;\n}\n\n:host .back {\n    margin-top: 0vh;\n    height: 4vh;\n    width: 18vw;\n    margin-left: 1vw;\n    margin-bottom: 3vh;\n}"
+module.exports = ":host {\n    margin: 0px;\n    padding: 0px;\n}\n\n.user-item {\n    font-size: 30px;\n    margin-left: 20px;\n    margin-right: 20px;\n}\n\n.friendTitle {\n    font-size: 40px;\n    margin-left: 20px;\n    margin-right: 20px;\n    padding-top: 20px;\n}\n\n:host .back {\n    margin-top: 0vh;\n    height: 4vh;\n    width: 18vw;\n    margin-left: 1vw;\n    margin-bottom: 2vh;\n}\n\n:host .infoMessage {\n    color: white;\n    margin-left: 20px;\n    font-size: 16px;\n}"
 
 /***/ }),
 
 /***/ "./src/app/components/user-list/user-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"state === 'friendList'\">\n  <h1 class=\"title has-text-white friendTitle\">Friend list</h1>\n  <ul>\n    <li *ngFor=\"let friend of friends\">\n      <a (click)=\"changeItem(friend)\" class=\"has-text-link user-item\">{{friend.fullName}}</a>\n    </li>\n  </ul>\n</div>\n\n<div *ngIf=\"state === 'search'\">\n  <button class=\"button back\" (click)=\"state = 'friendList'\">Go back</button>\n  <ul>\n    <li *ngFor=\"let user of searchUsers\">\n      <span class=\"has-text-white user-item\">{{user.fullName}}</span>\n      <button class=\"button is-link\" (click)=\"addUser(user.id)\">Add</button>\n    </li>\n  </ul>\n</div>\n\n<div *ngIf=\"state === 'friendRequest'\">\n  <button class=\"button back\" (click)=\"state = 'friendList'\">Go back</button>\n  <ul>\n    <li *ngFor=\"let request of friendRequestUsers\">\n      <span class=\"has-text-white user-item\">{{request.fullName}}</span>\n      <button class=\"button is-success\" (click)=\"acceptUser(request.email)\">Accept</button>\n      <button class=\"button is-danger\" (click)=\"declineRequest(request.email)\">Decline</button>\n    </li>\n  </ul>\n</div>\n"
+module.exports = "<div *ngIf=\"state === 'friendList'\">\n  <h1 class=\"title has-text-white friendTitle\">Friend list</h1>\n  <ul>\n    <li *ngFor=\"let friend of friends\">\n      <a (click)=\"changeItem(friend)\" class=\"has-text-link user-item\">{{friend.fullName}}</a>\n    </li>\n  </ul>\n</div>\n\n<div *ngIf=\"state === 'search'\">\n  <button class=\"button back\" (click)=\"state = 'friendList'\">Go back</button>\n\n  <div *ngIf=\"!searchUsers.length > 0\">\n    <p class=\"infoMessage\">No matching users...</p>\n  </div>\n\n  <div *ngIf=\"searchUsers.length > 0\">\n    <ul>\n      <li *ngFor=\"let user of searchUsers\">\n        <span class=\"has-text-white user-item\">{{user.fullName}}</span>\n        <button class=\"button is-link\" (click)=\"addUser(user.id)\">Add</button>\n      </li>\n    </ul>\n  </div>\n</div>\n\n<div *ngIf=\"state === 'friendRequest'\">\n  <button class=\"button back\" (click)=\"state = 'friendList'\">Go back</button>\n  <div *ngIf=\"!friendRequestUsers.length > 0\">\n    <p class=\"infoMessage\">You don't have any friend requests...</p>\n  </div>\n\n  <div *ngIf=\"friendRequestUsers.length > 0\">\n    <ul>\n      <li *ngFor=\"let request of friendRequestUsers\">\n        <span class=\"has-text-white user-item\">{{request.fullName}}</span>\n        <button class=\"button is-success\" (click)=\"acceptUser(request.email)\">Accept</button>\n        <button class=\"button is-danger\" (click)=\"declineRequest(request.email)\">Decline</button>\n      </li>\n    </ul>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -837,14 +848,6 @@ var UserListComponent = /** @class */ (function () {
             .subscribe(function (friends) {
             _this.friends = friends;
         });
-        // this.socket.on('updateOnlineUsers', onlineUsers => {
-        //   this.onlineUsers = onlineUsers
-        //   for (let i = 0; i < this.onlineUsers.length; i++) {
-        //     if (this.onlineUsers[i].id === this.currentUser.id) {
-        //       this.onlineUsers.splice(i, 1)
-        //     }
-        //   }
-        // })
     };
     UserListComponent.prototype.changeItem = function (user) {
         this.chatService.changeActiveUserItem(user);

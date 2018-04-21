@@ -13,6 +13,7 @@
     font-size: 40px;
     margin-left: 20px;
     margin-right: 20px;
+    padding-top: 20px;
 }
 
 :host .back {
@@ -20,5 +21,11 @@
     height: 4vh;
     width: 18vw;
     margin-left: 1vw;
-    margin-bottom: 3vh;
+    margin-bottom: 2vh;
+}
+
+:host .infoMessage {
+    color: white;
+    margin-left: 20px;
+    font-size: 16px;
 }

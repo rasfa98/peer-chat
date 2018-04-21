@@ -9,7 +9,6 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  // onlineUsers: any
   friends: any
   socket: any
   currentUser: any
@@ -40,16 +39,6 @@ export class UserListComponent implements OnInit {
     .subscribe(friends => {
       this.friends = friends
     })
-
-    // this.socket.on('updateOnlineUsers', onlineUsers => {
-    //   this.onlineUsers = onlineUsers
-      
-    //   for (let i = 0; i < this.onlineUsers.length; i++) {
-    //     if (this.onlineUsers[i].id === this.currentUser.id) {
-    //       this.onlineUsers.splice(i, 1)
-    //     }
-    //   }
-    // })
   }
 
   changeItem(user) {
