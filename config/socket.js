@@ -38,7 +38,7 @@
        const user = await User.findOne({ _id: data.id })
        const sender = await User.findOne({ socketId: socket.id })
 
-       socket.to(user.socketId).emit('recieveSignal', { peerId: data.peerId, id: sender.id, type: data.type, chatType: data.chatType })
+       socket.to(user.socketId).emit('recieveSignal', { peerId: data.peerId, id: sender.id, type: data.type, chatType: data.chatType, caller: sender.fullName })
      })
 
      socket.on('hangUp', async id => {

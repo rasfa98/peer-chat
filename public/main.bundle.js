@@ -226,7 +226,7 @@ module.exports = ":host {\n    margin: 0px;\n    padding: 0px;\n}\n\n:host h1 {\
 /***/ "./src/app/components/feed-header/feed-header.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"!calling\">\n  <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n    <div class=\"navbar-brand\">\n        <h1 class=\"title is-4\">{{activeUserItem.fullName}}</h1>\n    </div>\n\n    <div class=\"navbar-menu\">\n      <div class=\"navbar-end\">\n        <div class=\"navbar-item\">\n          <button class=\"button is-primary\" (click)=\"startVideoCall(activeUserItem.id)\">Video call</button>\n          <button class=\"button is-primary\" (click)=\"startVoiceCall(activeUserItem.id)\">Voice call</button>\n        </div>\n      </div>\n    </div>\n  </nav>\n</div>\n\n<div *ngIf=\"calling\">\n  <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n    <div class=\"navbar-brand\">\n        <h1 class=\"title is-4\">{{activeUserItem.fullName}}</h1>\n    </div>\n\n    <div class=\"navbar-menu\">\n      <div class=\"navbar-end\">\n        <div class=\"navbar-item\">\n          <button class=\"button is-success\" (click)=\"answerCall()\">Answer call</button>\n          <button class=\"button is-danger\" (click)=\"hangUp()\">Hang up</button>\n        </div>\n      </div>\n    </div>\n  </nav>\n</div>\n"
+module.exports = "<audio #audio loop></audio>\n\n<div *ngIf=\"!calling\">\n  <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n    <div class=\"navbar-brand\">\n        <h1 class=\"title is-4\">{{activeUserItem.fullName}}</h1>\n    </div>\n\n    <div class=\"navbar-menu\">\n      <div class=\"navbar-end\">\n        <div class=\"navbar-item\">\n          <button class=\"button is-primary\" (click)=\"startVideoCall(activeUserItem.id)\">Video call</button>\n          <button class=\"button is-primary\" (click)=\"startVoiceCall(activeUserItem.id)\">Voice call</button>\n        </div>\n      </div>\n    </div>\n  </nav>\n</div>\n\n<div *ngIf=\"calling\">\n  <nav class=\"navbar\" role=\"navigation\" aria-label=\"main navigation\">\n    <div class=\"navbar-brand\">\n        <h1 class=\"title is-4\">Incoming {{callInformation.callType}} call from {{callInformation.caller}}...</h1>\n    </div>\n\n    <div class=\"navbar-menu\">\n      <div class=\"navbar-end\">\n        <div class=\"navbar-item\">\n          <button class=\"button is-success\" (click)=\"answerCall()\">Answer call</button>\n          <button class=\"button is-danger\" (click)=\"hangUp()\">Hang up</button>\n        </div>\n      </div>\n    </div>\n  </nav>\n</div>\n"
 
 /***/ }),
 
@@ -271,23 +271,42 @@ var FeedHeaderComponent = /** @class */ (function () {
         this.chatService.currentActiveUserItem.subscribe(function (activeUserItem) { return _this.activeUserItem = activeUserItem; });
         this.socket.on('recieveSignal', function (data) {
             if (data.type === 'offer') {
+                _this.startAudioRinging();
                 _this.calling = true;
                 _this.data = data;
+                _this.callInformation = {
+                    caller: data.caller,
+                    callType: data.chatType
+                };
             }
             else {
                 _this.peer.signal(data.peerId);
             }
         });
         this.socket.on('hangUp', function () {
+            _this.stopAudio();
             _this.localStream.getTracks()
                 .forEach(function (x) { return x.stop(); });
         });
     };
     FeedHeaderComponent.prototype.startVideoCall = function (id) {
+        this.startAudioDial();
         this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null);
     };
     FeedHeaderComponent.prototype.startVoiceCall = function (id) {
+        this.startAudioDial();
         this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null);
+    };
+    FeedHeaderComponent.prototype.startAudioDial = function () {
+        this.audio.nativeElement.src = '../../../assets/dialing.mp3';
+        this.audio.nativeElement.play();
+    };
+    FeedHeaderComponent.prototype.stopAudio = function () {
+        this.audio.nativeElement.pause();
+    };
+    FeedHeaderComponent.prototype.startAudioRinging = function () {
+        this.audio.nativeElement.src = '../../../assets/ringing.mp3';
+        this.audio.nativeElement.play();
     };
     FeedHeaderComponent.prototype.answerCall = function () {
         if (this.data.chatType === 'video') {
@@ -298,6 +317,7 @@ var FeedHeaderComponent = /** @class */ (function () {
         }
     };
     FeedHeaderComponent.prototype.hangUp = function () {
+        this.audio.nativeElement.pause();
         this.calling = false;
         this.socket.emit('hangUp', this.data.id);
     };
@@ -341,8 +361,13 @@ var FeedHeaderComponent = /** @class */ (function () {
                     ]
                 }
             });
-            peerx.on('error', function (err) { return console.log(err); });
+            peerx.on('error', function (err) {
+                console.log(err);
+                _this.localStream.getTracks()
+                    .forEach(function (x) { return x.stop(); });
+            });
             peerx.on('connect', function () {
+                _this.stopAudio();
                 _this.chatService.changePeer(_this.peer);
                 _this.router.navigate(['peer']);
             });
@@ -355,6 +380,7 @@ var FeedHeaderComponent = /** @class */ (function () {
                 _this.router.navigate(['']);
                 _this.localStream.getTracks()
                     .forEach(function (x) { return x.stop(); });
+                _this.chatService.getFriends();
             });
         })
             .catch(function (err) { return console.log(err); });
@@ -365,6 +391,10 @@ var FeedHeaderComponent = /** @class */ (function () {
             }
         }, 2000);
     };
+    __decorate([
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_9" /* ViewChild */])('audio'),
+        __metadata("design:type", Object)
+    ], FeedHeaderComponent.prototype, "audio", void 0);
     FeedHeaderComponent = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["n" /* Component */])({
             selector: 'app-feed-header',
