@@ -126,16 +126,24 @@ export class FeedHeaderComponent implements OnInit {
           ]}
       })
 
-      peerx.on('error', err => console.log(err))
+      peerx.on('error', err => {
+        console.log(err)
+
+        this.localStream.getTracks()
+        .forEach(x => x.stop())
+      })
+
       peerx.on('connect', () => {
         this.stopAudio()
         this.chatService.changePeer(this.peer)
         this.router.navigate(['peer'])
       })
+
       peerx.on('signal', data => {
         this.peerId = data
         this.socket.emit('sendSignal', { id: id, peerId: data, chatType: chatType, type: type })
       })
+
       peerx.on('stream', stream => this.chatService.changeStream(stream))
 
       peerx.on('close', () => {
@@ -143,6 +151,8 @@ export class FeedHeaderComponent implements OnInit {
         
         this.localStream.getTracks()
         .forEach(x => x.stop())
+
+        this.chatService.getFriends()
       })
     })
     .catch(err => console.log(err))
