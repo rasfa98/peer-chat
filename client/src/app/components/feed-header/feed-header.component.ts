@@ -21,6 +21,8 @@ export class FeedHeaderComponent implements OnInit {
   calling: any
   data: any
   localStream: any
+  callInformation: any
+
 
   constructor(private chatService: ChatService, private websocketService: WebsocketService, private userService: UserService, private router: Router) {
     this.calling = false
@@ -36,6 +38,11 @@ export class FeedHeaderComponent implements OnInit {
         this.startAudioRinging()
         this.calling = true
         this.data = data
+
+        this.callInformation = {
+          caller: data.caller,
+          callType: data.chatType
+        }
       } else {
         this.peer.signal(data.peerId)
       }
