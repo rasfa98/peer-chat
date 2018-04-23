@@ -33,6 +33,7 @@ export class FeedHeaderComponent implements OnInit {
 
     this.socket.on('recieveSignal', data => {
       if (data.type === 'offer') {
+        this.startAudioRinging()
         this.calling = true
         this.data = data
       } else {
@@ -41,6 +42,7 @@ export class FeedHeaderComponent implements OnInit {
     })
 
     this.socket.on('hangUp', () => {
+      this.stopAudio()
       this.localStream.getTracks()
       .forEach(x => x.stop())
     })
@@ -79,6 +81,7 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   hangUp() {
+    this.audio.nativeElement.pause()
     this.calling = false
     this.socket.emit('hangUp', this.data.id)
   }
