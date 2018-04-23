@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from  '../../services/chat.service';
 import { WebsocketService } from  '../../services/websocket.service';
 import { UserService } from  '../../services/user.service';
@@ -11,6 +11,8 @@ import * as SimplePeer from 'simple-peer';
   styleUrls: ['./feed-header.component.css']
 })
 export class FeedHeaderComponent implements OnInit {
+  @ViewChild('audio') audio: any
+
   socket: any
   activeUserItem: any
   stream: any
@@ -45,11 +47,27 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   startVideoCall(id) {
+    this.startAudioDial()
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
   }
 
   startVoiceCall(id) {
+    this.startAudioDial()
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+  }
+
+  startAudioDial() {
+    this.audio.nativeElement.src = '../../../assets/dialing.mp3'
+    this.audio.nativeElement.play()
+  }
+
+  stopAudio() {
+    this.audio.nativeElement.pause()
+  }
+
+  startAudioRinging() {
+    this.audio.nativeElement.src = '../../../assets/ringing.mp3'
+    this.audio.nativeElement.play()
   }
 
   answerCall() {
@@ -107,6 +125,7 @@ export class FeedHeaderComponent implements OnInit {
 
       peerx.on('error', err => console.log(err))
       peerx.on('connect', () => {
+        this.stopAudio()
         this.chatService.changePeer(this.peer)
         this.router.navigate(['peer'])
       })
