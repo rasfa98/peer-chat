@@ -14,9 +14,15 @@ const User = require('../models/User')
 router.route('/current')
     .get((req, res) => res.send({ id: res.locals.userId }))
 
-router.route('/fullName')
+router.route('/query')
     .post(async (req, res) => {
-      let users = await User.find({ fullName: { $regex: req.body.fullName, $options: 'i' } })
+      let users
+
+      if (req.body.query.indexOf('@') !== -1) {
+        users = await User.find({ email: { $regex: req.body.query, $options: 'i' } })
+      } else {
+        users = await User.find({ fullName: { $regex: req.body.query, $options: 'i' } })
+      }
 
       users = users.map(x => { return { id: x._id, fullName: x.fullName, email: x.email, status: x.status } })
 
