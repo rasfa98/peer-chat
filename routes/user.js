@@ -16,7 +16,7 @@ router.route('/current')
 
 router.route('/fullName')
     .post(async (req, res) => {
-      let users = await User.find({ fullName: req.body.fullName })
+      let users = await User.find({ fullName: { $regex: req.body.fullName, $options: 'i' } })
 
       users = users.map(x => { return { id: x._id, fullName: x.fullName, email: x.email, status: x.status } })
 

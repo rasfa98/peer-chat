@@ -1,6 +1,6 @@
 <div class="field has-addons searchInput">
     <div class="control">
-      <input type="text" placeholder="Search for a user..." class="input" #query>
+      <input type="text" placeholder="Search for a user..." class="input" #query (input)="search(query.value)">
     </div>
     <div class="control">
       <button type="btn" class="button is-primary" (click)="search(query.value)">Find</button>
