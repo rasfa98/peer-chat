@@ -15,7 +15,7 @@ export class SearchComponent implements OnInit {
   }
 
   search(query, e) {
-    this.userService.getUsersByFullName(query)
+    this.userService.getUsersByQuery(query)
     .subscribe(users => {
       this.chatService.changeState("search")
       this.chatService.changeSearchUsers(users)

@@ -14,6 +14,7 @@ export class ChatService {
   private friends = new BehaviorSubject(null)
   private state = new BehaviorSubject('friendList')
   private calling = new BehaviorSubject(false)
+  private callInformation = new BehaviorSubject(null)
 
   currentActiveUserItem = this.activeUserItem.asObservable()
   currentStream = this.stream.asObservable()
@@ -24,6 +25,7 @@ export class ChatService {
   currentFriendRequestUsers = this.friendRequestUsers.asObservable()
   currentFriends = this.friends.asObservable()
   currentCalling = this.calling.asObservable()
+  currentCallInformation = this.callInformation.asObservable()
   
   constructor(private http: Http) { }
 
@@ -71,5 +73,9 @@ export class ChatService {
   getFriends() {
     return this.http.get('http://localhost:8000/user/friends')
     .map(res => res.json().friends)
+  }
+
+  changeCallInformation(callInformation) {
+    this.callInformation.next(callInformation)
   }
 }

@@ -12,6 +12,7 @@ export class ChatroomComponent implements OnInit {
   activeUserItem: any
   displayWelcome: any
   displayChatComponents: any
+  calling: any
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.displayWelcome = 'block'
@@ -20,6 +21,8 @@ export class ChatroomComponent implements OnInit {
 
   ngOnInit() {
     this.socket = this.websocketService.connect()
+
+    this.chatService.currentCalling.subscribe(calling => this.calling = calling)
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => {
       this.activeUserItem = activeUserItem

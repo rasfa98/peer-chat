@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { ChatService } from '../../services/chat.service';
+import { PopupService } from '../../services/popup.service';
+import { ChatService } from '../../services/chat.service'
 
 @Component({
   selector: 'app-popup',
@@ -7,12 +8,19 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
-  calling: any
+  callInformation: any
 
-  constructor(private chatService: ChatService) { }
+  constructor(private popupService: PopupService, private chatService: ChatService) { }
 
   ngOnInit() {
-    this.chatService.currentCalling.subscribe(calling => this.calling = calling)
+    this.chatService.currentCallInformation.subscribe(callInformation => this.callInformation = callInformation)
   }
 
+  answerCall() {
+    this.popupService.answerCallEvent()
+  }
+
+  hangUp() {
+    this.popupService.hangUpEvent()
+  }
 }

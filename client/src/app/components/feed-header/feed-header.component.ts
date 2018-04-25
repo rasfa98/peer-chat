@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from  '../../services/chat.service';
 import { WebsocketService } from  '../../services/websocket.service';
 import { UserService } from  '../../services/user.service';
+import { PopupService } from '../../services/popup.service';
 import { Router } from '@angular/router';
 import * as SimplePeer from 'simple-peer';
 
@@ -23,26 +24,33 @@ export class FeedHeaderComponent implements OnInit {
   localStream: any
   callInformation: any
 
-
-  constructor(private chatService: ChatService, private websocketService: WebsocketService, private userService: UserService, private router: Router) {
-    this.calling = false
-  }
+  constructor
+  (private chatService: ChatService,
+   private websocketService: WebsocketService, 
+   private userService: UserService,
+   private router: Router,
+   private popupService: PopupService) {}
 
   ngOnInit() {
     this.socket = this.websocketService.socket
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
+    this.chatService.currentCalling.subscribe(calling => this.calling = calling)
+    this.popupService.answerCallObs.subscribe(type => { if (type) { this.answerCall() } })
+    this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
 
     this.socket.on('recieveSignal', data => {
       if (data.type === 'offer') {
         this.startAudioRinging()
-        this.calling = true
+        this.chatService.changeCalling(true)
         this.data = data
 
         this.callInformation = {
           caller: data.caller,
           callType: data.chatType
         }
+
+        this.chatService.changeCallInformation(this.callInformation)
       } else {
         this.peer.signal(data.peerId)
       }
@@ -89,7 +97,7 @@ export class FeedHeaderComponent implements OnInit {
 
   hangUp() {
     this.audio.nativeElement.pause()
-    this.calling = false
+    this.chatService.changeCalling(false)
     this.socket.emit('hangUp', this.data.id)
   }
 
@@ -141,6 +149,7 @@ export class FeedHeaderComponent implements OnInit {
       })
 
       peerx.on('connect', () => {
+        this.chatService.changeCalling(false)
         this.stopAudio()
         this.chatService.changePeer(this.peer)
         this.router.navigate(['peer'])
