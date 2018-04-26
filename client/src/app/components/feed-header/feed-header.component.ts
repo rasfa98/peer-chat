@@ -163,10 +163,10 @@ export class FeedHeaderComponent implements OnInit {
       peerx.on('stream', stream => this.chatService.changeStream(stream))
 
       peerx.on('close', () => {
-        this.router.navigate([''])
-        
         this.localStream.getTracks()
         .forEach(x => x.stop())
+
+        this.router.navigate([''])
 
         this.chatService.getFriends()
       })

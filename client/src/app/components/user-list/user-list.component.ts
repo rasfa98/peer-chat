@@ -37,7 +37,7 @@ export class UserListComponent implements OnInit {
 
     this.chatService.getFriends()
     .subscribe(friends => {
-      this.friends = friends
+      this.friends = friends.filter(x => x.status === 'online')
     })
   }
 
