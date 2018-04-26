@@ -34,82 +34,80 @@ export class FeedHeaderComponent implements OnInit {
   ngOnInit() {
     this.socket = this.websocketService.socket
 
+    // Observables.
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentCalling.subscribe(calling => this.calling = calling)
     this.popupService.answerCallObs.subscribe(type => { if (type) { this.answerCall() } })
     this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
 
+    // When the users gets a Peer2Peer call.
     this.socket.on('recieveSignal', data => {
       if (data.type === 'offer') {
         this.startAudioRinging()
         this.chatService.changeCalling(true)
         this.data = data
 
-        this.callInformation = {
-          caller: data.caller,
-          callType: data.chatType
-        }
+        this.callInformation = { caller: data.caller, callType: data.chatType }
 
         this.chatService.changeCallInformation(this.callInformation)
-      } else {
-        this.peer.signal(data.peerId)
-      }
+      } else { this.peer.signal(data.peerId) }
     })
 
+    // When the called user hangs up.
     this.socket.on('hangUp', () => {
       this.stopAudio()
-      this.localStream.getTracks()
-      .forEach(x => x.stop())
+      this.localStream.getTracks().forEach(x => x.stop())
     })
   }
 
+  // Starts a new video call.
   startVideoCall(id) {
     this.startAudioDial()
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
   }
 
+  // Starts a new voice call.
   startVoiceCall(id) {
     this.startAudioDial()
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
   }
 
+  // Starts the dial sound.
   startAudioDial() {
     this.audio.nativeElement.src = '../../../assets/dialing.mp3'
     this.audio.nativeElement.play()
   }
 
+  // Stops the call audio (dial/ringing)
   stopAudio() {
     this.audio.nativeElement.pause()
   }
 
+  // Starts teh ringing sound.
   startAudioRinging() {
     this.audio.nativeElement.src = '../../../assets/ringing.mp3'
     this.audio.nativeElement.play()
   }
 
+  // Answer the incoming call.
   answerCall() {
-    if (this.data.chatType === 'video') {
-      this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId)
-    } else {
-      this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId)
-    } 
+    if (this.data.chatType === 'video') { this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId) } 
+    if (this.data.chatType !== 'video') { this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId) }
   }
 
+  // Decline incoming call.
   hangUp() {
     this.audio.nativeElement.pause()
     this.chatService.changeCalling(false)
     this.socket.emit('hangUp', this.data.id)
   }
 
+  // Creates a new Peer.
   createPeer(options, id, type, chatType, peerId) {
     let peerx
     let init
 
-    if (type === 'offer') {
-      init = true
-    } else {
-      init = false
-    }
+    type === 'offer' ? init = true : init = false
 
     navigator.mediaDevices.getUserMedia({ video: options.video, audio: options.audio })
     .then(stream => {
@@ -141,12 +139,7 @@ export class FeedHeaderComponent implements OnInit {
           ]}
       })
 
-      peerx.on('error', err => {
-        console.log(err)
-
-        this.localStream.getTracks()
-        .forEach(x => x.stop())
-      })
+      peerx.on('error', err => this.localStream.getTracks().forEach(x => x.stop()))
 
       peerx.on('connect', () => {
         this.chatService.changeCalling(false)
@@ -163,8 +156,7 @@ export class FeedHeaderComponent implements OnInit {
       peerx.on('stream', stream => this.chatService.changeStream(stream))
 
       peerx.on('close', () => {
-        this.localStream.getTracks()
-        .forEach(x => x.stop())
+        this.localStream.getTracks().forEach(x => x.stop())
 
         this.router.navigate([''])
 
@@ -173,11 +165,11 @@ export class FeedHeaderComponent implements OnInit {
     })
     .catch(err => console.log(err))
 
+    // Sets "dummy variable" values when view is fully rendered.
     setTimeout(() => {
       this.peer = peerx
 
-      if (type === 'answer') { this.peer.signal(peerId) }
+      type === 'answer' ? this.peer.signal(peerId) : null
     }, 2000)
   }
-
 }

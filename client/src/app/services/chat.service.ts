@@ -29,6 +29,7 @@ export class ChatService {
   
   constructor(private http: Http) { }
 
+  // Changes values that's shared between components.
   changeActiveUserItem(user) {
     this.activeUserItem.next(user)
   }
@@ -57,11 +58,6 @@ export class ChatService {
     this.friendRequestUsers.next(friendRequestUsers)
   }
 
-  getFriendRequests() {
-    return this.http.get('http://localhost:8000/user/friendRequests')
-    .map(res => res.json().requests)
-  }
-
   changeFriends(friends) {
     this.friends.next(friends)
   }
@@ -70,12 +66,19 @@ export class ChatService {
     this.calling.next(calling)
   }
 
+  changeCallInformation(callInformation) {
+    this.callInformation.next(callInformation)
+  }
+
+  // Gets the current users friend requests.
+  getFriendRequests() {
+    return this.http.get('http://localhost:8000/user/friendRequests')
+    .map(res => res.json().requests)
+  }
+
+  // Gets the current users friends.
   getFriends() {
     return this.http.get('http://localhost:8000/user/friends')
     .map(res => res.json().friends)
-  }
-
-  changeCallInformation(callInformation) {
-    this.callInformation.next(callInformation)
   }
 }

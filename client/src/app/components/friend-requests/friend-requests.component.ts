@@ -24,20 +24,16 @@ export class FriendRequestsComponent implements OnInit {
       this.chatService.changeFriendRequestUsers(this.friendRequests)
     })
 
-    this.socket.on('acceptRequest', () => {
-      this.chatService.getFriends()
-      .subscribe(friends => this.chatService.changeFriends(friends))
-    })
+    this.socket.on('acceptRequest', () => this.chatService.getFriends().subscribe(friends => this.chatService.changeFriends(friends)))
   }
 
+  // Gets a users friend requests.
   viewFriendRequests() {
-    this.chatService.getFriendRequests()
-    .subscribe(data => {
+    this.chatService.getFriendRequests().subscribe(data => {
       this.chatService.changeState("friendRequest")
       this.chatService.changeFriendRequestUsers(data)
 
       this.friendRequests = data
     })
   }
-
 }

@@ -11,12 +11,13 @@ export class PopupService {
 
   constructor() { }
 
+  // Triggers answerCall() in feed-header component.
   answerCallEvent() {
     this.answerCall.next(true)
   }
 
+  // Triggers hangUp() in feed-header component.
   hangUpEvent() {
     this.hangUp.next(true)
   }
-
 }

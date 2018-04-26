@@ -22,16 +22,13 @@ export class ChatroomComponent implements OnInit {
   ngOnInit() {
     this.socket = this.websocketService.connect()
 
+    // Observables.
     this.chatService.currentCalling.subscribe(calling => this.calling = calling)
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => {
       this.activeUserItem = activeUserItem
 
-      if (activeUserItem.id !== null) {
-        this.displayWelcome = 'none'
-        this.displayChatComponents = 'block'
-      }
+      activeUserItem.id !== null ? this.displayWelcome = 'none' : this.displayChatComponents = 'block'
     })
   }
-
 }

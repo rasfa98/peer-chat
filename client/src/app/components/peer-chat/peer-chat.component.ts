@@ -16,20 +16,19 @@ export class PeerChatComponent implements OnInit {
   constructor(private chatService: ChatService, private router: Router) { }
 
   ngOnInit() {
-    let video = this.videoChat.nativeElement
-
+    // Observables.
     this.chatService.currentStream.subscribe(stream => {
       this.stream = this.stream
 
-      video.src = window.URL.createObjectURL(stream)
-      video.play()
+      this.videoChat.nativeElement.src = window.URL.createObjectURL(stream)
+      this.videoChat.nativeElement.play()
     })
 
     this.chatService.currentPeer.subscribe(peer => this.peer = peer)
   }
 
+  // Ends the current Peer2Peer call.
   endCall() {
     this.peer.destroy()
   }
-
 }
