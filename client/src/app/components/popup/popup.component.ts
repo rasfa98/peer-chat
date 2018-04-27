@@ -8,7 +8,7 @@ import { ChatService } from '../../services/chat.service'
   styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
-  callInformation: any
+  callInformation: object
 
   constructor(private popupService: PopupService, private chatService: ChatService) { }
 

@@ -9,7 +9,7 @@ import { ChatService } from '../../services/chat.service';
 })
 export class FriendRequestsComponent implements OnInit {
   socket: any
-  friendRequests: any
+  friendRequests: object[]
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.friendRequests = []

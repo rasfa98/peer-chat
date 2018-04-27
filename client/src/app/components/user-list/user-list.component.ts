@@ -9,13 +9,13 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  friends: any
+  friends: object[]
   socket: any
-  currentUser: any
+  currentUser: object
   activeUserItem: any
-  searchUsers: any
-  friendRequestUsers: any
-  state: any
+  searchUsers: object[]
+  friendRequestUsers: object[]
+  state: string
 
   constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {}
 

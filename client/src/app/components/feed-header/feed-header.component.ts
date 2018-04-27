@@ -17,12 +17,12 @@ export class FeedHeaderComponent implements OnInit {
   socket: any
   activeUserItem: any
   stream: any
-  peerId: any
+  peerId: string
   peer: any
-  calling: any
+  calling: boolean
   data: any
   localStream: any
-  callInformation: any
+  callInformation: object
 
   constructor
   (private chatService: ChatService,

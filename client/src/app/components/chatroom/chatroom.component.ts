@@ -8,11 +8,11 @@ import { ChatService } from '../../services/chat.service'
   styleUrls: ['./chatroom.component.css']
 })
 export class ChatroomComponent implements OnInit {
-  socket: any
-  activeUserItem: any
-  displayWelcome: any
-  displayChatComponents: any
-  calling: any
+  socket: void
+  activeUserItem: object
+  displayWelcome: string
+  displayChatComponents: string
+  calling: boolean
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.displayWelcome = 'block'
