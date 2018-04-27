@@ -8,13 +8,13 @@
 
 'use strict'
 
-const router = require('express').Router()
 const User = require('../models/User')
+
+const router = require('express').Router()
 
 router.route('/')
     .get(async (req, res) => {
-      await User.findOneAndUpdate({ _id: res.locals.userId }, { status: 'offline', peerId: null })
-
+      await User.findOneAndUpdate({ socketId: req.session.userId }, { status: 'offline', socketId: null })
       req.session.destroy()
       res.redirect('/')
     })

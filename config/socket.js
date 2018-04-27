@@ -11,13 +11,6 @@
  const socket = require('socket.io')
  const User = require('../models/User')
 
- async function updateOnlineUsers (io) {
-   let users = await User.find({ status: 'online' })
-   users = users.map(x => { return { id: x._id, fullName: x.fullName } })
-
-   io.emit('updateOnlineUsers', users)
- }
-
  /**
   * Configures and starts the websocket server.
   *
@@ -26,61 +19,56 @@
   */
  module.exports.run = (server) => {
    const io = socket(server)
+   let currentUser
 
    io.on('connection', async socket => {
      socket.on('newUser', async user => {
        await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id, status: 'online' })
 
-       updateOnlineUsers(io)
+       currentUser = await User.findOne({ socketId: socket.id })
+
+       io.emit('updateFriendStatus', { id: currentUser._id, status: 'online' })
      })
 
+     socket.on('disconnect', async () => {
+       await User.findOneAndUpdate({ socketId: socket.id }, { status: 'offline', socketId: null })
+
+       io.emit('updateFriendStatus', { id: currentUser._id, status: 'offline' })
+     })
+
+     // Peer2Peer
      socket.on('sendSignal', async data => {
-       const user = await User.findOne({ _id: data.id })
-       const sender = await User.findOne({ socketId: socket.id })
+       const receiver = await User.findOne({ _id: data.id })
 
-       socket.to(user.socketId).emit('recieveSignal', { peerId: data.peerId, id: sender.id, type: data.type, chatType: data.chatType, caller: sender.fullName })
+       socket.to(receiver.socketId).emit('newSignal', { peerId: data.peerId, id: currentUser.id, type: data.type, chatType: data.chatType, caller: currentUser.fullName })
      })
 
-     socket.on('hangUp', async id => {
-       const user = await User.findOne({ _id: id })
+     socket.on('hangUp', async id => socket.to(currentUser.socketId).emit('hangUp'))
 
-       socket.to(user.socketId).emit('hangUp')
-     })
-
+     // Friend requests
      socket.on('addUser', async id => {
-       const user = await User.findOne({ _id: id })
-       const sender = await User.findOne({ socketId: socket.id })
+       const receiver = await User.findOne({ _id: id })
 
-       const filteredRequests = user.friendRequests.filter(x => x.email === sender.email)
+       const filteredRequests = receiver.friendRequests.filter(x => x.email === currentUser.email)
 
-       if (!filteredRequests.length > 0 && user._id !== sender._id) {
-         const friendRequests = user.friendRequests
+       if (!filteredRequests.length > 0 && receiver._id !== currentUser._id) {
+         const friendRequests = receiver.friendRequests
 
          const newRequest = {
-           fullName: sender.fullName,
-           email: sender.email
+           fullName: currentUser.fullName,
+           email: currentUser.email
          }
 
          friendRequests.push(newRequest)
 
          await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
 
-         socket.to(user.socketId).emit('addUser', newRequest)
+         socket.to(receiver.socketId).emit('addUser', newRequest)
        }
      })
 
-     socket.on('sendMessage', async data => {
-       const sendTo = await User.findOne({ _id: data.id })
-       const from = await User.findOne({ socketId: socket.id })
-
-       socket.emit('newMessage', { message: data.message, id: sendTo.id, name: 'you' })
-       socket.to(sendTo.socketId).emit('newMessage', { message: data.message, id: from._id, name: from.fullName })
-     })
-
      socket.on('declineRequest', async email => {
-       const user = await User.findOne({ socketId: socket.id })
-
-       const friendRequests = user.friendRequests
+       const friendRequests = currentUser.friendRequests
 
        for (let i = 0; i < friendRequests.length; i++) {
          if (friendRequests[i].email === email) {
@@ -88,43 +76,47 @@
          }
        }
 
-       await User.findOneAndUpdate({ _id: user.id }, { friendRequests: friendRequests })
+       await User.findOneAndUpdate({ _id: currentUser.id }, { friendRequests: friendRequests })
      })
 
      socket.on('acceptRequest', async email => {
-       const user = await User.findOne({ socketId: socket.id })
        const sender = await User.findOne({ email: email })
 
-       const matchingRequests = user.friendRequests.filter(x => x.email === email)
-       const currentFriends = user.friends.filter(x => x.email === email)
+       const currentMatchingUserRequests = currentUser.friendRequests.filter(x => x.email === email)
+       const currentUserFriends = currentUser.friends.filter(x => x.email === email)
 
-       if (matchingRequests.length > 0 && !currentFriends.length > 0) {
-         const userFriends = user.friends
-         const senderFriends = sender.friends
+       if (currentMatchingUserRequests.length > 0 && !currentUserFriends.length > 0) {
+         const currentUserFriendsArray = currentUser.friends
+         const senderFriendsArray = sender.friends
 
-         userFriends.push({ id: sender._id, fullName: sender.fullName, email: sender.email })
-         senderFriends.push({ id: user._id, fullName: user.fullName, email: user.email })
+         currentUserFriendsArray.push({ id: sender._id })
+         senderFriendsArray.push({ id: currentUser._id })
 
-         const friendRequests = user.friendRequests
+         const currentUserFriendRequests = currentUser.friendRequests
 
-         for (let i = 0; i < friendRequests.length; i++) {
-           if (friendRequests[i].email === email) {
-             friendRequests.splice(i, 1)
+         for (let i = 0; i < currentUserFriendRequests.length; i++) {
+           if (currentUserFriendRequests[i].email === email) {
+             currentUserFriendRequests.splice(i, 1)
            }
          }
 
-         await User.findOneAndUpdate({ _id: user._id }, { friends: userFriends, friendRequests: friendRequests })
-         await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriends })
+         await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUserFriendRequests })
+         await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriendsArray })
 
          socket.emit('acceptRequest')
          socket.to(sender.socketId).emit('acceptRequest')
        }
      })
 
-     socket.on('disconnect', async () => {
-       await User.findOneAndUpdate({ socketId: socket.id }, { status: 'offline', socketId: null })
+     // Text messages
+     socket.on('sendMessage', async data => {
+       const receiver = await User.findOne({ _id: data.id })
 
-       updateOnlineUsers(io)
+       // Send message to the sender.
+       socket.emit('newMessage', { message: data.message, id: receiver.id, name: 'you' })
+
+       // Send message to the receiver.
+       socket.to(receiver.socketId).emit('newMessage', { message: data.message, id: currentUser._id, name: currentUser.fullName })
      })
    })
 

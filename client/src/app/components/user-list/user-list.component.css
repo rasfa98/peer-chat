@@ -29,3 +29,10 @@
     margin-left: 20px;
     font-size: 16px;
 }
+
+:host .status {
+    font-size: 20px;
+    margin-left: 20px;
+    margin-right: 20px;
+    font-style: italic;
+}

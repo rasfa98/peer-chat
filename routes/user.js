@@ -11,9 +11,11 @@
 const router = require('express').Router()
 const User = require('../models/User')
 
+// Get the current user.
 router.route('/current')
     .get((req, res) => res.send({ id: res.locals.userId }))
 
+// Find and return users from the database from a specific query.
 router.route('/query')
     .post(async (req, res) => {
       let users
@@ -29,6 +31,7 @@ router.route('/query')
       res.send({ users: users })
     })
 
+// Get the current users friend requests.
 router.route('/friendRequests')
     .get(async (req, res) => {
       const user = await User.findOne({ _id: req.session.userId })
@@ -36,11 +39,20 @@ router.route('/friendRequests')
       res.send({ requests: user.friendRequests })
     })
 
+// Get the current users friends.
 router.route('/friends')
     .get(async (req, res) => {
       const user = await User.findOne({ _id: req.session.userId })
 
-      res.send({ friends: user.friends })
+      const friends = []
+
+      for (let i = 0; i < user.friends.length; i++) {
+        const currentFriend = await User.findOne({ _id: user.friends[i].id })
+
+        friends.push({ id: currentFriend._id, fullName: currentFriend.fullName })
+      }
+
+      res.send({ friends: friends })
     })
 
 // Exports

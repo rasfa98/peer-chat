@@ -41,10 +41,12 @@ export class FeedHeaderComponent implements OnInit {
     this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
 
     // When the users gets a Peer2Peer call.
-    this.socket.on('recieveSignal', data => {
+    this.socket.on('newSignal', data => {
       if (data.type === 'offer') {
         this.startAudioRinging()
+        
         this.chatService.changeCalling(true)
+
         this.data = data
 
         this.callInformation = { caller: data.caller, callType: data.chatType }
@@ -103,7 +105,7 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   // Creates a new Peer.
-  createPeer(options, id, type, chatType, peerId) {
+  createPeer(options, receiver, type, chatType, peerId) {
     let peerx
     let init
 
@@ -143,14 +145,17 @@ export class FeedHeaderComponent implements OnInit {
 
       peerx.on('connect', () => {
         this.chatService.changeCalling(false)
+        
         this.stopAudio()
+        
         this.chatService.changePeer(this.peer)
+        
         this.router.navigate(['peer'])
       })
 
       peerx.on('signal', data => {
         this.peerId = data
-        this.socket.emit('sendSignal', { id: id, peerId: data, chatType: chatType, type: type })
+        this.socket.emit('sendSignal', { id: receiver, peerId: data, chatType: chatType, type: type })
       })
 
       peerx.on('stream', stream => this.chatService.changeStream(stream))
@@ -159,8 +164,6 @@ export class FeedHeaderComponent implements OnInit {
         this.localStream.getTracks().forEach(x => x.stop())
 
         this.router.navigate([''])
-
-        this.chatService.getFriends()
       })
     })
     .catch(err => console.log(err))

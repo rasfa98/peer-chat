@@ -17,11 +17,7 @@
    email: { type: String, required: 'Email is required!', unique: true },
    password: { type: String, required: 'Password is required!', trim: true },
    status: { type: String, default: 'offline' },
-   friends: [{
-     id: String,
-     fullName: String,
-     email: String
-   }],
+   friends: [{ id: String }],
    friendRequests: [{
      fullName: String,
      email: String

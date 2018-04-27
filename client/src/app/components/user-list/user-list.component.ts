@@ -9,7 +9,7 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
-  friends: object[]
+  friends: any
   socket: any
   currentUser: object
   activeUserItem: any
@@ -28,11 +28,19 @@ export class UserListComponent implements OnInit {
     this.chatService.currentState.subscribe(state => this.state = state)
     this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
     this.chatService.currentFriends.subscribe(friends => this.friends = friends)
-    this.chatService.getFriends().subscribe(friends => this.friends = friends.filter(x => x.status === 'online'))
+    this.chatService.getFriends().subscribe(friends => this.friends = friends)
 
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user
       this.socket.emit('newUser', user)
+    })
+
+    this.socket.on('updateFriendStatus', friend => {
+      for (let i = 0; i < this.friends.length; i++) {
+        if (this.friends[i].id === friend.id) {
+          this.friends[i].status = friend.status
+        }
+      }
     })
   }
 

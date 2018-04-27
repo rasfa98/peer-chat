@@ -3,6 +3,7 @@
   <ul>
     <li *ngFor="let friend of friends">
       <a (click)="changeItem(friend)" class="has-text-link user-item">{{friend.fullName}}</a>
+      <p class="status has-text-white">{{friend.status}}</p>
     </li>
   </ul>
 </div>
