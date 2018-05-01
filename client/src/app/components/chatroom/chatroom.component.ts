@@ -9,14 +9,13 @@ import { ChatService } from '../../services/chat.service'
 })
 export class ChatroomComponent implements OnInit {
   socket: void
-  activeUserItem: object
   displayWelcome: string
   displayChatComponents: string
+  loading: boolean
   calling: boolean
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
-    this.displayWelcome = 'block'
-    this.displayChatComponents = 'none'
+    this.loading = true
   }
 
   ngOnInit() {
@@ -26,9 +25,15 @@ export class ChatroomComponent implements OnInit {
     this.chatService.currentCalling.subscribe(calling => this.calling = calling)
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => {
-      this.activeUserItem = activeUserItem
+      if (activeUserItem.id === null) {
+        this.displayWelcome = 'block'
+        this.displayChatComponents = 'none'
+      } else {
+        this.displayWelcome = 'none'
+        this.displayChatComponents = 'block'
+      }
 
-      activeUserItem.id !== null ? this.displayWelcome = 'none' : this.displayChatComponents = 'block'
+      this.loading = false
     })
   }
 }

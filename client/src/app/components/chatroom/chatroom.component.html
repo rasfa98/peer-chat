@@ -1,42 +1,49 @@
-<div *ngIf="calling">
-  <app-popup></app-popup>
+<div [hidden]="!loading">
+  <div class="loading">
+    <app-loading></app-loading>
+  </div>
 </div>
 
-
-<div class="columns is-gapless">
-  <div class="column is-one-fifth">
-    <div class="search">
-      <app-search></app-search>
-    </div>
-    <div class="friend-requests">
-        <app-friend-requests></app-friend-requests>
-      </div>
-    <div class="user-list">
-      <app-user-list></app-user-list>
-    </div>
+<div *ngIf="!loading">
+  <div *ngIf="calling">
+    <app-popup></app-popup>
   </div>
 
-  <div class="column">
-    <div [style.display]="displayWelcome">
-      <div class="welcome">
-        <app-welcome></app-welcome>
+
+  <div class="columns is-gapless">
+    <div class="column is-one-fifth">
+      <div class="search">
+        <app-search></app-search>
       </div>
-
-    </div>
-
-    <div [style.display]="displayChatComponents">
-      <div class="feed-header">
-        <app-feed-header></app-feed-header>
+      <div class="friend-requests">
+        <app-friend-requests></app-friend-requests>
       </div>
-
-      <div class="feed">
-        <app-feed></app-feed>
-      </div>
-
-      <div class="send">
-        <app-send></app-send>
+      <div class="user-list">
+        <app-user-list></app-user-list>
       </div>
     </div>
 
+    <div class="column">
+      <div [style.display]="displayWelcome">
+        <div class="welcome">
+          <app-welcome></app-welcome>
+        </div>
+      </div>
+
+      <div [style.display]="displayChatComponents">
+        <div class="feed-header">
+          <app-feed-header></app-feed-header>
+        </div>
+
+        <div class="feed">
+          <app-feed></app-feed>
+        </div>
+
+        <div class="send">
+          <app-send></app-send>
+        </div>
+      </div>
+
+    </div>
   </div>
 </div>

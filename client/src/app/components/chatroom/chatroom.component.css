@@ -1,9 +1,6 @@
-.show {
-    display: block;
-}
-
-.hide {
-    display: none;
+.loading {
+    height: 100vh;
+    background-color: red;
 }
 
 .search {
