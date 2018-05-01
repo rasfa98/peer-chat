@@ -1,11 +1,25 @@
 <div *ngIf="state === 'friendList'">
-  <h1 class="title has-text-white friendTitle">Friend list</h1>
+  <!-- <h1 class="subtitle has-text-white friendTitle">Friend list</h1>
   <ul>
     <li *ngFor="let friend of friends">
       <a (click)="changeItem(friend)" class="has-text-link user-item">{{friend.fullName}}</a>
       <p class="status has-text-white">{{friend.status}}</p>
     </li>
-  </ul>
+  </ul> -->
+
+  <h1 class="subtitle has-text-white friendTitle">Friend list</h1>
+
+  <div class="menu">
+    <ul class="menu-list">
+      <li *ngFor="let friend of friends">
+        <a><img src="../../../assets/poster.png">
+          <span class="status"></span>
+          <span class="name">{{friend.fullName}}</span><br>
+          <span class="email">{{friend.email}}</span>
+        </a>
+      </li>
+    </ul>
+  </div>
 </div>
 
 <div *ngIf="state === 'search'">
@@ -35,8 +49,8 @@
     <ul>
       <li *ngFor="let request of friendRequestUsers">
         <span class="has-text-white user-item">{{request.fullName}}</span>
-        <button class="button is-success" (click)="acceptUser(request.email)">Accept</button>
-        <button class="button is-danger" (click)="declineRequest(request.email)">Decline</button>
+        <button class="button is-success" (click)="acceptRequest(request.id)">Accept</button>
+        <button class="button is-danger" (click)="declineRequest(request.id)">Decline</button>
       </li>
     </ul>
   </div>

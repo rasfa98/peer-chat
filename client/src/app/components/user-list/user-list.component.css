@@ -10,7 +10,7 @@
 }
 
 .friendTitle {
-    font-size: 40px;
+    font-size: 20px;
     margin-left: 20px;
     margin-right: 20px;
     padding-top: 20px;
@@ -35,4 +35,52 @@
     margin-left: 20px;
     margin-right: 20px;
     font-style: italic;
+}
+
+:host .menu {
+    background-color: rgb(72, 21, 78);
+    padding: 0px;
+}
+
+:host .menu li {
+    margin-bottom: 20px;
+}
+
+:host .menu a {
+    height: 84px;;
+}
+
+:host .menu .name {
+    margin-top: 8px;
+    color: white;
+    font-size: 20px;
+    font-weight: 900;
+    display: block;
+}
+
+:host .menu .email {
+    color: white;
+    font-size: 16px;
+    margin-top: -15px;
+    display: block;
+}
+
+:host .menu .status {
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    background-color: red;
+    display: inline-block;
+    position: absolute;
+    margin-top: 45px;
+    margin-left: -40px;
+}
+
+:host .menu img {
+    width: 70px;
+    height: 70px;
+    margin-right: 20px;
+    border-radius: 100%;
+    float: left;
+    clear: both;
 }

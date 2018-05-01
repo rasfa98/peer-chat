@@ -11,27 +11,31 @@ import { ChatService } from '../../services/chat.service';
 export class UserListComponent implements OnInit {
   friends: any
   socket: any
-  currentUser: object
   activeUserItem: any
   searchUsers: object[]
   friendRequestUsers: object[]
   state: string
 
-  constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {}
+  constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {
+  }
 
   ngOnInit() {
     this.socket = this.websocketService.socket
+
+    this.friends = [
+      { id: 1, fullName: 'Sven', email: 'sven@ab.se', status: 'online' },
+      { id: 2, fullName: 'Rasmus', email: 'rasmus@falk.se', status: 'offline' }
+    ]
 
     // Observables.
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers)
     this.chatService.currentState.subscribe(state => this.state = state)
     this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
-    this.chatService.currentFriends.subscribe(friends => this.friends = friends)
-    this.chatService.getFriends().subscribe(friends => this.friends = friends)
+    // this.chatService.currentFriends.subscribe(friends => this.friends = friends)
+    // this.chatService.getFriends().subscribe(friends => this.friends = friends)
 
     this.userService.getCurrentUser().subscribe(user => {
-      this.currentUser = user
       this.socket.emit('newUser', user)
     })
 
@@ -57,14 +61,14 @@ export class UserListComponent implements OnInit {
   }
 
   // Accepts a friend request.
-  acceptUser(email) {
-    this.socket.emit('acceptRequest', email)
+  acceptRequest(id) {
+    this.socket.emit('acceptRequest', id)
     this.chatService.changeState("friendList")
   }
 
   // Declines a friend request.
-  declineRequest(email) {
-    this.socket.emit('declineRequest', email)
+  declineRequest(id) {
+    this.socket.emit('declineRequest', id)
     this.chatService.changeState("friendList")
   }
 }
