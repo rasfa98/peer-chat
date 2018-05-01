@@ -31,9 +31,10 @@
 
      socket.on('disconnect', async () => {
        const currentUser = await User.findOne({ socketId: socket.id })
-       await User.findOneAndUpdate({ socketId: socket.id }, { status: 'offline', socketId: null })
 
-       io.emit('updateFriendStatus', { id: currentUser.id, status: 'offline' })
+       await User.findOneAndUpdate({ _id: currentUser._id }, { status: 'offline', socketId: null })
+
+       io.emit('updateFriendStatus', { id: currentUser._id, status: 'offline' })
      })
 
      // Peer2Peer
@@ -54,9 +55,10 @@
        const currentUser = await User.findOne({ socketId: socket.id })
        const receiver = await User.findOne({ _id: id })
 
-       const filteredRequests = receiver.friendRequests.filter(x => x.id === currentUser._id)
+       const filteredRequests = receiver.friendRequests.filter(x => x.id === id)
+       const filteredFriends = receiver.friends.filter(x => x.id === id)
 
-       if (filteredRequests.length === 0 && receiver._id !== currentUser._id) {
+       if (filteredRequests.length === 0 && filteredFriends.length === 0 && !receiver._id.equals(currentUser._id)) {
          const friendRequests = receiver.friendRequests
 
          const newRequest = {
