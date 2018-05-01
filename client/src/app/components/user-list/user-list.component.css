@@ -9,7 +9,7 @@
     margin-right: 20px;
 }
 
-.friendTitle {
+.listTitle {
     font-size: 20px;
     margin-left: 20px;
     margin-right: 20px;
@@ -19,15 +19,9 @@
 :host .back {
     margin-top: 0vh;
     height: 4vh;
-    width: 18vw;
+    width: 31vw;
     margin-left: 1vw;
     margin-bottom: 2vh;
-}
-
-:host .infoMessage {
-    color: white;
-    margin-left: 20px;
-    font-size: 16px;
 }
 
 :host .status {

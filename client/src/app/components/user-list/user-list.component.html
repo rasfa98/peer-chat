@@ -1,20 +1,14 @@
 <div *ngIf="state === 'friendList'">
-  <!-- <h1 class="subtitle has-text-white friendTitle">Friend list</h1>
-  <ul>
-    <li *ngFor="let friend of friends">
-      <a (click)="changeItem(friend)" class="has-text-link user-item">{{friend.fullName}}</a>
-      <p class="status has-text-white">{{friend.status}}</p>
-    </li>
-  </ul> -->
-
-  <h1 class="subtitle has-text-white friendTitle">Friend list</h1>
+  <h1 class="subtitle has-text-white listTitle">Friend list</h1>
 
   <div class="menu">
     <ul class="menu-list">
       <li *ngFor="let friend of friends">
-        <a><img src="../../../assets/poster.png">
+        <a (click)="changeItem(friend)">
+          <img src="../../../assets/poster.png">
           <span class="status" [ngClass]="{'online' : friend.status === 'online', 'offline' : friend.status === 'offline'}"></span>
-          <span class="name">{{friend.fullName}}</span><br>
+          <span class="name">{{friend.fullName}}</span>
+          <br>
           <span class="email">{{friend.email}}</span>
         </a>
       </li>
@@ -26,23 +20,30 @@
   <button class="button back" (click)="state = 'friendList'">Go back</button>
 
   <div *ngIf="!searchUsers.length > 0">
-    <p class="infoMessage">No matching users...</p>
+    <h1 class="subtitle has-text-white listTitle">No matching users...</h1>
   </div>
 
   <div *ngIf="searchUsers.length > 0">
-    <ul>
-      <li *ngFor="let user of searchUsers">
-        <span class="has-text-white user-item">{{user.fullName}}</span>
-        <button class="button is-link" (click)="addUser(user.id)">Add</button>
-      </li>
-    </ul>
+    <div class="menu">
+      <ul class="menu-list">
+        <li *ngFor="let user of searchUsers">
+          <a>
+            <img src="../../../assets/poster.png">
+            <span class="status" [ngClass]="{'online' : user.status === 'online', 'offline' : user.status === 'offline'}"></span>
+            <span class="name">{{user.fullName}}</span>
+            <br>
+            <span class="email">{{user.email}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
   </div>
 </div>
 
 <div *ngIf="state === 'friendRequest'">
   <button class="button back" (click)="state = 'friendList'">Go back</button>
   <div *ngIf="!friendRequestUsers.length > 0">
-    <p class="infoMessage">You don't have any friend requests...</p>
+    <h1 class="subtitle has-text-white listTitle">You don't have any friend requests...</h1>
   </div>
 
   <div *ngIf="friendRequestUsers.length > 0">
