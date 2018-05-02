@@ -131,10 +131,13 @@
        } else {
          currentUserConversations.push({ id: data.id, messages: [ { message: data.message, sender: 'you' } ] })
          receiverConversations.push({ id: currentUser._id, messages: [ { message: data.message, sender: currentUser.fullName } ] })
+
+         currentUser.conversations.push(currentUserConversations[0])
+         receiver.conversations.push(receiverConversations[0])
        }
 
-       await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUserConversations })
-       await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiverConversations })
+       await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
+       await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
 
        // Send message to the sender.
        socket.emit('newMessage', { message: data.message, id: receiver.id, name: 'you' })

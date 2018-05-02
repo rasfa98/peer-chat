@@ -49,10 +49,25 @@ router.route('/friends')
       for (let i = 0; i < user.friends.length; i++) {
         const currentFriend = await User.findOne({ _id: user.friends[i].id })
 
-        friends.push({ id: currentFriend._id, fullName: currentFriend.fullName })
+        friends.push({ id: currentFriend._id, fullName: currentFriend.fullName, status: currentFriend.status })
       }
 
       res.send({ friends: friends })
+    })
+
+router.route('/conversations')
+    .get(async (req, res) => {
+      const user = await User.findOne({ _id: req.session.userId })
+
+      const conversations = user.conversations
+
+      const structuredConversations = {}
+
+      for (let i = 0; i < conversations.length; i++) {
+        structuredConversations[conversations[i].id] = conversations[i].messages
+      }
+
+      res.send({ conversations: structuredConversations })
     })
 
 // Exports
