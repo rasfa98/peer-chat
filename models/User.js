@@ -17,12 +17,20 @@
    email: { type: String, required: 'Email is required!', unique: true },
    password: { type: String, required: 'Password is required!', trim: true },
    status: { type: String, default: 'offline' },
+   avatar: { type: String },
    friends: [{ id: String }],
    friendRequests: [{
      fullName: String,
-     email: String
+     id: String
    }],
-   socketId: { type: String, default: null }
+   socketId: { type: String, default: null },
+   conversations: [{
+     id: String,
+     messages: [{
+       message: String,
+       sender: String
+     }]
+   }]
  })
 
  // Hashing of password.
