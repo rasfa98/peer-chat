@@ -21,7 +21,9 @@
    friends: [{ id: String }],
    friendRequests: [{
      fullName: String,
-     id: String
+     id: String,
+     email: String,
+     avatar: String
    }],
    socketId: { type: String, default: null },
    conversations: [{
