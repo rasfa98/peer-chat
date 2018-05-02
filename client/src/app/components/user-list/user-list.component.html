@@ -34,7 +34,7 @@
             <span class="name">{{user.fullName}}</span>
             <br>
             <span class="email">{{user.email}}</span>
-            <button (click)="addUser(user.id)">Add</button>
+            <button (click)="addUser(user.id)" class="button add is-primary"><span class="icon is-small"><i class="ion-android-person-add"></i></span></button>
           </a>
         </li>
       </ul>
@@ -49,26 +49,18 @@
   </div>
 
   <div *ngIf="friendRequestUsers.length > 0">
-      <h1 class="subtitle has-text-white listTitle">Friend requests</h1>
-      <div class="menu">
-          <ul class="menu-list">
-            <li *ngFor="let request of friendRequestUsers">
-              <a>
-                <img src="{{request.avatar}}">
-                <span class="name">{{request.fullName}}</span>
-                <br>
-                <span class="email">{{request.email}}</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-    <!-- <ul>
-      <li *ngFor="let request of friendRequestUsers">
-        <span class="has-text-white user-item">{{request.fullName}}</span>
-        <button class="button is-success" (click)="acceptRequest(request.id)">Accept</button>
-        <button class="button is-danger" (click)="declineRequest(request.id)">Decline</button>
-      </li>
-    </ul> -->
-  <!-- </div> -->
+    <h1 class="subtitle has-text-white listTitle">Friend requests</h1>
+    <div class="menu">
+      <ul class="menu-list">
+        <li *ngFor="let request of friendRequestUsers">
+          <a>
+            <img src="{{request.avatar}}">
+            <span class="name">{{request.fullName}}</span>
+            <br>
+            <span class="email">{{request.email}}</span>
+          </a>
+        </li>
+      </ul>
+    </div>
+  </div>
 </div>

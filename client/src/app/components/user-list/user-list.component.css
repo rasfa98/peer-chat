@@ -85,3 +85,19 @@
     float: left;
     clear: both;
 }
+
+:host .add {
+    background-color: transparent;
+    height: 84px;
+    margin-top: -77px;
+    width: 58px;
+    margin-right: 10px;
+    padding: 0px;
+    float: right;
+    font-size: 50px;
+    clear: both;
+}
+
+:host .add:hover {
+    color: rgb(205, 17, 226);
+}
