@@ -5,10 +5,14 @@
 
 :host input {
     height: 5vh;
-    width: 70vw;
+    width: 57vw;
 }
 
 :host button {
     height: 5vh;
     width: 10vw;
+}
+
+:host button i {
+    font-size: 30px;
 }
