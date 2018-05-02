@@ -11,6 +11,7 @@
 const router = require('express').Router()
 const User = require('../models/User')
 const checkError = require('../lib/checkError')
+const avatar = require('../lib/avatar')
 
 router.route('/')
     .get((req, res) => res.render('register'))
@@ -19,7 +20,8 @@ router.route('/')
         const user = new User({
           fullName: req.body.fullName,
           email: req.body.email,
-          password: req.body.password
+          password: req.body.password,
+          avatar: avatar()
         })
 
         if (req.body.password !== req.body.passwordRepeat) {

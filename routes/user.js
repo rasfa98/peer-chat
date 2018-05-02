@@ -26,7 +26,7 @@ router.route('/query')
         users = await User.find({ fullName: { $regex: req.body.query, $options: 'i' } })
       }
 
-      users = users.map(x => { return { id: x._id, fullName: x.fullName, email: x.email, status: x.status } })
+      users = users.map(x => { return { id: x._id, fullName: x.fullName, email: x.email, status: x.status, avatar: x.avatar } })
 
       res.send({ users: users })
     })
@@ -49,7 +49,7 @@ router.route('/friends')
       for (let i = 0; i < user.friends.length; i++) {
         const currentFriend = await User.findOne({ _id: user.friends[i].id })
 
-        friends.push({ id: currentFriend._id, fullName: currentFriend.fullName, status: currentFriend.status })
+        friends.push({ id: currentFriend._id, fullName: currentFriend.fullName, status: currentFriend.status, avatar: currentFriend.avatar })
       }
 
       res.send({ friends: friends })

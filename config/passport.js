@@ -13,6 +13,7 @@
  const FacebookStrategy = require('passport-facebook')
  const User = require('../models/User')
  const uniqId = require('uniqid')
+ const avatar = require('../lib/avatar')
 
  /**
   * Configures the different strategies.
@@ -43,7 +44,8 @@
        const newUser = new User({
          fullName: profile.displayName,
          email: email,
-         password: uniqId()
+         password: uniqId(),
+         avatar: avatar()
        })
 
        await newUser.save()
@@ -74,7 +76,8 @@
        const newUser = new User({
          fullName: profile.displayName,
          email: email,
-         password: uniqId()
+         password: uniqId(),
+         avatar: avatar()
        })
 
        await newUser.save()
