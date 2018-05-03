@@ -5,19 +5,25 @@ import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 export class PopupService {
   private answerCall = new BehaviorSubject(null)
   private hangUp = new BehaviorSubject(null)
+  private cancelCall = new BehaviorSubject(null)
 
   answerCallObs = this.answerCall.asObservable()
   hangUpObs = this.hangUp.asObservable()
+  cancelCallObs = this.cancelCall.asObservable()
 
   constructor() { }
 
   // Triggers answerCall() in feed-header component.
-  answerCallEvent() {
-    this.answerCall.next(true)
+  answerCallEvent(bool) {
+    this.answerCall.next(bool)
   }
 
   // Triggers hangUp() in feed-header component.
-  hangUpEvent() {
-    this.hangUp.next(true)
+  hangUpEvent(bool) {
+    this.hangUp.next(bool)
+  }
+
+  cancelCallEvent(bool) {
+    this.cancelCall.next(bool)
   }
 }
