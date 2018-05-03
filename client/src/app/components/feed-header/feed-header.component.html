@@ -1,6 +1,6 @@
 <audio #audio loop></audio>
 
-<div *ngIf="!calling">
+<div *ngIf="!calling && !dialing">
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
         <h1 class="title is-4">{{activeUserItem.fullName}}</h1>
@@ -33,3 +33,19 @@
     </div>
   </nav>
 </div>
+
+<div *ngIf="dialing">
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+          <h1 class="title is-4">Calling {{activeUserItem.fullName}}...</h1>
+      </div>
+  
+      <div class="navbar-menu">
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <button class="button is-danger" (click)="hangUp()">Hang up</button>
+          </div>
+        </div>
+      </div>
+    </nav>
+  </div>

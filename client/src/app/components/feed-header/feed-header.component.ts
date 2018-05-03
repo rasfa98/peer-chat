@@ -20,6 +20,7 @@ export class FeedHeaderComponent implements OnInit {
   peerId: string
   peer: any
   calling: boolean
+  dialing: boolean
   data: any
   localStream: any
   callInformation: object
@@ -27,7 +28,6 @@ export class FeedHeaderComponent implements OnInit {
   constructor
   (private chatService: ChatService,
    private websocketService: WebsocketService, 
-   private userService: UserService,
    private router: Router,
    private popupService: PopupService) {}
 
@@ -37,6 +37,7 @@ export class FeedHeaderComponent implements OnInit {
     // Observables.
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentCalling.subscribe(calling => this.calling = calling)
+    this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
     this.popupService.answerCallObs.subscribe(type => { if (type) { this.answerCall() } })
     this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
 
@@ -57,6 +58,7 @@ export class FeedHeaderComponent implements OnInit {
 
     // When the called user hangs up.
     this.socket.on('hangUp', () => {
+      this.chatService.changeDialing(false)
       this.stopAudio()
       this.localStream.getTracks().forEach(x => x.stop())
     })
@@ -64,12 +66,14 @@ export class FeedHeaderComponent implements OnInit {
 
   // Starts a new video call.
   startVideoCall(id) {
+    this.dialing = true
     this.startAudioDial()
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
   }
 
   // Starts a new voice call.
   startVoiceCall(id) {
+    this.dialing = true
     this.startAudioDial()
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
   }
@@ -95,6 +99,10 @@ export class FeedHeaderComponent implements OnInit {
   answerCall() {
     if (this.data.chatType === 'video') { this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId) } 
     if (this.data.chatType !== 'video') { this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId) }
+  }
+
+  cancelCall() {
+
   }
 
   // Decline incoming call.
@@ -145,10 +153,14 @@ export class FeedHeaderComponent implements OnInit {
 
       peerx.on('connect', () => {
         this.chatService.changeCalling(false)
+        this.chatService.changeDialing(false)
         
         this.stopAudio()
         
         this.chatService.changePeer(this.peer)
+
+        this.popupService.hangUpEvent(false)
+        this.popupService.answerCallEvent(false)
         
         this.router.navigate(['peer'])
       })
