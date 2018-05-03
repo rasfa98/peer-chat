@@ -41,6 +41,7 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
     this.popupService.answerCallObs.subscribe(type => { if (type) { this.answerCall() } })
     this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
+    this.popupService.cancelCallObs.subscribe(type => { if (type) { this.cancelCall() } })
 
     // When the users gets a Peer2Peer call.
     this.socket.on('newSignal', data => {
@@ -63,12 +64,18 @@ export class FeedHeaderComponent implements OnInit {
       this.stopAudio()
       this.localStream.getTracks().forEach(x => x.stop())
     })
+
+    this.socket.on('cancelCall', () => {
+      this.chatService.changeCalling(false)
+      this.stopAudio()
+    })
   }
 
   // Starts a new video call.
   startVideoCall(id) {
     this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
-    this.dialing = true
+    this.chatService.changeDialInformation(this.dialInformation)
+    this.chatService.changeDialing(true)
     this.startAudioDial()
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
   }
@@ -76,7 +83,8 @@ export class FeedHeaderComponent implements OnInit {
   // Starts a new voice call.
   startVoiceCall(id) {
     this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' }
-    this.dialing = true
+    this.chatService.changeDialInformation(this.dialInformation)
+    this.chatService.changeDialing(true)
     this.startAudioDial()
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
   }
@@ -115,6 +123,7 @@ export class FeedHeaderComponent implements OnInit {
   // Decline incoming call.
   hangUp() {
     this.chatService.changeCalling(false)
+    this.stopAudio()
     this.socket.emit('hangUp', this.data.id)
   }
 
@@ -167,6 +176,7 @@ export class FeedHeaderComponent implements OnInit {
 
         this.popupService.hangUpEvent(false)
         this.popupService.answerCallEvent(false)
+        this.popupService.cancelCallEvent(false)
         
         this.router.navigate(['peer'])
       })

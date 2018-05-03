@@ -37,13 +37,13 @@
 <div *ngIf="dialing">
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
-          <h1 class="title is-4">Making a {{dialInformation.dialType}} call to {{dialInformation.receiver}}</h1>
+          <h1 class="title is-4">Making a {{dialInformation.dialType}} call to {{dialInformation.receiver}}...</h1>
       </div>
   
       <div class="navbar-menu">
         <div class="navbar-end">
           <div class="navbar-item">
-            <button class="button is-danger" (click)="cancelCall()">Hang up</button>
+            <button class="button is-danger" (click)="cancelCall()">Cancel</button>
           </div>
         </div>
       </div>
