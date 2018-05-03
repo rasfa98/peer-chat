@@ -1,9 +1,22 @@
-<div class="card">
-  <div class="card-header">
-    <h1 class="subtitle is-4 has-text-white">Incoming {{callInformation.callType}} call from {{callInformation.caller}}...</h1>
+<div *ngIf="calling">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="subtitle is-4 has-text-white">Incoming {{callInformation.callType}} call from {{callInformation.caller}}...</h1>
+    </div>
+    <div class="card-content has-text-centered">
+      <button class="button is-success" (click)="answerCall()">Answer</button>
+      <button class="button is-danger" (click)="hangUp()">Hang up</button>
+    </div>
   </div>
-  <div class="card-content has-text-centered">
-    <button class="button is-success" (click)="answerCall()">Answer</button>
-    <button class="button is-danger" (click)="hangUp()">Hang up</button>
+</div>
+
+<div *ngIf="dialing">
+  <div class="card">
+    <div class="card-header">
+      <h1 class="subtitle is-4 has-text-white">Making a {{dialInformation.dialType}} call to {{dialInformation.receiver}}...</h1>
+    </div>
+    <div class="card-content has-text-centered">
+      <button class="button is-danger" (click)="cancelCall()">Cancel</button>
+    </div>
   </div>
 </div>
