@@ -11,10 +11,12 @@ export class ChatService {
   private activeConversation = new BehaviorSubject(null)
   private searchUsers = new BehaviorSubject(null)
   private friendRequestUsers = new BehaviorSubject(null)
-  private friends = new BehaviorSubject(null)
+  private friends = new BehaviorSubject([])
   private state = new BehaviorSubject('friendList')
   private calling = new BehaviorSubject(false)
   private callInformation = new BehaviorSubject(null)
+  private dialing = new BehaviorSubject(false)
+  private dialInformation = new BehaviorSubject(null)
 
   currentActiveUserItem = this.activeUserItem.asObservable()
   currentStream = this.stream.asObservable()
@@ -25,7 +27,9 @@ export class ChatService {
   currentFriendRequestUsers = this.friendRequestUsers.asObservable()
   currentFriends = this.friends.asObservable()
   currentCalling = this.calling.asObservable()
+  currentDialing = this.dialing.asObservable()
   currentCallInformation = this.callInformation.asObservable()
+  currentDialInformation = this.dialInformation.asObservable()
   
   constructor(private http: Http) { }
 
@@ -66,8 +70,16 @@ export class ChatService {
     this.calling.next(calling)
   }
 
+  changeDialing(dialing) {
+    this.dialing.next(dialing)
+  }
+
   changeCallInformation(callInformation) {
     this.callInformation.next(callInformation)
+  }
+
+  changeDialInformation(dialInformation) {
+    this.dialInformation.next(dialInformation)
   }
 
   // Gets the current users friend requests.
@@ -80,5 +92,10 @@ export class ChatService {
   getFriends() {
     return this.http.get('http://localhost:8000/user/friends')
     .map(res => res.json().friends)
+  }
+
+  getConversations() {
+    return this.http.get('http://localhost:8000/user/conversations')
+    .map(res => res.json().conversations)
   }
 }
