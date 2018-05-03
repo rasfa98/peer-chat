@@ -24,6 +24,7 @@ export class FeedHeaderComponent implements OnInit {
   data: any
   localStream: any
   callInformation: object
+  dialInformation: any
 
   constructor
   (private chatService: ChatService,
@@ -66,6 +67,7 @@ export class FeedHeaderComponent implements OnInit {
 
   // Starts a new video call.
   startVideoCall(id) {
+    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
     this.dialing = true
     this.startAudioDial()
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
@@ -73,6 +75,7 @@ export class FeedHeaderComponent implements OnInit {
 
   // Starts a new voice call.
   startVoiceCall(id) {
+    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' }
     this.dialing = true
     this.startAudioDial()
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
@@ -102,12 +105,15 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   cancelCall() {
+    this.chatService.changeDialing(false)
+    this.stopAudio()
+    this.localStream.getTracks().forEach(x => x.stop())
 
+    this.socket.emit('cancelCall', this.dialInformation.id )
   }
 
   // Decline incoming call.
   hangUp() {
-    this.audio.nativeElement.pause()
     this.chatService.changeCalling(false)
     this.socket.emit('hangUp', this.data.id)
   }
