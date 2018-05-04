@@ -23,6 +23,7 @@ export class FeedComponent implements OnInit {
     // Observables.
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentActiveConversation.subscribe(id => this.activeConversation = this.conversations[id])
+    this.chatService.getConversations().subscribe(conversations => this.conversations = conversations)
     
     // Adds new messages to the client.
     this.socket.on('newMessage', data => {
@@ -31,8 +32,6 @@ export class FeedComponent implements OnInit {
       } else {
         this.conversations[data.id] = []
         this.conversations[data.id].push({ message: data.message, sender: data.name })
-
-        this.activeUserItem.id === data.id ? this.activeConversation = this.conversations[data.id] : null
       }
     })
   }

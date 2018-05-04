@@ -7,20 +7,47 @@
     width: 30%;
     word-wrap: break-word;
     clear: both;
-    margin: 10px;
+    font-size: 16px;
     word-break: break-all;
+    position: relative;
+    padding: 10px;
+    border-radius: 7px;
+    z-index: 100;
 }
 
 :host .peer {
     background-color: rgb(106, 105, 194);
     float: left;
+    margin-left: 30px;
 }
 
 :host .you {
     background-color: rgb(255, 255, 255);
     float: right;
+    margin-right: 30px;
 }
 
-:host .message .card-content {
-    font-size: 16px;
+:host .peer:before {
+    left: -5px;
+    background-color: rgb(106, 105, 194);
+}
+
+:host .you:before {
+    right: -5px;
+    background-color: rgb(255, 255, 255);
+}
+
+:host .message:before {
+    position: absolute;
+    display: block;
+    width: 30px;
+    height: 26px;
+    top: 9px;
+    content: "";
+    transform: rotate(29deg) skew(-25deg);
+    z-index: -100;
+}
+
+:host ul {
+    padding-top: 35px;
 }
