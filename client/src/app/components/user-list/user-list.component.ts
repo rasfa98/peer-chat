@@ -24,7 +24,7 @@ export class UserListComponent implements OnInit {
 
     this.friends = [
       { id: 1, fullName: 'Sven', email: 'sven@ab.se', status: 'online', avatar: "../../../assets/avatars/avatar-1.png" },
-      { id: 2, fullName: 'Rasmus', email: 'rasmus@falk.se', status: 'offline', avatar: "../../../assets/avatars/avatar-2.png" }
+      { id: 2, fullName: 'Rasmus', email: 'rasmus@falk.se', status: 'offline', avatar: "../../../assets/avatars/avatar-2.png", notification: true }
     ]
 
     this.friendRequestUsers = [

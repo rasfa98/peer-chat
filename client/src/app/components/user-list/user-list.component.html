@@ -10,6 +10,7 @@
           <span class="name">{{friend.fullName}}</span>
           <br>
           <span class="email">{{friend.email}}</span>
+          <span [ngClass]="{'notificationDot' : friend.notification}"></span>
         </a>
       </li>
     </ul>

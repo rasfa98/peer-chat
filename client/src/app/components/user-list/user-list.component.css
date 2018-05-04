@@ -101,3 +101,13 @@
 :host .add:hover {
     color: rgb(205, 17, 226);
 }
+
+:host .notificationDot {
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    position: absolute;
+    margin-top: -30px;
+    margin-left: 300px;
+    background-color: rgb(205, 17, 226);
+}
