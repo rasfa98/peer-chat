@@ -46,8 +46,13 @@
      })
 
      socket.on('hangUp', async id => {
-       const currentUser = await User.findOne({ socketId: socket.id })
-       socket.to(currentUser.socketId).emit('hangUp')
+       const receiver = await User.findOne({ _id: id })
+       socket.to(receiver.socketId).emit('hangUp')
+     })
+
+     socket.on('cancelCall', async id => {
+       const receiver = await User.findOne({ _id: id })
+       socket.to(receiver.socketId).emit('cancelCall')
      })
 
      // Friend requests
@@ -63,7 +68,9 @@
 
          const newRequest = {
            fullName: currentUser.fullName,
-           id: currentUser._id
+           email: currentUser.email,
+           id: currentUser._id,
+           avatar: currentUser.avatar
          }
 
          friendRequests.push(newRequest)
@@ -144,6 +151,7 @@
 
        // Send message to the receiver.
        socket.to(receiver.socketId).emit('newMessage', { message: data.message, id: currentUser._id, name: currentUser.fullName })
+       socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
      })
    })
 
