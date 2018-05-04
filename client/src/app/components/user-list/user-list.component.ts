@@ -51,12 +51,22 @@ export class UserListComponent implements OnInit {
         }
       }
     })
+
+    this.socket.on('messageNotification', id => {
+      const friend = this.friends.filter(x => x.id === id)[0]
+
+      if (this.activeUserItem.id !== id) {
+        friend.notification = true
+      }
+    })
   }
 
   // Changes the selected friend in the friend list.
   changeItem(user) {
     this.chatService.changeActiveUserItem(user)
     this.chatService.changeActiveConversation(user.id)
+
+    if (this.activeUserItem.notification) { this.activeUserItem.notification = false }
   }
 
   // Sends a friend request to a specific user.
