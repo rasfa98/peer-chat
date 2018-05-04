@@ -59,8 +59,8 @@
             <span class="name">{{request.fullName}}</span>
             <br>
             <span class="email">{{request.email}}</span>
-            <button (click)="acceptRequest(request.id)"></button>
-            <button (click)="declineRequest(request.id)"></button>
+            <button (click)="acceptRequest(request.id)" class="button accept is-primary"><span class="icon is-small"><i class="ion-android-done"></i></span></button>
+            <button (click)="declineRequest(request.id)" class="button decline is-primary"><span class="icon is-small"><i class="ion-android-close"></i></span></button>
           </a>
         </li>
       </ul>

@@ -111,3 +111,34 @@
     margin-left: 300px;
     background-color: rgb(205, 17, 226);
 }
+
+:host .accept {
+    background-color: transparent;
+    height: 84px;
+    margin-top: -75px;
+    width: 70px;
+    margin-right: 10px;
+    padding: 0px;
+    float: right;
+    font-size: 45px;
+    clear: both;
+}
+
+:host .accept:hover {
+    color: rgb(17, 226, 128);
+}
+
+:host .decline {
+    background-color: transparent;
+    height: 84px;
+    margin-top: -75px;
+    width: 70px;
+    margin-right: -10px;
+    padding: 0px;
+    float: right;
+    font-size: 45px;
+}
+
+:host .decline:hover {
+    color: rgb(205, 17, 226);
+}
