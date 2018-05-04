@@ -1,11 +1,3 @@
-<div *ngIf="notification">
-  <button class="button is-primary" (click)="viewFriendRequests()">Friend requests
-  </button>
-  <span class="notificationDot"></span>
-</div>
-
-<div *ngIf="!notification">
-  <button class="button is-primary" (click)="viewFriendRequests()">Friend requests
-  </button>
-  <span class="notificationDot"></span>
-</div>
+<button class="button is-primary" (click)="viewFriendRequests()">Friend requests
+</button>
+<span [ngClass]="{'notificationDot' : notification}"></span>

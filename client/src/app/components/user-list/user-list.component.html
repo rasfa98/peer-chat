@@ -17,7 +17,7 @@
 </div>
 
 <div *ngIf="state === 'search'">
-  <button class="button back" (click)="state = 'friendList'">Go back</button>
+  <button class="button back" (click)="back()">Go back</button>
 
   <div *ngIf="!searchUsers.length > 0">
     <h1 class="subtitle has-text-white listTitle">No matching users...</h1>
@@ -43,7 +43,7 @@
 </div>
 
 <div *ngIf="state === 'friendRequest'">
-  <button class="button back" (click)="state = 'friendList'">Go back</button>
+  <button class="button back" (click)="back()">Go back</button>
   <div *ngIf="!friendRequestUsers.length > 0">
     <h1 class="subtitle has-text-white listTitle">You don't have any friend requests...</h1>
   </div>
@@ -58,6 +58,8 @@
             <span class="name">{{request.fullName}}</span>
             <br>
             <span class="email">{{request.email}}</span>
+            <button (click)="acceptRequest(request.id)"></button>
+            <button (click)="declineRequest(request.id)"></button>
           </a>
         </li>
       </ul>

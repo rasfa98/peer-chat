@@ -76,4 +76,8 @@ export class UserListComponent implements OnInit {
     this.socket.emit('declineRequest', id)
     this.chatService.changeState("friendList")
   }
+
+  back() {
+    this.chatService.changeState('friendList')
+  }
 }
