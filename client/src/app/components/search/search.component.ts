@@ -14,10 +14,14 @@ export class SearchComponent implements OnInit {
   ngOnInit() {}
 
   // Find the users by using the given query.
-  search(query, e) {
-    this.userService.getUsersByQuery(query).subscribe(users => {
-      this.chatService.changeState("search")
-      this.chatService.changeSearchUsers(users)
-    })
+  search(query) {
+    if (query !== "") {
+      this.userService.getUsersByQuery(query).subscribe(users => {
+        this.chatService.changeState("search")
+        this.chatService.changeSearchUsers(users.users)
+      })
+    } else {
+      this.chatService.changeState('friendList')
+    }
   }
 }
