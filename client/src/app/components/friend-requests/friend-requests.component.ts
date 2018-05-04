@@ -9,22 +9,30 @@ import { ChatService } from '../../services/chat.service';
 })
 export class FriendRequestsComponent implements OnInit {
   socket: any
-  friendRequests: object[]
+  notification: any
+  state: string
 
-  constructor(private websocketService: WebsocketService, private chatService: ChatService) {
-    this.friendRequests = []
-  }
+  constructor(private websocketService: WebsocketService, private chatService: ChatService) {}
 
   ngOnInit() {
     this.socket = this.websocketService.socket
 
-    this.socket.on('addUser', request => {
-      this.friendRequests.push(request)
+    // Observables.
+    this.chatService.currentState.subscribe(state => this.state = state)
 
-      this.chatService.changeFriendRequestUsers(this.friendRequests)
+    this.socket.on('addUser', () => {
+      this.chatService.getFriendRequests().subscribe(friendRequests => {
+        this.chatService.changeFriendRequestUsers(friendRequests)
+      })
     })
 
-    this.socket.on('acceptRequest', () => this.chatService.getFriends().subscribe(friends => this.chatService.changeFriends(friends)))
+    this.socket.on('acceptRequest', () => {
+      this.chatService.getFriends().subscribe(friends => {
+      this.chatService.changeFriends(friends)
+
+      if (this.state !== "friendRequest") { this.notification = true }
+    })
+  })
   }
 
   // Gets a users friend requests.
@@ -32,8 +40,6 @@ export class FriendRequestsComponent implements OnInit {
     this.chatService.getFriendRequests().subscribe(data => {
       this.chatService.changeState("friendRequest")
       this.chatService.changeFriendRequestUsers(data)
-
-      this.friendRequests = data
     })
   }
 }
