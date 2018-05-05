@@ -466,7 +466,7 @@ module.exports = ":host {\n    margin: 0px;\n    padding: 0px;\n}\n\n:host .mess
 /***/ "./src/app/components/feed/feed.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<ul>\n  <li *ngFor=\"let message of activeConversation\">\n    <div *ngIf=\"message.sender === 'you'\">\n      <div class=\"card message you\">\n        <div class=\"card-content\">\n          <p>{{message.message}}</p>\n        </div>\n      </div>\n    </div>\n\n    <div *ngIf=\"message.sender !== 'you'\">\n        <div class=\"card message peer\">\n          <div class=\"card-content\">\n            <p class=\"has-text-white\">{{message.message}}</p>\n          </div>\n        </div>\n      </div>\n  </li>\n</ul>\n\n<! -- MOCK -- >\n\n<div class=\"message peer\">\n    <p class=\"has-text-white\">Tjena!</p>\n</div>\n\n<div class=\"message you\">\n    <p>Hejsan Kalle!</p>\n</div>\n\n<div class=\"message you\">\n    <p>LOREM IPSUM asdasdasdjdkglhksoalasdk</p>\n</div>\n\n<div class=\"message peer\">\n    <p class=\"has-text-white\">asdasdasdasd!</p>\n</div>\n\n<div class=\"message peer\">\n    <p class=\"has-text-white\">asdasdasdasd!</p>\n</div>"
+module.exports = "<ul>\n  <li *ngFor=\"let message of activeConversation\">\n    <div *ngIf=\"message.sender === 'you'\">\n      <div class=\"card message you\">\n        <div class=\"card-content\">\n          <p>{{message.message}}</p>\n        </div>\n      </div>\n    </div>\n\n    <div *ngIf=\"message.sender !== 'you'\">\n        <div class=\"card message peer\">\n          <div class=\"card-content\">\n            <p class=\"has-text-white\">{{message.message}}</p>\n          </div>\n        </div>\n      </div>\n  </li>\n</ul>"
 
 /***/ }),
 
