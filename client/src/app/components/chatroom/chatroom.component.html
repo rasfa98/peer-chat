@@ -5,13 +5,13 @@
 </div>
 
 <div *ngIf="!loading">
-  <div *ngIf="calling">
+  <div *ngIf="calling || dialing">
     <app-popup></app-popup>
   </div>
 
 
   <div class="columns is-gapless">
-    <div class="column is-one-fifth">
+    <div class="column is-one-third">
       <div class="search">
         <app-search></app-search>
       </div>

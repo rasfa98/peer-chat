@@ -23,6 +23,7 @@ export class PopupService {
     this.hangUp.next(bool)
   }
 
+  // Triggers cancleCall() in feed-header component.
   cancelCallEvent(bool) {
     this.cancelCall.next(bool)
   }

@@ -49,7 +49,7 @@ router.route('/friends')
       for (let i = 0; i < user.friends.length; i++) {
         const currentFriend = await User.findOne({ _id: user.friends[i].id })
 
-        friends.push({ id: currentFriend._id, fullName: currentFriend.fullName, status: currentFriend.status, avatar: currentFriend.avatar })
+        friends.push({ id: currentFriend._id, fullName: currentFriend.fullName, email: currentFriend.email, status: currentFriend.status, avatar: currentFriend.avatar })
       }
 
       res.send({ friends: friends })

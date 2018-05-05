@@ -9,13 +9,13 @@ export class UserService {
 
   // Gets the current user.
   getCurrentUser() {
-    return this.http.get('http://localhost:8000/user/current')
+    return this.http.get('https://rasmusfalk.se/user/current')
     .map(res => res.json())
   }
 
   // Gets the users with the matching query value.
   getUsersByQuery(query) {
-    return this.http.post('http://localhost:8000/user/query', { query: query })
-    .map(res => res.json().users)
+    return this.http.post('https://rasmusfalk.se/user/query', { query: query })
+    .map(res => res.json())
   }
 }

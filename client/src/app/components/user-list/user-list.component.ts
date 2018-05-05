@@ -22,23 +22,13 @@ export class UserListComponent implements OnInit {
   ngOnInit() {
     this.socket = this.websocketService.socket
 
-    this.friends = [
-      { id: 1, fullName: 'Sven', email: 'sven@ab.se', status: 'online', avatar: "../../../assets/avatars/avatar-1.png" },
-      { id: 2, fullName: 'Rasmus', email: 'rasmus@falk.se', status: 'offline', avatar: "../../../assets/avatars/avatar-2.png", notification: true }
-    ]
-
-    this.friendRequestUsers = [
-      { id: 1, fullName: 'Sven', email: 'sven@ab.se', status: 'online', avatar: "../../../assets/avatars/avatar-1.png" },
-      { id: 2, fullName: 'Rasmus', email: 'rasmus@falk.se', status: 'offline', avatar: "../../../assets/avatars/avatar-2.png" }
-    ]
-
     // Observables.
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers)
     this.chatService.currentState.subscribe(state => this.state = state)
-    // this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
-    // this.chatService.currentFriends.subscribe(friends => this.friends = friends)
-    // this.chatService.getFriends().subscribe(friends => this.friends = friends)
+    this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
+    this.chatService.currentFriends.subscribe(friends => this.friends = friends)
+    this.chatService.getFriends().subscribe(friends => this.friends = friends)
 
     this.userService.getCurrentUser().subscribe(user => {
       this.socket.emit('newUser', user)

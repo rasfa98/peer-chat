@@ -84,18 +84,18 @@ export class ChatService {
 
   // Gets the current users friend requests.
   getFriendRequests() {
-    return this.http.get('http://localhost:8000/user/friendRequests')
+    return this.http.get('https://rasmusfalk.se/user/friendRequests')
     .map(res => res.json().requests)
   }
 
   // Gets the current users friends.
   getFriends() {
-    return this.http.get('http://localhost:8000/user/friends')
+    return this.http.get('https://rasmusfalk.se/user/friends')
     .map(res => res.json().friends)
   }
 
   getConversations() {
-    return this.http.get('http://localhost:8000/user/conversations')
+    return this.http.get('https://rasmusfalk.se/user/conversations')
     .map(res => res.json().conversations)
   }
 }

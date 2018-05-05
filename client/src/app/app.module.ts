@@ -21,6 +21,7 @@ import { WelcomeComponent } from './components/welcome/welcome.component';
 import { SearchComponent } from './components/search/search.component';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
 import { PopupComponent } from './components/popup/popup.component';
+import { LoadingComponent } from './components/loading/loading.component';
 
 const appRoutes: Routes = [
   { path: '', component: ChatroomComponent },
@@ -39,7 +40,8 @@ const appRoutes: Routes = [
     WelcomeComponent,
     SearchComponent,
     FriendRequestsComponent,
-    PopupComponent
+    PopupComponent,
+    LoadingComponent
   ],
   imports: [
     BrowserModule,

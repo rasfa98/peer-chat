@@ -13,6 +13,7 @@ export class ChatroomComponent implements OnInit {
   displayChatComponents: string
   loading: boolean
   calling: boolean
+  dialing: boolean
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.loading = true
@@ -23,6 +24,7 @@ export class ChatroomComponent implements OnInit {
 
     // Observables.
     this.chatService.currentCalling.subscribe(calling => this.calling = calling)
+    this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => {
       if (activeUserItem.id === null) {
