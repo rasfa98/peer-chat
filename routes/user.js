@@ -28,6 +28,10 @@ router.route('/query')
 
       users = users.map(x => { return { id: x._id, fullName: x.fullName, email: x.email, status: x.status, avatar: x.avatar } })
 
+      users.forEach((x, i) => {
+        if (x.id.equals(req.session.userId)) { users.splice(i, 1) }
+      })
+
       res.send({ users: users })
     })
 
