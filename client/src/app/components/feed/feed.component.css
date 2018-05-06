@@ -13,6 +13,7 @@
     padding: 10px;
     border-radius: 7px;
     z-index: 100;
+    margin: 10px;
 }
 
 :host .peer {
@@ -49,5 +50,5 @@
 }
 
 :host ul {
-    padding-top: 35px;
+    padding-top: 25px;
 }
