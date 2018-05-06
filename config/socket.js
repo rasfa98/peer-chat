@@ -61,7 +61,7 @@
        const receiver = await User.findOne({ _id: id })
 
        const filteredRequests = receiver.friendRequests.filter(x => x.id === id)
-       const filteredFriends = receiver.friends.filter(x => x.id === id)
+       const filteredFriends = currentUser.friends.filter(x => x.id === id)
 
        if (filteredRequests.length === 0 && filteredFriends.length === 0 && !receiver._id.equals(currentUser._id)) {
          const friendRequests = receiver.friendRequests
