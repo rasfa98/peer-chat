@@ -129,6 +129,13 @@
        const currentUser = await User.findOne({ socketId: socket.id })
        const receiver = await User.findOne({ _id: data.id })
 
+       // Send message to the sender.
+       socket.emit('newMessage', { message: data.message, id: receiver.id, name: 'you' })
+
+       // Send message to the receiver.
+       socket.to(receiver.socketId).emit('newMessage', { message: data.message, id: currentUser._id, name: currentUser.fullName })
+       socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
+
        let currentUserConversations = currentUser.conversations.filter(x => x.id === receiver._id.toString())
        let receiverConversations = receiver.conversations.filter(x => x.id === currentUser._id.toString())
 
@@ -145,13 +152,6 @@
 
        await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
        await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
-
-       // Send message to the sender.
-       socket.emit('newMessage', { message: data.message, id: receiver.id, name: 'you' })
-
-       // Send message to the receiver.
-       socket.to(receiver.socketId).emit('newMessage', { message: data.message, id: currentUser._id, name: currentUser.fullName })
-       socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
      })
    })
 
