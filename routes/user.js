@@ -13,7 +13,11 @@ const User = require('../models/User')
 
 // Get the current user.
 router.route('/current')
-    .get((req, res) => res.send({ id: res.locals.userId }))
+    .get(async (req, res) => {
+      const user = await User.findOne({ _id: res.locals.userId })
+
+      res.send({ id: res.locals.userId, fullName: user.fullName, status: user.status })
+    })
 
 // Find and return users from the database from a specific query.
 router.route('/query')
