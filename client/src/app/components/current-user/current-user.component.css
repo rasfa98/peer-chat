@@ -1,0 +1,40 @@
+:host img {
+    width: 70px;
+    height: 70px;
+    margin-right: 20px;
+    border-radius: 100%;
+    float: left;
+    clear: both;
+}
+
+:host .name {
+    color: white;
+    font-size: 20px;
+    font-weight: 900;
+    display: block;
+}
+
+:host .statusText {
+    color: white;
+    font-size: 16px;
+    margin-top: -15px;
+    display: block;
+}
+
+:host .status {
+    height: 20px;
+    width: 20px;
+    border-radius: 100%;
+    display: inline-block;
+    position: absolute;
+    margin-top: 45px;
+    margin-left: -40px;
+}
+
+.online {
+    background-color: rgb(4, 214, 134);
+}
+
+.offline {
+    background-color: rgb(255, 255, 255);
+}
