@@ -3,5 +3,11 @@
     <span class="status" [ngClass]="{'online' : currentUser.status === 'online', 'offline' : currentUser.status === 'offline'}"></span>
     <span class="name">{{currentUser.fullName}}</span>
     <br>
-    <span class="statusText">{{currentUser.status}}</span>
+
+    <select class="statusSelect">
+        <option value="online" selected>online</option>
+        <option value="away">away</option>
+        <option value="busy">busy</option>
+        <option value="offline">offline</option>
+    </select>
 </div>
