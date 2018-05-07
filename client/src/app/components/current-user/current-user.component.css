@@ -20,10 +20,22 @@
     display: block;
 }
 
-:host .statusSelect {
-    font-size: 21px;
-    margin-top: -28px;
-    display: block;
+:host .select {
+    margin-top: -30px;
+    margin-left: -7px;
+    font-size: 16px;
+}
+
+:host .select select {
+    background-color: transparent;
+    border: none;
+    color: white;
+    margin-top: -15px;
+}
+
+:host .select:after {
+    margin-top: -1px;
+    margin-right: 5px;
 }
 
 :host .status {
@@ -42,4 +54,12 @@
 
 .offline {
     background-color: rgb(255, 255, 255);
+}
+
+.away {
+    background-color: rgb(243, 247, 3);
+}
+
+.busy {
+    background-color: rgb(247, 6, 6);
 }

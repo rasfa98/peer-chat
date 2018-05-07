@@ -1,13 +1,15 @@
 <div>
-    <img src="{{currentUser.avatar}}">
-    <span class="status" [ngClass]="{'online' : currentUser.status === 'online', 'offline' : currentUser.status === 'offline'}"></span>
-    <span class="name">{{currentUser.fullName}}</span>
-    <br>
-
-    <select class="statusSelect">
-        <option value="online" selected>online</option>
-        <option value="away">away</option>
-        <option value="busy">busy</option>
-        <option value="offline">offline</option>
-    </select>
+  <img src="{{currentUser.avatar}}">
+  <span class="status" [ngClass]="{'online' : currentUser.status === 'online', 'offline' : currentUser.status === 'offline', 'away' : currentUser.status === 'away', 'busy' : currentUser.status === 'busy'}"></span>
+  <span class="name">{{currentUser.fullName}}</span>
+  <br>
 </div>
+
+<div class="select">
+    <select #status (input)="changeStatus(status.value)">
+      <option value="online" selected>online</option>
+      <option value="away">away</option>
+      <option value="busy">busy</option>
+      <option value="offline">offline</option>
+    </select>
+  </div>

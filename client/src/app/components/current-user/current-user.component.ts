@@ -19,12 +19,16 @@ export class CurrentUserComponent implements OnInit {
     this.socket = this.websocketService.socket
 
     this.userService.getCurrentUser().subscribe(user => {
-      // this.currentUser = user
-      // this.socket.emit('newUser', user)
+      this.currentUser = user
+      this.socket.emit('newUser', user)
     })
 
     this.socket.on('updateCurrentUserStatus', status => {
       this.currentUser.status = status
     })
+  }
+
+  changeStatus(status) {
+    this.socket.emit('updateStatus', status)
   }
 }
