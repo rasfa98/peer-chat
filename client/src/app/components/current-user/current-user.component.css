@@ -1,3 +1,8 @@
+:host div {
+    margin-left: 1vw;
+    padding-top: 15px;
+}
+
 :host img {
     width: 70px;
     height: 70px;
@@ -8,16 +13,17 @@
 }
 
 :host .name {
+    padding-top: 5px;
     color: white;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: 900;
     display: block;
 }
 
 :host .statusText {
     color: white;
-    font-size: 16px;
-    margin-top: -15px;
+    font-size: 21px;
+    margin-top: -28px;
     display: block;
 }
 

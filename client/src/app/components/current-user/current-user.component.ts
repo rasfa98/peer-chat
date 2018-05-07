@@ -12,19 +12,19 @@ export class CurrentUserComponent implements OnInit {
   socket: any
 
   constructor(private userService: UserService, private websocketService: WebsocketService) {
-    this.currentUser = { status: 'online', fullName: 'Rasmus Falk', avatar: '../../assets/avatars/avatar-3.png' }
+    // this.currentUser = { status: 'online', fullName: 'Rasmus Falk', avatar: '../../assets/avatars/avatar-3.png' }
   }
 
   ngOnInit() {
     this.socket = this.websocketService.socket
 
     this.userService.getCurrentUser().subscribe(user => {
-      // this.currentUser = user
-      // this.socket.emit('newUser', user)
+      this.currentUser = user
+      this.socket.emit('newUser', user)
     })
 
     this.socket.on('updateCurrentUserStatus', status => {
-      this.currentUser.status = status.toUpperCase()
+      this.currentUser.status = status
     })
   }
 }
