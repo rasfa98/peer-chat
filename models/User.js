@@ -16,6 +16,7 @@
    fullName: { type: String, required: 'Full name is required!', trim: true },
    email: { type: String, required: 'Email is required!', unique: true },
    password: { type: String, required: 'Password is required!', trim: true },
+   changedStatus: { type: String, default: 'online' },
    status: { type: String, default: 'offline' },
    avatar: { type: String },
    friends: [{ id: String }],
