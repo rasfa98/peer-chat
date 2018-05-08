@@ -12,7 +12,6 @@ export class CurrentUserComponent implements OnInit {
   socket: any
 
   constructor(private userService: UserService, private websocketService: WebsocketService) {
-    this.currentUser = { status: 'online', fullName: 'Rasmus Falk', avatar: '../../assets/avatars/avatar-3.png' }
   }
 
   ngOnInit() {
