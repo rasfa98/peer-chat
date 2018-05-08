@@ -71,6 +71,10 @@ export class FeedHeaderComponent implements OnInit {
     })
   }
 
+  removeFriend(id) {
+    this.socket.emit('removeFriend', id)
+  }
+
   // Starts a new video call.
   startVideoCall(id) {
     this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
@@ -78,6 +82,8 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.changeDialing(true)
     this.startAudioDial()
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
+
+    setTimeout(() => this.cancelCall(), 10000)
   }
 
   // Starts a new voice call.
@@ -87,6 +93,8 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.changeDialing(true)
     this.startAudioDial()
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+
+    setTimeout(() => this.cancelCall(), 10000)
   }
 
   // Starts the dial sound.
@@ -145,13 +153,7 @@ export class FeedHeaderComponent implements OnInit {
         objectMode: true,
         reconnectTimer: 250,
         config: {
-          iceServers: [{ urls:  [
-            'stun:stun.l.google.com:19302',
-            'stun:stun1.l.google.com:19302',
-            'stun:stun2.l.google.com:19302',
-            'stun:stun3.l.google.com:19302',
-            'stun:stun4.l.google.com:19302' ]},
-            {
+          iceServers: [{
               urls: 'stun:numb.viagenie.ca',
               username: 'rasmus.falk@live.se',
               credential: 'M581Z6DzR97BPSQltlbvq2jGXwObjoZB'
@@ -164,7 +166,12 @@ export class FeedHeaderComponent implements OnInit {
           ]}
       })
 
-      peerx.on('error', err => this.localStream.getTracks().forEach(x => x.stop()))
+      peerx.on('error', err => {
+        this.localStream.getTracks().forEach(x => x.stop())
+        this.chatService.changeDialing(false)
+        this.chatService.changeCalling(false)
+        this.stopAudio()
+      })
 
       peerx.on('connect', () => {
         this.chatService.changeCalling(false)
