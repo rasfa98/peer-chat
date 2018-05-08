@@ -40,8 +40,7 @@ export class FriendRequestsComponent implements OnInit {
     this.chatService.getFriendRequests().subscribe(data => {
       this.chatService.changeFriendRequestUsers(data)
       this.notification = false;
+      this.chatService.changeState("friendRequest")
     })
-
-    this.chatService.changeState("friendRequest")
   }
 }
