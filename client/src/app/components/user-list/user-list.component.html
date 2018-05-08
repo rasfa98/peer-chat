@@ -6,7 +6,7 @@
       <li *ngFor="let friend of friends">
         <a (click)="changeItem(friend)">
           <img src="{{friend.avatar}}">
-          <span class="status" [ngClass]="{'online' : friend.status === 'online', 'offline' : friend.status === 'offline'}"></span>
+          <span class="status" [ngClass]="{'online' : friend.status === 'online', 'offline' : friend.status === 'offline', 'away' : friend.status === 'away', 'busy' : friend.status === 'busy'}"></span>
           <span class="name">{{friend.fullName}}</span>
           <br>
           <span class="email">{{friend.email}}</span>
@@ -31,7 +31,7 @@
         <li *ngFor="let user of searchUsers">
           <a>
             <img src="{{user.avatar}}">
-            <span class="status" [ngClass]="{'online' : user.status === 'online', 'offline' : user.status === 'offline'}"></span>
+            <span class="status" [ngClass]="{'online' : user.status === 'online', 'offline' : user.status === 'offline', 'away' : user.status === 'away', 'busy' : user.status === 'busy'}"></span>
             <span class="name">{{user.fullName}}</span>
             <br>
             <span class="email">{{user.email}}</span>

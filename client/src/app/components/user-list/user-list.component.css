@@ -77,6 +77,14 @@
     background-color: rgb(255, 255, 255);
 }
 
+.away {
+    background-color: rgb(243, 247, 3);
+}
+
+.busy {
+    background-color: rgb(247, 6, 6);
+}
+
 :host .menu img {
     width: 70px;
     height: 70px;
