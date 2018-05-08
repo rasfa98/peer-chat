@@ -9,6 +9,7 @@ import { Router } from '@angular/router'
 })
 export class PeerChatComponent implements OnInit {
   @ViewChild('videoChat') videoChat: any
+  @ViewChild('end') endCallBtn: any
 
   stream: any
   peer: any
@@ -24,7 +25,10 @@ export class PeerChatComponent implements OnInit {
       this.videoChat.nativeElement.play()
     })
 
-    this.chatService.currentPeer.subscribe(peer => this.peer = peer)
+    this.chatService.currentPeer.subscribe(peer => {
+      this.peer = peer
+      this.endCallBtn.nativeElement.disabled = false
+    })
   }
 
   // Ends the current Peer2Peer call.
