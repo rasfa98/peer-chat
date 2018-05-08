@@ -48,6 +48,22 @@
        socket.emit('updateCurrentUserStatus', status)
      })
 
+     socket.on('removeFriend', async id => {
+       const currentUser = await User.findOne({ socketId: socket.id })
+       const friend = await User.findOne({ _id: id })
+
+       currentUser.friends.forEach((x, i) => {
+         if (x.id === friend._id.toString()) { currentUser.friends.splice(i, 1) }
+       })
+
+       friend.friends.forEach((x, i) => {
+         if (x.id === currentUser._id.toString()) { friend.friends.splice(i, 1) }
+       })
+
+       await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
+       await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
+     })
+
      // Peer2Peer
      socket.on('sendSignal', async data => {
        const currentUser = await User.findOne({ socketId: socket.id })
