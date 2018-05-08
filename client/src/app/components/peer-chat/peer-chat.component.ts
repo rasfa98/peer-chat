@@ -20,7 +20,7 @@ export class PeerChatComponent implements OnInit {
     this.chatService.currentStream.subscribe(stream => {
       this.stream = this.stream
 
-      this.videoChat.nativeElement.src = window.URL.createObjectURL(stream)
+      this.videoChat.nativeElement.srcObject = stream
       this.videoChat.nativeElement.play()
     })
 
