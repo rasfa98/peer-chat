@@ -5,14 +5,28 @@
 
 :host input {
     height: 5vh;
-    width: 57vw;
+    width: 52vw;
 }
 
-:host button {
+:host .emojis {
+    height: 5vh;
+    width: 5vw;
+}
+
+:host .send {
     height: 5vh;
     width: 10vw;
 }
 
 :host button i {
     font-size: 25px;
+}
+
+:host .emojiPopup {
+    position: absolute;
+    z-index: 90;
+    display: block;
+    width: 100%;
+    margin-top: -40px;
+    background-color: red;
 }

@@ -12,8 +12,11 @@ export class SendComponent implements OnInit {
 
   socket: any
   activeUserItem: any
+  emojis: boolean
 
-  constructor(private websocketService: WebsocketService, private chatService: ChatService) {}
+  constructor(private websocketService: WebsocketService, private chatService: ChatService) {
+    this.emojis = false
+  }
 
   ngOnInit() {
     this.socket = this.websocketService.socket
