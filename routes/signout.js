@@ -15,7 +15,9 @@ const router = require('express').Router()
 router.route('/')
     .get(async (req, res) => {
       await User.findOneAndUpdate({ socketId: req.session.userId }, { status: 'offline', socketId: null })
-      req.session.destroy()
+      req.session.userId = null
+      req.session.login = null
+      req.session.cookies = true
       res.redirect('/')
     })
 
