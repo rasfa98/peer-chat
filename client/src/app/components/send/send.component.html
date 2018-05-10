@@ -1,12 +1,16 @@
-<div *ngIf="emojis">
-    <div class="emojiPopup">
-        <p>emojis!</p>
-    </div>
+<div *ngIf="showEmojis">
+  <div class="emojiPopup">
+    <ul>
+      <li *ngFor="let emoji of emojis; let x = index">
+        <a [innerHtml]="emoji.code" (click)="addEmoji(x)"></a>
+      </li>
+    </ul>
   </div>
+</div>
 
 <div class="field has-addons">
   <div class="control">
-    <button type="btn" class="button is-primary emojis" (click)="this.emojis = !emojis">
+    <button type="btn" class="button is-primary emojis" (click)="getEmojis()">
       <span class="icon is-small">
         <i class="ion-happy-outline"></i>
       </span>
