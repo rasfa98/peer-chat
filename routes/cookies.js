@@ -12,14 +12,7 @@ const router = require('express').Router()
 
 router.route('/accept')
     .get((req, res) => {
-      res.locals.cookies = true
-
-      res.redirect('/')
-    })
-
-router.route('/decline')
-    .get((req, res) => {
-      res.locals.cookies = false
+      req.session.cookies = true
 
       res.redirect('/')
     })
