@@ -10,6 +10,7 @@
 
  const socket = require('socket.io')
  const User = require('../models/User')
+ const emoji = require('../lib/emoji')
 
  /**
   * Configures and starts the websocket server.
@@ -62,6 +63,9 @@
 
        await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
        await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
+
+       socket.emit('updateFriends', currentUser.friends)
+       socket.to(friend.socketId).emit('updateFriends', friend.friends)
      })
 
      // Peer2Peer
@@ -156,22 +160,24 @@
        const currentUser = await User.findOne({ socketId: socket.id })
        const receiver = await User.findOne({ _id: data.id })
 
+       const message = emoji.addEmojis(data.message)
+
        // Send message to the sender.
-       socket.emit('newMessage', { message: data.message, id: receiver.id, name: 'you' })
+       socket.emit('newMessage', { message: message, id: receiver.id, name: 'you' })
 
        // Send message to the receiver.
-       socket.to(receiver.socketId).emit('newMessage', { message: data.message, id: currentUser._id, name: currentUser.fullName })
+       socket.to(receiver.socketId).emit('newMessage', { message: message, id: currentUser._id, name: currentUser.fullName })
        socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
 
        let currentUserConversations = currentUser.conversations.filter(x => x.id === receiver._id.toString())
        let receiverConversations = receiver.conversations.filter(x => x.id === currentUser._id.toString())
 
        if (currentUserConversations.length > 0) {
-         currentUserConversations[0].messages.push({ message: data.message, sender: 'you' })
-         receiverConversations[0].messages.push({ message: data.message, sender: currentUser.fullName })
+         currentUserConversations[0].messages.push({ message: message, sender: 'you' })
+         receiverConversations[0].messages.push({ message: message, sender: currentUser.fullName })
        } else {
-         currentUserConversations.push({ id: data.id, messages: [ { message: data.message, sender: 'you' } ] })
-         receiverConversations.push({ id: currentUser._id, messages: [ { message: data.message, sender: currentUser.fullName } ] })
+         currentUserConversations.push({ id: data.id, messages: [ { message: message, sender: 'you' } ] })
+         receiverConversations.push({ id: currentUser._id, messages: [ { message: message, sender: currentUser.fullName } ] })
 
          currentUser.conversations.push(currentUserConversations[0])
          receiver.conversations.push(receiverConversations[0])
