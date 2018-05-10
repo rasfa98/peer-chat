@@ -16,7 +16,7 @@ router.route('/current')
     .get(async (req, res) => {
       const user = await User.findOne({ _id: res.locals.userId })
 
-      res.send({ id: res.locals.userId, fullName: user.fullName, status: user.status })
+      res.send({ id: res.locals.userId, fullName: user.fullName, status: user.status, avatar: user.avatar })
     })
 
 // Find and return users from the database from a specific query.
