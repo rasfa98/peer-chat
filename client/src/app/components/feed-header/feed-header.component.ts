@@ -25,12 +25,15 @@ export class FeedHeaderComponent implements OnInit {
   localStream: any
   callInformation: object
   dialInformation: any
+  error: boolean
 
   constructor
   (private chatService: ChatService,
    private websocketService: WebsocketService, 
    private router: Router,
-   private popupService: PopupService) {}
+   private popupService: PopupService) {
+     this.error = false
+   }
 
   ngOnInit() {
     this.socket = this.websocketService.socket
@@ -171,11 +174,14 @@ export class FeedHeaderComponent implements OnInit {
         this.chatService.changeDialing(false)
         this.chatService.changeCalling(false)
         this.stopAudio()
+        this.error = true
       })
 
       peerx.on('connect', () => {
         this.chatService.changeCalling(false)
         this.chatService.changeDialing(false)
+
+        this.error = false
         
         this.stopAudio()
         
