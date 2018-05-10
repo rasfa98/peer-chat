@@ -31,11 +31,11 @@
     margin-top: -170px;
     margin-left: 10px;
     border-radius: 7px;
-    background-color: red;
+    background-color: #8e44ad;
 }
 
 :host .emojiPopup:before {
-    background-color: red;
+    background-color: #8e44ad;
     position: absolute;
     display: block;
     margin-left: 10px;
@@ -45,4 +45,10 @@
     content: "";
     transform: rotate(29deg) skew(-25deg);
     z-index: -100;
+}
+
+:host ul li {
+    display: inline;
+    font-size: 30px;
+    padding: 7px;
 }

@@ -48,6 +48,6 @@ export class SendComponent implements OnInit {
   }
 
   addEmoji(index) {
-    console.log(index)
+    this.input.nativeElement.value += `${this.emojis[index].text} `
   }
 }
