@@ -13,7 +13,6 @@ export class FriendRequestsComponent implements OnInit {
   state: string
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
-    this.notification = true
   }
 
   ngOnInit() {

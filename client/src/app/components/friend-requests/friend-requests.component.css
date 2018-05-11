@@ -2,6 +2,7 @@
     height: 40px;
     width: 31vw;
     margin-left: 1vw;
+    margin-top: 9px;
 }
 
 :host .notificationDot {

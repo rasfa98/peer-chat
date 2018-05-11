@@ -3,6 +3,10 @@
     padding: 0px;
 }
 
+:host .notification {
+    z-index: 100;
+}
+
 :host h1 {
     font-size: 30px;
     margin: 10px;

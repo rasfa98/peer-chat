@@ -22,7 +22,7 @@
 :host .select {
     margin-top: -30px;
     margin-left: -7px;
-    font-size: 16px;
+    font-size: 18px;
 }
 
 :host .select select {
@@ -65,13 +65,11 @@
 :host .signout {
     background-color: transparent;
     top: -15px;
-    position: fixed;
-    margin-right: 0vw;
-    margin-left: 15vw;
+    position: absolute;
+    margin-left: 10vw;
     padding: 0px;
     float: right;
     font-size: 50px;
-    clear: both;
 }
 
 :host .signout:hover {

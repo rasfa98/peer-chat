@@ -17,14 +17,6 @@ export class UserListComponent implements OnInit {
   state: string
 
   constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {
-    this.friends = [{ id: 1, fullName: 'Rasmus Falke', email: 'rasmus.falk@live.se', avatar: '../../assets/avatars/avatar-1.png', notification: true, status: 'away' },
-    { id: 1, fullName: 'Rasmus Falke', email: 'rasmus.falk@live.se', avatar: '../../assets/avatars/avatar-1.png', notification: true, status: 'away' },
-    { id: 1, fullName: 'Rasmus Falke', email: 'rasmus.falk@live.se', avatar: '../../assets/avatars/avatar-1.png', notification: true, status: 'away' },
-    { id: 1, fullName: 'Rasmus Falke', email: 'rasmus.falk@live.se', avatar: '../../assets/avatars/avatar-1.png', notification: true, status: 'away' },
-    { id: 1, fullName: 'Rasmus Falke', email: 'rasmus.falk@live.se', avatar: '../../assets/avatars/avatar-1.png', notification: true, status: 'away' },
-    { id: 1, fullName: 'Rasmus Falke', email: 'rasmus.falk@live.se', avatar: '../../assets/avatars/avatar-1.png', notification: true, status: 'away' }]
-
-    this.friendRequestUsers = [{ id: 1, fullName: 'Rasmus Falke', email: 'rasmus.falk@live.se', avatar: '../../assets/avatars/avatar-1.png', notification: true }]
   }
 
   ngOnInit() {
@@ -35,8 +27,8 @@ export class UserListComponent implements OnInit {
     this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers)
     this.chatService.currentState.subscribe(state => this.state = state)
     this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
-    // this.chatService.currentFriends.subscribe(friends => this.friends = friends)
-    // this.chatService.getFriends().subscribe(friends => this.friends = friends)
+    this.chatService.currentFriends.subscribe(friends => this.friends = friends)
+    this.chatService.getFriends().subscribe(friends => this.friends = friends)
 
     this.socket.on('updateFriendStatus', friend => {
       for (let i = 0; i < this.friends.length; i++) {

@@ -18,10 +18,10 @@
 
 :host .back {
     margin-top: 0vh;
-    height: 5vh;
+    margin-bottom: 10px;
+    height: 40px;
     width: 31vw;
     margin-left: 1vw;
-    margin-bottom: 2vh;
 }
 
 :host .status {
@@ -99,7 +99,7 @@
     height: 84px;
     margin-top: -77px;
     width: 58px;
-    margin-right: 10px;
+    margin-right: 70vw;
     padding: 0px;
     float: right;
     font-size: 50px;
@@ -125,7 +125,7 @@
     height: 84px;
     margin-top: -75px;
     width: 70px;
-    margin-right: 10px;
+    margin-right: 70vw;
     padding: 0px;
     float: right;
     font-size: 45px;
@@ -141,7 +141,7 @@
     height: 84px;
     margin-top: -75px;
     width: 70px;
-    margin-right: -10px;
+    margin-right: 0vw;
     padding: 0px;
     float: right;
     font-size: 45px;

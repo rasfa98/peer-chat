@@ -4,7 +4,7 @@
 }
 
 :host .message {
-    width: 40%;
+    width: 30%;
     word-wrap: break-word;
     clear: both;
     font-size: 16px;
@@ -12,20 +12,20 @@
     position: relative;
     padding: 10px;
     border-radius: 7px;
-    z-index: 100;
+    z-index: 0;
     margin: 10px;
 }
 
 :host .peer {
     background-color: rgb(106, 105, 194);
     float: left;
-    margin-left: 30px;
+    margin-left: 2vw
 }
 
 :host .you {
     background-color: rgb(255, 255, 255);
     float: right;
-    margin-right: 30px;
+    margin-right: 35.3vw;
 }
 
 :host .peer:before {

@@ -24,11 +24,10 @@
 
 :host .emojiPopup {
     position: absolute;
-    z-index: 90;
+    text-align: center;
     display: block;
-    width: 40%;
-    height: 130px;
-    margin-top: -150px;
+    width: 60%;
+    margin-top: -160px;
     margin-left: 10px;
     border-radius: 7px;
     background-color: white;
@@ -41,7 +40,7 @@
     margin-left: 10px;
     width: 30px;
     height: 26px;
-    top: 110px;
+    top: 120px;
     content: "";
     transform: rotate(29deg) skew(-25deg);
     z-index: -100;
