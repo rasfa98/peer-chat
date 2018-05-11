@@ -3,39 +3,53 @@
     background-color: rgb(248, 246, 248);
 }
 
+.current-user {
+    background-color: #8e44ad;
+    height: 100px;
+}
+
 .search {
     background-color: rgb(72, 21, 78);
-    height: 8vh;
+    height: 65px;
 }
 
 .friend-requests {
     background-color: rgb(72, 21, 78);
-    height: 5vh;
+    height: 70px;
 }
 
 .user-list {
     background-color: rgb(72, 21, 78);
-    height: 87vh;
+    position: absolute;
+    bottom: 0;
+    top: 235px;
+    width: 100%;
+    overflow-y: scroll;
 }
 
 .welcome {
     background-color: rgb(248, 246, 248);
     height: 100vh;
     padding: 20px;
+    position: relative;
 }
 
 .feed-header {
     background-color: white;
-    height:8vh;
+    height: 70px;
 }
 
 .feed {
     background-color: rgb(248, 246, 248);
-    height: 87vh;
     overflow-y: scroll;
+    position: absolute;
+    bottom: 40px;
+    top: 70px;
 }
 
 .send {
     background-color: white;
-    height: 5vh;
+    height: 40px;
+    position: fixed;
+    bottom: 0px;
 }

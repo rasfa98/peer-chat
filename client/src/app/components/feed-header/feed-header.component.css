@@ -31,3 +31,7 @@
 :host .close:hover {
     color: rgb(211, 211, 211);
 }
+
+:host .title {
+    margin-top: 20px;
+}

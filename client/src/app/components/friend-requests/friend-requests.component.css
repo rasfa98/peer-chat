@@ -1,6 +1,5 @@
 :host button {
-    margin-top: 0vh;
-    height: 4vh;
+    height: 40px;
     width: 31vw;
     margin-left: 1vw;
 }
@@ -11,7 +10,7 @@
     border-radius: 100%;
     display: inline-block;
     position: absolute;
-    margin-top: 6px;
+    margin-top: 10px;
     margin-left: -40px;
     background-color: rgb(205, 17, 226);
 }

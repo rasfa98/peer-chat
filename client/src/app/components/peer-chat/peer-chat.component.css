@@ -1,13 +1,15 @@
 :host video {
-    width: 50%;
-    margin-top: 5vh;
+    width: 100vw;
+    height: 95vh;
 }
 
 :host .background {
     background-color: rgb(248, 246, 248);
-    height: 100vh;
 }
 
 :host button {
     font-size: 20px;
+    width: 15vw;
+    height: 5vh;
+    margin-top: -6px;
 }

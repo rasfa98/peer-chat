@@ -180,9 +180,6 @@ export class FeedHeaderComponent implements OnInit {
       peerx.on('connect', () => {
         this.chatService.changeCalling(false)
         this.chatService.changeDialing(false)
-
-        this.error = false
-        
         this.stopAudio()
         
         this.chatService.changePeer(this.peer)

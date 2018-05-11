@@ -4,17 +4,17 @@
 }
 
 :host input {
-    height: 5vh;
+    height: 40px;
     width: 52vw;
 }
 
 :host .emojis {
-    height: 5vh;
+    height: 40px;
     width: 5vw;
 }
 
 :host .send {
-    height: 5vh;
+    height: 40px;
     width: 10vw;
 }
 
@@ -27,21 +27,21 @@
     z-index: 90;
     display: block;
     width: 40%;
-    height: 150px;
-    margin-top: -170px;
+    height: 130px;
+    margin-top: -150px;
     margin-left: 10px;
     border-radius: 7px;
-    background-color: #8e44ad;
+    background-color: white;
 }
 
 :host .emojiPopup:before {
-    background-color: #8e44ad;
+    background-color: white;
     position: absolute;
     display: block;
     margin-left: 10px;
     width: 30px;
     height: 26px;
-    top: 133px;
+    top: 110px;
     content: "";
     transform: rotate(29deg) skew(-25deg);
     z-index: -100;
@@ -51,4 +51,8 @@
     display: inline;
     font-size: 30px;
     padding: 7px;
+}
+
+:host ul li:hover {
+    opacity: 0.7;
 }

@@ -1,6 +1,9 @@
 :host .field {
-    padding-top: 2vh;
-    height: 4vh;
+    padding-top: 13px;
     width: 31vw;
     margin-left: 1vw;
+}
+
+:host input {
+    height: 40px;
 }

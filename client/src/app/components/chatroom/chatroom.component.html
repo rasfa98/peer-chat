@@ -12,6 +12,9 @@
 
   <div class="columns is-gapless">
     <div class="column is-one-third">
+      <div class="current-user">
+        <app-current-user></app-current-user>
+      </div>
       <div class="search">
         <app-search></app-search>
       </div>
@@ -23,7 +26,7 @@
       </div>
     </div>
 
-    <div class="column">
+    <div class="column right">
       <div [style.display]="displayWelcome">
         <div class="welcome">
           <app-welcome></app-welcome>
