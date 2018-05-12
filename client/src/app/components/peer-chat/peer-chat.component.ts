@@ -18,17 +18,18 @@ export class PeerChatComponent implements OnInit {
   ngOnInit() {
     // Observables.
     this.chatService.currentStream.subscribe(stream => {
-      this.videoChat.nativeElement.srcObject = stream
+      this.chatService.currentPeer.subscribe(peer => {
+        this.peer = peer
+        this.endCallBtn.nativeElement.disabled = false
 
-      this.videoChat.nativeElement.play()
-      .catch(err => {
-        this.peer.destroy()
+        this.videoChat.nativeElement.srcObject = stream
+
+        this.videoChat.nativeElement.play()
+        .catch(err => {
+          this.peer.destroy()
+          this.chatService.changeError(true)
+        })
       })
-    })
-
-    this.chatService.currentPeer.subscribe(peer => {
-      this.peer = peer
-      this.endCallBtn.nativeElement.disabled = false
     })
   }
 

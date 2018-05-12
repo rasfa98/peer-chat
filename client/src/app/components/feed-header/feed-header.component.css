@@ -3,10 +3,6 @@
     padding: 0px;
 }
 
-:host .notification {
-    z-index: 100;
-}
-
 :host h1 {
     font-size: 30px;
     margin: 10px;
@@ -18,22 +14,6 @@
 
 :host .navbar {
     background-color: white;
-}
-
-:host .close {
-    background-color: transparent;
-    margin-right: 10px;
-    padding: 0px;
-    float: right;
-    font-size: 30px;
-    clear: both;
-    border: none;
-    color: white;
-    margin-top: -9px;
-}
-
-:host .close:hover {
-    color: rgb(211, 211, 211);
 }
 
 :host .title {

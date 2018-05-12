@@ -1,0 +1,19 @@
+:host .notification {
+    z-index: 100;
+}
+
+:host .close {
+    background-color: transparent;
+    margin-right: 10px;
+    padding: 0px;
+    float: right;
+    font-size: 30px;
+    clear: both;
+    border: none;
+    color: white;
+    margin-top: -9px;
+}
+
+:host .close:hover {
+    color: rgb(211, 211, 211);
+}

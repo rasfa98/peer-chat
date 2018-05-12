@@ -25,14 +25,12 @@ export class FeedHeaderComponent implements OnInit {
   localStream: any
   callInformation: object
   dialInformation: any
-  error: boolean
 
   constructor
-  (private chatService: ChatService,
-   private websocketService: WebsocketService, 
-   private router: Router,
-   private popupService: PopupService) {
-   }
+    (private chatService: ChatService,
+      private websocketService: WebsocketService,
+      private router: Router,
+      private popupService: PopupService) {}
 
   ngOnInit() {
     this.socket = this.websocketService.socket
@@ -44,173 +42,275 @@ export class FeedHeaderComponent implements OnInit {
     this.popupService.answerCallObs.subscribe(type => { if (type) { this.answerCall() } })
     this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
     this.popupService.cancelCallObs.subscribe(type => { if (type) { this.cancelCall() } })
-    this.chatService.currentError.subscribe(error => { if (error) { this.newError() }} )
+    this.chatService.currentError.subscribe(error => { if (error) { this.newError() } })
 
-    // When the users gets a Peer2Peer call.
-    this.socket.on('newSignal', data => {
-      if (data.type === 'offer') {
-        this.startAudioRinging()
-        
-        this.chatService.changeCalling(true)
+    try {
+      // When the users gets a Peer2Peer call.
+      this.socket.on('newSignal', data => {
+        if (data.type === 'offer') {
+          this.startAudioRinging()
 
-        this.data = data
+          this.chatService.changeCalling(true)
 
-        this.callInformation = { caller: data.caller, callType: data.chatType }
+          this.data = data
 
-        this.chatService.changeCallInformation(this.callInformation)
-      } else { this.peer.signal(data.peerId) }
-    })
+          this.callInformation = {
+            caller: data.caller,
+            callType: data.chatType
+          }
 
-    // When the called user hangs up.
-    this.socket.on('hangUp', () => {
-      this.chatService.changeDialing(false)
-      this.stopAudio()
-      this.localStream.getTracks().forEach(x => x.stop())
-    })
+          this.chatService.changeCallInformation(this.callInformation)
+        } else {
+          this.peer.signal(data.peerId)
+        }
+      })
 
-    this.socket.on('cancelCall', () => {
-      this.chatService.changeCalling(false)
-      this.stopAudio()
-    })
+      // When the called user hangs up.
+      this.socket.on('hangUp', () => {
+        this.chatService.changeDialing(false)
+        this.stopAudio()
+        this.localStream.getTracks().forEach(x => x.stop())
+      })
+
+      this.socket.on('cancelCall', () => {
+        this.chatService.changeCalling(false)
+        this.stopAudio()
+      })
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   removeFriend(id) {
-    this.socket.emit('removeFriend', id)
+    try {
+      this.socket.emit('removeFriend', id)
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   // Starts a new video call.
   startVideoCall(id) {
-    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
-    this.chatService.changeDialInformation(this.dialInformation)
-    this.chatService.changeDialing(true)
-    this.startAudioDial()
-    this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
+    try {
+      this.dialInformation = {
+        id: this.activeUserItem.id,
+        receiver: this.activeUserItem.fullName,
+        dialType: 'video'
+      }
+      this.chatService.changeDialInformation(this.dialInformation)
+      this.chatService.changeDialing(true)
+      this.startAudioDial()
+      this.createPeer({
+        audio: true,
+        video: true
+      }, id, 'offer', 'video', null)
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   // Starts a new voice call.
   startVoiceCall(id) {
-    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' }
-    this.chatService.changeDialInformation(this.dialInformation)
-    this.chatService.changeDialing(true)
-    this.startAudioDial()
-    this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+    try {
+      this.dialInformation = {
+        id: this.activeUserItem.id,
+        receiver: this.activeUserItem.fullName,
+        dialType: 'voice'
+      }
+      this.chatService.changeDialInformation(this.dialInformation)
+      this.chatService.changeDialing(true)
+      this.startAudioDial()
+      this.createPeer({
+        audio: true,
+        video: false
+      }, id, 'offer', 'voice', null)
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   newError() {
-    if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
+    try {
+      if (this.localStream) {
+        this.localStream.getTracks().forEach(x => x.stop())
+      }
 
-    this.chatService.changeDialing(false)
-    this.chatService.changeCalling(false)
-    this.stopAudio()
-    this.error = true
+      this.chatService.changeDialing(false)
+      this.chatService.changeCalling(false)
+      this.stopAudio()
+    } catch (err) {
+      console.log(err)
+    }
   }
 
   // Starts the dial sound.
   startAudioDial() {
-    this.audio.nativeElement.src = '../../../assets/dialing.mp3'
-    this.audio.nativeElement.play()
+    try {
+      this.audio.nativeElement.src = '../../../assets/dialing.mp3'
+      this.audio.nativeElement.play()
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   // Stops the call audio (dial/ringing)
   stopAudio() {
-    this.audio.nativeElement.pause()
+    try {
+      this.audio.nativeElement.pause()
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   // Starts teh ringing sound.
   startAudioRinging() {
-    this.audio.nativeElement.src = '../../../assets/ringing.mp3'
-    this.audio.nativeElement.play()
+    try {
+      this.audio.nativeElement.src = '../../../assets/ringing.mp3'
+      this.audio.nativeElement.play()
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   // Answer the incoming call.
   answerCall() {
-    if (this.data.chatType === 'video') { this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId) } 
-    if (this.data.chatType !== 'video') { this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId) }
+    try {
+      if (this.data.chatType === 'video') {
+        this.createPeer({
+          audio: true,
+          video: true
+        }, this.data.id, 'answer', null, this.data.peerId)
+      }
+      if (this.data.chatType !== 'video') {
+        this.createPeer({
+          audio: true,
+          video: false
+        }, this.data.id, 'answer', null, this.data.peerId)
+      }
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   cancelCall() {
-    this.chatService.changeDialing(false)
-    this.stopAudio()
-    this.localStream.getTracks().forEach(x => x.stop())
+    try {
+      this.chatService.changeDialing(false)
+      this.stopAudio()
+      this.localStream.getTracks().forEach(x => x.stop())
 
-    this.socket.emit('cancelCall', this.dialInformation.id )
+      this.socket.emit('cancelCall', this.dialInformation.id)
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   // Decline incoming call.
   hangUp() {
-    this.chatService.changeCalling(false)
-    this.stopAudio()
+    try {
+      this.chatService.changeCalling(false)
+      this.stopAudio()
 
-    this.socket.emit('hangUp', this.data.id)
+      this.socket.emit('hangUp', this.data.id)
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 
   // Creates a new Peer.
   createPeer(options, receiver, type, chatType, peerId) {
-    let peerx
-    let init
+    try {
+      let peerx
+      let init
 
-    type === 'offer' ? init = true : init = false
+      type === 'offer' ? init = true : init = false
 
-    navigator.mediaDevices.getUserMedia({ video: options.video, audio: options.audio })
-    .then(stream => {
-      this.localStream = stream
+      navigator.mediaDevices.getUserMedia({
+          video: options.video,
+          audio: options.audio
+        })
+        .then(stream => {
+          this.localStream = stream
 
-      peerx = new SimplePeer({
-        initiator: init,
-        trickle: false,
-        stream: stream,
-        objectMode: true,
-        reconnectTimer: 250,
-        config: {
-          iceServers: [{
-              urls: 'stun:numb.viagenie.ca',
-              username: 'rasmus.falk@live.se',
-              credential: 'M581Z6DzR97BPSQltlbvq2jGXwObjoZB'
-            },
-            {
-              urls: 'turn:numb.viagenie.ca',
-              username: 'rasmus.falk@live.se',
-              credential: 'M581Z6DzR97BPSQltlbvq2jGXwObjoZB'
+          peerx = new SimplePeer({
+            initiator: init,
+            trickle: false,
+            stream: stream,
+            objectMode: true,
+            reconnectTimer: 250,
+            config: {
+              iceServers: [{
+                  urls: 'stun:numb.viagenie.ca',
+                  username: 'rasmus.falk@live.se',
+                  credential: 'M581Z6DzR97BPSQltlbvq2jGXwObjoZB'
+                },
+                {
+                  urls: 'turn:numb.viagenie.ca',
+                  username: 'rasmus.falk@live.se',
+                  credential: 'M581Z6DzR97BPSQltlbvq2jGXwObjoZB'
+                }
+              ]
             }
-          ]}
-      })
+          })
 
-      peerx.on('error', err => this.chatService.changeError(true))
+          peerx.on('error', err => this.chatService.changeError(true))
 
-      peerx.on('connect', () => {
-        this.chatService.changeCalling(false)
-        this.chatService.changeDialing(false)
-        this.stopAudio()
-        
-        this.chatService.changePeer(this.peer)
+          peerx.on('connect', () => {
+            this.chatService.changeCalling(false)
+            this.chatService.changeDialing(false)
+            this.stopAudio()
 
-        this.popupService.hangUpEvent(false)
-        this.popupService.answerCallEvent(false)
-        this.popupService.cancelCallEvent(false)
-        
-        this.router.navigate(['peer'])
-      })
+            this.chatService.changePeer(this.peer)
 
-      peerx.on('signal', data => {
-        this.peerId = data
-        this.socket.emit('sendSignal', { id: receiver, peerId: data, chatType: chatType, type: type })
-      })
+            this.popupService.hangUpEvent(false)
+            this.popupService.answerCallEvent(false)
+            this.popupService.cancelCallEvent(false)
 
-      peerx.on('stream', stream => this.chatService.changeStream(stream))
+            this.router.navigate(['peer'])
+          })
 
-      peerx.on('close', () => {
-        this.localStream.getTracks().forEach(x => x.stop())
+          peerx.on('signal', data => {
+            this.peerId = data
+            this.socket.emit('sendSignal', {
+              id: receiver,
+              peerId: data,
+              chatType: chatType,
+              type: type
+            })
+          })
 
-        this.router.navigate([''])
-      })
-    })
-    .catch(err => console.log(err))
+          peerx.on('stream', stream => this.chatService.changeStream(stream))
 
-    // Sets "dummy variable" values when view is fully rendered.
-    setTimeout(() => {
-      this.peer = peerx
+          peerx.on('close', () => {
+            this.localStream.getTracks().forEach(x => x.stop())
 
-      type === 'answer' ? this.peer.signal(peerId) : null
-    }, 2000)
+            this.router.navigate([''])
+          })
+        })
+        .catch(err => {
+          this.chatService.changeError(true)
+          console.log(err)
+        })
+
+      // Sets "dummy variable" values when view is fully rendered.
+      setTimeout(() => {
+        this.peer = peerx
+
+        type === 'answer' ? this.peer.signal(peerId) : null
+      }, 2000)
+    } catch (err) {
+      this.chatService.changeError(true)
+      console.log(err)
+    }
   }
 }
+
