@@ -32,7 +32,6 @@ export class FeedHeaderComponent implements OnInit {
    private websocketService: WebsocketService, 
    private router: Router,
    private popupService: PopupService) {
-     this.error = false
    }
 
   ngOnInit() {
@@ -45,6 +44,7 @@ export class FeedHeaderComponent implements OnInit {
     this.popupService.answerCallObs.subscribe(type => { if (type) { this.answerCall() } })
     this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
     this.popupService.cancelCallObs.subscribe(type => { if (type) { this.cancelCall() } })
+    this.chatService.currentError.subscribe(error => { if (error) { this.newError() }} )
 
     // When the users gets a Peer2Peer call.
     this.socket.on('newSignal', data => {
@@ -85,8 +85,6 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.changeDialing(true)
     this.startAudioDial()
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
-
-    setTimeout(() => this.cancelCall(), 10000)
   }
 
   // Starts a new voice call.
@@ -96,8 +94,17 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.changeDialing(true)
     this.startAudioDial()
     this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+  }
 
-    setTimeout(() => this.cancelCall(), 10000)
+  newError() {
+    if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
+
+    console.log('new error...')
+
+    this.chatService.changeDialing(false)
+    this.chatService.changeCalling(false)
+    this.stopAudio()
+    this.error = true
   }
 
   // Starts the dial sound.
@@ -169,13 +176,7 @@ export class FeedHeaderComponent implements OnInit {
           ]}
       })
 
-      peerx.on('error', err => {
-        this.localStream.getTracks().forEach(x => x.stop())
-        this.chatService.changeDialing(false)
-        this.chatService.changeCalling(false)
-        this.stopAudio()
-        this.error = true
-      })
+      peerx.on('error', err => this.chatService.changeError(true))
 
       peerx.on('connect', () => {
         this.chatService.changeCalling(false)

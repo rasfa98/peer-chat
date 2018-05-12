@@ -23,15 +23,6 @@
     <div class="navbar-brand">
         <h1 class="title is-4">Incoming {{callInformation.callType}} call from {{callInformation.caller}}...</h1>
     </div>
-
-    <div class="navbar-menu">
-      <div class="navbar-end">
-        <div class="navbar-item">
-          <button class="button is-success" (click)="answerCall()">Answer call</button>
-          <button class="button is-danger" (click)="hangUp()">Hang up</button>
-        </div>
-      </div>
-    </div>
   </nav>
 </div>
 
@@ -39,14 +30,6 @@
     <nav class="navbar" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
           <h1 class="title is-4">Making a {{dialInformation.dialType}} call to {{dialInformation.receiver}}...</h1>
-      </div>
-  
-      <div class="navbar-menu">
-        <div class="navbar-end">
-          <div class="navbar-item">
-            <button class="button is-danger" (click)="cancelCall()">Cancel</button>
-          </div>
-        </div>
       </div>
     </nav>
   </div>

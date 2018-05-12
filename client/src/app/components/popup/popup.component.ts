@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { PopupService } from '../../services/popup.service';
 import { ChatService } from '../../services/chat.service'
 
@@ -8,6 +8,9 @@ import { ChatService } from '../../services/chat.service'
   styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
+  @ViewChild('answer') answerBtn: any
+  @ViewChild('hangUp') hangUpBtn: any
+
   callInformation: object
   dialInformation: object
   calling: boolean
@@ -25,6 +28,9 @@ export class PopupComponent implements OnInit {
 
   // Triggers answerCall() in feed-header component.
   answerCall() {
+    this.answerBtn.nativeElement.disabled = true
+    this.hangUpBtn.nativeElement.disabled = true
+
     this.popupService.answerCallEvent(true)
   }
 
