@@ -99,8 +99,6 @@ export class FeedHeaderComponent implements OnInit {
   newError() {
     if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
 
-    console.log('new error...')
-
     this.chatService.changeDialing(false)
     this.chatService.changeCalling(false)
     this.stopAudio()
@@ -142,6 +140,7 @@ export class FeedHeaderComponent implements OnInit {
   hangUp() {
     this.chatService.changeCalling(false)
     this.stopAudio()
+
     this.socket.emit('hangUp', this.data.id)
   }
 

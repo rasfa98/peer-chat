@@ -4,8 +4,8 @@
       <h1 class="subtitle is-4 has-text-white">Incoming {{callInformation.callType}} call from {{callInformation.caller}}...</h1>
     </div>
     <div class="card-content has-text-centered">
-      <button class="button is-success" (click)="answerCall()" #answer>Answer</button>
-      <button class="button is-danger" (click)="hangUp()" #hangUp>Hang up</button>
+      <button class="button is-success" (click)="answerCall()" #answerBtn>Answer</button>
+      <button class="button is-danger" (click)="hangUp()" #hangUpBtn>Hang up</button>
     </div>
   </div>
 </div>

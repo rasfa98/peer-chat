@@ -11,7 +11,6 @@ export class PeerChatComponent implements OnInit {
   @ViewChild('videoChat') videoChat: any
   @ViewChild('end') endCallBtn: any
 
-  stream: any
   peer: any
 
   constructor(private chatService: ChatService, private router: Router) { }
@@ -19,10 +18,12 @@ export class PeerChatComponent implements OnInit {
   ngOnInit() {
     // Observables.
     this.chatService.currentStream.subscribe(stream => {
-      this.stream = this.stream
-
       this.videoChat.nativeElement.srcObject = stream
+
       this.videoChat.nativeElement.play()
+      .catch(err => {
+        this.peer.destroy()
+      })
     })
 
     this.chatService.currentPeer.subscribe(peer => {

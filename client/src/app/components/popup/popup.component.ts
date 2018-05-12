@@ -8,8 +8,8 @@ import { ChatService } from '../../services/chat.service'
   styleUrls: ['./popup.component.css']
 })
 export class PopupComponent implements OnInit {
-  @ViewChild('answer') answerBtn: any
-  @ViewChild('hangUp') hangUpBtn: any
+  @ViewChild('answerBtn') answerBtn: any
+  @ViewChild('hangUpBtn') hangUpBtn: any
 
   callInformation: object
   dialInformation: object
@@ -19,6 +19,7 @@ export class PopupComponent implements OnInit {
   constructor(private popupService: PopupService, private chatService: ChatService) { }
 
   ngOnInit() {
+
     // Observables.
     this.chatService.currentCallInformation.subscribe(callInformation => this.callInformation = callInformation)
     this.chatService.currentDialInformation.subscribe(dialInformation => this.dialInformation = dialInformation)
