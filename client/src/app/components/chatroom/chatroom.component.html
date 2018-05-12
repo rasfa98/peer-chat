@@ -9,6 +9,11 @@
     <app-popup></app-popup>
   </div>
 
+  <div *ngIf="error">
+    <div class="error">
+        <app-error></app-error>
+    </div>
+  </div>
 
   <div class="columns is-gapless">
     <div class="column is-one-third">

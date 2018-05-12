@@ -8,6 +8,11 @@
     height: 100px;
 }
 
+.error {
+    position: absolute;
+    width: 100%
+}
+
 .search {
     background-color: rgb(72, 21, 78);
     height: 65px;

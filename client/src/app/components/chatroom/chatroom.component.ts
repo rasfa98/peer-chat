@@ -14,9 +14,11 @@ export class ChatroomComponent implements OnInit {
   loading: boolean
   calling: boolean
   dialing: boolean
+  error: boolean
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.loading = true
+    this.error = true
   }
 
   ngOnInit() {
@@ -25,6 +27,7 @@ export class ChatroomComponent implements OnInit {
     // Observables.
     this.chatService.currentCalling.subscribe(calling => this.calling = calling)
     this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
+    // this.chatService.currentError.subscribe(error => this.error = error)
 
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => {
       if (activeUserItem.id === null) {
