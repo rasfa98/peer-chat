@@ -27,7 +27,7 @@
     text-align: center;
     display: block;
     width: 60%;
-    margin-top: -160px;
+    bottom: 75px;
     margin-left: 10px;
     border-radius: 7px;
     background-color: white;
@@ -40,7 +40,7 @@
     margin-left: 10px;
     width: 30px;
     height: 26px;
-    top: 120px;
+    bottom: -10px;
     content: "";
     transform: rotate(29deg) skew(-25deg);
     z-index: -100;
