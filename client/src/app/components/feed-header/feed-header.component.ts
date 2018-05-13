@@ -77,7 +77,7 @@ export class FeedHeaderComponent implements OnInit {
         this.stopAudio()
       })
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to establish a connection, please try again...' })
       console.log(err)
     }
   }
@@ -86,7 +86,7 @@ export class FeedHeaderComponent implements OnInit {
     try {
       this.socket.emit('removeFriend', id)
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to remove one of your friends.' })
       console.log(err)
     }
   }
@@ -107,7 +107,7 @@ export class FeedHeaderComponent implements OnInit {
         video: true
       }, id, 'offer', 'video', null)
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to start a video call.' })
       console.log(err)
     }
   }
@@ -128,7 +128,7 @@ export class FeedHeaderComponent implements OnInit {
         video: false
       }, id, 'offer', 'voice', null)
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to start a voice call.' })
       console.log(err)
     }
   }
@@ -153,7 +153,7 @@ export class FeedHeaderComponent implements OnInit {
       this.audio.nativeElement.src = '../../../assets/dialing.mp3'
       this.audio.nativeElement.play()
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to start the dial sound.' })
       console.log(err)
     }
   }
@@ -163,7 +163,7 @@ export class FeedHeaderComponent implements OnInit {
     try {
       this.audio.nativeElement.pause()
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to stop the audio...' })
       console.log(err)
     }
   }
@@ -174,7 +174,7 @@ export class FeedHeaderComponent implements OnInit {
       this.audio.nativeElement.src = '../../../assets/ringing.mp3'
       this.audio.nativeElement.play()
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to start the ringing sound.' })
       console.log(err)
     }
   }
@@ -195,7 +195,7 @@ export class FeedHeaderComponent implements OnInit {
         }, this.data.id, 'answer', null, this.data.peerId)
       }
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to answer the call...' })
       console.log(err)
     }
   }
@@ -221,7 +221,7 @@ export class FeedHeaderComponent implements OnInit {
 
       this.socket.emit('hangUp', this.data.id)
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to cancel the call...' })
       console.log(err)
     }
   }
@@ -262,7 +262,7 @@ export class FeedHeaderComponent implements OnInit {
             }
           })
 
-          peerx.on('error', err => this.chatService.changeError(true))
+          peerx.on('error', err => this.chatService.changeError({ error: true, message: 'An error occured when trying to establish a connection, please try again...' }))
 
           peerx.on('connect', () => {
             this.chatService.changeCalling(false)
@@ -297,7 +297,7 @@ export class FeedHeaderComponent implements OnInit {
           })
         })
         .catch(err => {
-          this.chatService.changeError(true)
+          this.chatService.changeError({ error: true, message: 'An error occured when trying to establish a connection, please try again...' })
           console.log(err)
         })
 
@@ -308,7 +308,7 @@ export class FeedHeaderComponent implements OnInit {
         type === 'answer' ? this.peer.signal(peerId) : null
       }, 2000)
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeError({ error: true, message: 'There was an error when trying to use your camera/microphone' })
       console.log(err)
     }
   }
