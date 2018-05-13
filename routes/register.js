@@ -34,6 +34,11 @@ router.route('/')
         } else {
           await user.save()
 
+          req.session.flash = {
+            type: 'success',
+            message: 'Account successfully created!'
+          }
+
           res.redirect('/login')
         }
       } catch (err) {
