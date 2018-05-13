@@ -39,9 +39,9 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentCalling.subscribe(calling => this.calling = calling)
     this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
-    this.popupService.answerCallObs.subscribe(type => { if (type) { this.answerCall() } })
-    this.popupService.hangUpObs.subscribe(type => { if (type) { this.hangUp() } })
-    this.popupService.cancelCallObs.subscribe(type => { if (type) { this.cancelCall() } })
+    this.popupService.answerCallObs.subscribe(type => { if (type && this.data) {this.answerCall() } })
+    this.popupService.hangUpObs.subscribe(type => { if (type && this.data) { this.hangUp() } })
+    this.popupService.cancelCallObs.subscribe(type => { if (type && this.data) { this.cancelCall() } })
     this.chatService.currentError.subscribe(error => { if (error) { this.newError() } })
 
     try {
@@ -99,6 +99,7 @@ export class FeedHeaderComponent implements OnInit {
         receiver: this.activeUserItem.fullName,
         dialType: 'video'
       }
+
       this.chatService.changeDialInformation(this.dialInformation)
       this.chatService.changeDialing(true)
       this.startAudioDial()
@@ -120,6 +121,7 @@ export class FeedHeaderComponent implements OnInit {
         receiver: this.activeUserItem.fullName,
         dialType: 'voice'
       }
+
       this.chatService.changeDialInformation(this.dialInformation)
       this.chatService.changeDialing(true)
       this.startAudioDial()
@@ -221,7 +223,7 @@ export class FeedHeaderComponent implements OnInit {
 
       this.socket.emit('hangUp', this.data.id)
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to cancel the call...' })
+      this.chatService.changeError({ error: true, message: 'An error occured when trying to hang up...' })
       console.log(err)
     }
   }
@@ -270,6 +272,7 @@ export class FeedHeaderComponent implements OnInit {
             this.stopAudio()
 
             this.chatService.changePeer(this.peer)
+            this.chatService.changeError(false)
 
             this.popupService.hangUpEvent(false)
             this.popupService.answerCallEvent(false)
