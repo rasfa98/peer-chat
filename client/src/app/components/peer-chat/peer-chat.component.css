@@ -1,6 +1,13 @@
-:host video {
+:host .peer {
     width: 100vw;
     height: 95vh;
+}
+
+:host .you {
+    position: absolute;
+    height: 40vh;
+    top: 0;
+    margin-left: 9.9vh;
 }
 
 :host .background {
