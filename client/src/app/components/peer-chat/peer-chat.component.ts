@@ -65,11 +65,11 @@ export class PeerChatComponent implements OnInit {
   }
 
   toggleCamera() {
-    this.localStream.getVideoTracks().forEach(x => x.stop())
+    this.localStream.getVideoTracks().forEach(x => x.enabled = !x.enabled)
   }
 
   toggleMicrophone() {
-    this.localStream.getAudioTracks().forEach(x => x.stop())
+    this.localStream.getAudioTracks().forEach(x => x.enabled = !x.enabled)
   }
 
   getCallType() {
