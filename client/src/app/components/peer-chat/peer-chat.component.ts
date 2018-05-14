@@ -9,6 +9,8 @@ import { Router } from '@angular/router'
 })
 export class PeerChatComponent implements OnInit {
   @ViewChild('videoChat') videoChat: any
+  @ViewChild('mic') micBtn: any
+  @ViewChild('video') videoBtn: any
   @ViewChild('localVideo') localVideo: any
   @ViewChild('end') endCallBtn: any
 
@@ -28,8 +30,15 @@ export class PeerChatComponent implements OnInit {
 
       if (tracks.length > 0) {
         this.chatType = 'video'
+
+        this.micBtn.nativeElement.disabled = false
+        this.videoBtn.nativeElement.disabled = false
       } else {
         this.chatType = 'voice'
+
+        this.localVideo.nativeElement.style.display = 'none'
+        this.micBtn.nativeElement.disabled = false
+        this.videoBtn.nativeElement.disabled = false
       }
       
       this.localVideo.nativeElement.srcObject = stream

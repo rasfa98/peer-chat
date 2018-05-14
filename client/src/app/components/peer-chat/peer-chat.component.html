@@ -5,8 +5,8 @@
       <video class="you" #localVideo poster="../../../assets/poster.png"></video>
     </div>
 
-    <button class="button is-primary" (click)="toggleMicrophone()" #mic>Toggle microphone</button>
-    <button class="button is-primary" (click)="toggleCamera()" #video>Toggle camera</button>
+    <button class="button is-primary" (click)="toggleMicrophone()" disabled #mic>Toggle microphone</button>
+    <button class="button is-primary" (click)="toggleCamera()" disabled #video>Toggle camera</button>
     <button class="button is-danger" (click)="endCall()" disabled #end>End call</button>
   </div>
 </div>
