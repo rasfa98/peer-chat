@@ -15,6 +15,7 @@ export class PeerChatComponent implements OnInit {
   peer: any
   stream: any
   localStream: any
+  chatType: string
 
   constructor(private chatService: ChatService, private router: Router) { }
 
@@ -22,6 +23,14 @@ export class PeerChatComponent implements OnInit {
     // Observables.
     this.chatService.currentLocalStream.subscribe(stream => {
       this.localStream = stream
+
+      const tracks = stream.getTracks().filter(x => x.kind === 'video')
+
+      if (tracks.length > 0) {
+        this.chatType = 'video'
+      } else {
+        this.chatType = 'voice'
+      }
       
       this.localVideo.nativeElement.srcObject = stream
       this.localVideo.nativeElement.play()
