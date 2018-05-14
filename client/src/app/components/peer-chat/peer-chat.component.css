@@ -1,22 +1,35 @@
+:host .background {
+    height: 100vh;
+    overflow-y: hidden;
+}
+
 :host .peer {
-    width: 100vw;
-    height: 95vh;
+    height: 100%;
 }
 
 :host .you {
     position: absolute;
     height: 40vh;
     top: 0;
-    margin-left: 9.9vh;
+    right: 0;
 }
 
 :host .background {
     background-color: rgb(248, 246, 248);
 }
 
+:host .buttons {
+    position: absolute;
+    bottom: 30px;
+    margin: 0 auto;
+    width: 100%;
+    display: block
+}
+
 :host button {
-    font-size: 20px;
-    width: 15vw;
-    height: 5vh;
-    margin-top: -6px;
+    height: 70px;
+    width: 70px;
+    margin: 15px;
+    font-size: 30px;
+    border-radius: 100%;
 }

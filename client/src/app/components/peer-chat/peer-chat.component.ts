@@ -84,8 +84,8 @@ export class PeerChatComponent implements OnInit {
         this.chatType = 'voice'
 
         this.localVideo.nativeElement.style.display = 'none'
+        this.videoBtn.nativeElement.style.display = 'none'
         this.micBtn.nativeElement.disabled = false
-        this.videoBtn.nativeElement.disabled = false
       }
   }
 }

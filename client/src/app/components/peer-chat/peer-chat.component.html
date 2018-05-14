@@ -5,12 +5,24 @@
 </div>
 
 <div class="has-text-centered background" #chat hidden>
-  <div>
-    <video class="peer" #videoChat poster="../../../assets/poster.png"></video>
-    <video class="you" #localVideo poster="../../../assets/poster.png"></video>
-  </div>
+  <video class="peer" #videoChat poster="../../../assets/poster.png"></video>
+  <video class="you" #localVideo poster="../../../assets/poster.png"></video>
 
-  <button class="button is-primary" (click)="toggleMicrophone()" disabled #mic>Toggle microphone</button>
-  <button class="button is-primary" (click)="toggleCamera()" disabled #video>Toggle camera</button>
-  <button class="button is-danger" (click)="endCall()" disabled #end>End call</button>
+  <div class="buttons">
+    <button class="button is-primary" (click)="toggleMicrophone()" disabled #mic>
+      <span class="icon is-small">
+        <i class="ion-android-microphone"></i>
+      </span>
+    </button>
+    <button class="button is-primary" (click)="toggleCamera()" disabled #video>
+      <span class="icon is-small">
+        <i class="ion-android-camera"></i>
+      </span>
+    </button>
+    <button class="button is-danger" (click)="endCall()" disabled #end>
+      <span class="icon is-small">
+        <i class="ion-android-call"></i>
+      </span>
+    </button>
+  </div>
 </div>
