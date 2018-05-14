@@ -13,34 +13,28 @@ export class PeerChatComponent implements OnInit {
   @ViewChild('video') videoBtn: any
   @ViewChild('localVideo') localVideo: any
   @ViewChild('end') endCallBtn: any
+  @ViewChild('chat') chatComponents: any
 
   peer: any
   stream: any
   localStream: any
   chatType: string
+  loading: boolean
 
-  constructor(private chatService: ChatService, private router: Router) { }
+  constructor(private chatService: ChatService, private router: Router) {
+    this.loading = true
+  }
 
   ngOnInit() {
     // Observables.
     this.chatService.currentLocalStream.subscribe(stream => {
       this.localStream = stream
 
-      const tracks = stream.getTracks().filter(x => x.kind === 'video')
+      this.chatComponents.nativeElement.hidden = false
+      this.loading = false
 
-      if (tracks.length > 0) {
-        this.chatType = 'video'
+      this.getCallType()
 
-        this.micBtn.nativeElement.disabled = false
-        this.videoBtn.nativeElement.disabled = false
-      } else {
-        this.chatType = 'voice'
-
-        this.localVideo.nativeElement.style.display = 'none'
-        this.micBtn.nativeElement.disabled = false
-        this.videoBtn.nativeElement.disabled = false
-      }
-      
       this.localVideo.nativeElement.srcObject = stream
       this.localVideo.nativeElement.play()
     })
@@ -50,6 +44,7 @@ export class PeerChatComponent implements OnInit {
 
       this.chatService.currentPeer.subscribe(peer => {
         this.peer = peer
+
         this.endCallBtn.nativeElement.disabled = false
 
         this.videoChat.nativeElement.srcObject = stream
@@ -75,5 +70,22 @@ export class PeerChatComponent implements OnInit {
 
   toggleMicrophone() {
     this.localStream.getAudioTracks().forEach(x => x.stop())
+  }
+
+  getCallType() {
+    const tracks = this.localStream.getTracks().filter(x => x.kind === 'video')
+
+      if (tracks.length > 0) {
+        this.chatType = 'video'
+
+        this.micBtn.nativeElement.disabled = false
+        this.videoBtn.nativeElement.disabled = false
+      } else {
+        this.chatType = 'voice'
+
+        this.localVideo.nativeElement.style.display = 'none'
+        this.micBtn.nativeElement.disabled = false
+        this.videoBtn.nativeElement.disabled = false
+      }
   }
 }
