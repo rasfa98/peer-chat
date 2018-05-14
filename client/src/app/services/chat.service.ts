@@ -20,6 +20,7 @@ export class ChatService {
   private dialInformation = new BehaviorSubject(null)
   private error = new BehaviorSubject({ error: false, message: null })
   private localStream = new BehaviorSubject(null)
+  private chatType = new BehaviorSubject(null)
 
   currentActiveUserItem = this.activeUserItem.asObservable()
   currentStream = this.stream.asObservable()
@@ -35,6 +36,7 @@ export class ChatService {
   currentDialInformation = this.dialInformation.asObservable()
   currentError = this.error.asObservable()
   currentLocalStream = this.localStream.asObservable()
+  currentChatType = this.chatType.asObservable()
 
   BASE_URL: string = environment.BASE_URL
   
@@ -95,6 +97,10 @@ export class ChatService {
 
   changeError(error) {
     this.error.next(error)
+  }
+
+  changeChatType(chatType) {
+    this.chatType.next(chatType)
   }
 
   // Gets the current users friend requests.
