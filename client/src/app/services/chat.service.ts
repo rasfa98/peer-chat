@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http } from '@angular/http';
 import 'rxjs/add/operator/map';
+import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ChatService {
@@ -17,6 +18,8 @@ export class ChatService {
   private callInformation = new BehaviorSubject(null)
   private dialing = new BehaviorSubject(false)
   private dialInformation = new BehaviorSubject(null)
+  private error = new BehaviorSubject({ error: false, message: null })
+  private localStream = new BehaviorSubject(null)
 
   currentActiveUserItem = this.activeUserItem.asObservable()
   currentStream = this.stream.asObservable()
@@ -30,6 +33,10 @@ export class ChatService {
   currentDialing = this.dialing.asObservable()
   currentCallInformation = this.callInformation.asObservable()
   currentDialInformation = this.dialInformation.asObservable()
+  currentError = this.error.asObservable()
+  currentLocalStream = this.localStream.asObservable()
+
+  BASE_URL: string = environment.BASE_URL
   
   constructor(private http: Http) { }
 
@@ -40,6 +47,10 @@ export class ChatService {
 
   changeStream(stream) {
     this.stream.next(stream)
+  }
+
+  changeLocalStream(stream) {
+    this.localStream.next(stream)
   }
 
   changeActiveConversation(conversation) {
@@ -82,20 +93,24 @@ export class ChatService {
     this.dialInformation.next(dialInformation)
   }
 
+  changeError(error) {
+    this.error.next(error)
+  }
+
   // Gets the current users friend requests.
   getFriendRequests() {
-    return this.http.get('https://rasmusfalk.se/user/friendRequests')
+    return this.http.get(`${this.BASE_URL}/user/friendRequests`)
     .map(res => res.json().requests)
   }
 
   // Gets the current users friends.
   getFriends() {
-    return this.http.get('https://rasmusfalk.se/user/friends')
+    return this.http.get(`${this.BASE_URL}/user/friends`)
     .map(res => res.json().friends)
   }
 
   getConversations() {
-    return this.http.get('https://rasmusfalk.se/user/conversations')
+    return this.http.get(`${this.BASE_URL}/user/conversations`)
     .map(res => res.json().conversations)
   }
 }
