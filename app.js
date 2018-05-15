@@ -32,7 +32,7 @@
    store: new MongoStore({ url: app.get('connectionString') }),
    cookie: {
      secure: false,
-     expires: 900000
+     expires: 99999999999
    }
  }))
 
@@ -54,6 +54,7 @@
  app.use((req, res, next) => {
    res.locals.login = req.session.login
    res.locals.userId = req.session.userId
+   res.locals.cookies = req.session.cookies
    next()
  })
 
