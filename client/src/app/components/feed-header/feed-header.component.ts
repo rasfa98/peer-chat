@@ -90,6 +90,7 @@ export class FeedHeaderComponent implements OnInit {
   removeFriend(id) {
     try {
       this.socket.emit('removeFriend', id)
+      this.chatService.changeInfo({ info: true, message: 'Friend has been removed', type: 'danger' })
     } catch (err) {
       this.chatService.changeError({ error: true, message: 'An error occured when trying to remove one of your friends.' })
       console.log(err)
