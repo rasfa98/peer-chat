@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-info',
@@ -6,10 +7,22 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./info.component.css']
 })
 export class InfoComponent implements OnInit {
+  info: any
 
-  constructor() { }
+  constructor(private chatService: ChatService) {
+  }
 
   ngOnInit() {
+    // Observables.
+    this.chatService.currentInfo.subscribe(info => {
+      this.info = info
+
+      if (info.info === true) {
+        setTimeout(() => {
+          this.chatService.changeInfo({ info: false, message: null })
+        }, 4000)
+      }
+    })
   }
 
 }
