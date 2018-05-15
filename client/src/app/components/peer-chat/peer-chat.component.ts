@@ -20,6 +20,8 @@ export class PeerChatComponent implements OnInit {
   localStream: any
   chatType: string
   loading: boolean
+  hasPlayedLocal: boolean
+  hasPlayedPeer: boolean
 
   constructor(private chatService: ChatService, private router: Router) {
     this.loading = true
@@ -28,34 +30,42 @@ export class PeerChatComponent implements OnInit {
   ngOnInit() {
     // Observables.
     this.chatService.currentLocalStream.subscribe(stream => {
-      this.localStream = stream
+      if (!this.hasPlayedLocal) {
+        this.localStream = stream
 
-      this.chatComponents.nativeElement.hidden = false
-      this.loading = false
+        this.chatComponents.nativeElement.hidden = false
+        this.loading = false
 
-      this.getCallType()
+        this.getCallType()
 
-      this.localVideo.nativeElement.srcObject = stream
-      this.localVideo.nativeElement.play()
+        this.localVideo.nativeElement.srcObject = stream
+        this.localVideo.nativeElement.play()
+        this.hasPlayedLocal = true
+      }
     })
 
     this.chatService.currentStream.subscribe(stream => {
-      this.stream = stream
+      if (!this.hasPlayedPeer) {
+        this.stream = stream
 
-      this.chatService.currentPeer.subscribe(peer => {
-        this.peer = peer
-
-        this.endCallBtn.nativeElement.disabled = false
-
-        this.videoChat.nativeElement.srcObject = stream
-
-        this.videoChat.nativeElement.play()
-        .catch(err => {
-          this.peer.destroy()
-          this.chatService.changeError({ error: true, message: 'There was an error with the stream, please try again...' })
-          console.log(err)
-        })
-      })
+        this.chatService.currentPeer.subscribe(peer => {
+          this.peer = peer
+  
+          this.endCallBtn.nativeElement.disabled = false
+  
+          this.videoChat.nativeElement.srcObject = stream
+          this.videoChat.nativeElement.play()
+          .then(() => {
+            this.hasPlayedPeer = true
+          })
+          .catch(err => {
+            this.hasPlayedPeer = false
+            this.peer.destroy()
+            this.chatService.changeError({ error: true, message: 'There was an error with the stream, please try again...' })
+            console.log(err)
+          })
+        }) 
+      }
     })
   }
 
