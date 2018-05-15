@@ -22,9 +22,13 @@ export class PeerChatComponent implements OnInit {
   loading: boolean
   hasPlayedLocal: boolean
   hasPlayedPeer: boolean
+  clickVid: boolean
+  clickMic: boolean
 
   constructor(private chatService: ChatService, private router: Router) {
     this.loading = true
+    this.clickMic = true
+    this.clickVid = true
   }
 
   ngOnInit() {
@@ -76,10 +80,12 @@ export class PeerChatComponent implements OnInit {
 
   toggleCamera() {
     this.localStream.getVideoTracks().forEach(x => x.enabled = !x.enabled)
+    this.clickVid = !this.clickVid
   }
 
   toggleMicrophone() {
     this.localStream.getAudioTracks().forEach(x => x.enabled = !x.enabled)
+    this.clickMic = !this.clickMic
   }
 
   getCallType() {
@@ -87,15 +93,11 @@ export class PeerChatComponent implements OnInit {
 
       if (tracks.length > 0) {
         this.chatType = 'video'
-
-        this.micBtn.nativeElement.disabled = false
-        this.videoBtn.nativeElement.disabled = false
       } else {
         this.chatType = 'voice'
 
         this.localVideo.nativeElement.style.display = 'none'
         this.videoBtn.nativeElement.style.display = 'none'
-        this.micBtn.nativeElement.disabled = false
       }
   }
 }
