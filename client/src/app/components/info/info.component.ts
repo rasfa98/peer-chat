@@ -19,7 +19,7 @@ export class InfoComponent implements OnInit {
 
       if (info.info === true) {
         setTimeout(() => {
-          this.chatService.changeInfo({ info: false, message: null })
+          this.chatService.changeInfo({ info: false, message: null, type: null })
         }, 4000)
       }
     })

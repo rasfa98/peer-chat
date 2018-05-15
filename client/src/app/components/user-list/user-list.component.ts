@@ -28,7 +28,10 @@ export class UserListComponent implements OnInit {
     this.chatService.currentState.subscribe(state => this.state = state)
     this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
     this.chatService.currentFriends.subscribe(friends => this.friends = friends)
-    this.chatService.getFriends().subscribe(friends => this.friends = friends)
+    this.chatService.getFriends().subscribe(friends => {
+      this.friends = friends
+      this.chatService.changeFriends(friends)
+    })
 
     this.socket.on('updateFriendStatus', friend => {
       for (let i = 0; i < this.friends.length; i++) {
@@ -65,18 +68,21 @@ export class UserListComponent implements OnInit {
   addUser(id) {
     this.socket.emit('addUser', id)
     this.chatService.changeState("friendList")
+    this.chatService.changeInfo({ info: true, message: 'Friend request has been sent.', type: 'success' })
   }
 
   // Accepts a friend request.
   acceptRequest(id) {
     this.socket.emit('acceptRequest', id)
     this.chatService.changeState("friendList")
+    this.chatService.changeInfo({ info: true, message: 'User has been added to your friend list!', type: 'success' })
   }
 
   // Declines a friend request.
   declineRequest(id) {
     this.socket.emit('declineRequest', id)
     this.chatService.changeState("friendList")
+    this.chatService.changeInfo({ info: true, message: 'Friend request has been declined...', type: 'danger' })
   }
 
   back() {
