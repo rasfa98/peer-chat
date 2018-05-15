@@ -23,7 +23,13 @@ export class FeedComponent implements OnInit {
     // Observables.
     this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.currentActiveConversation.subscribe(id => this.activeConversation = this.conversations[id])
-    this.chatService.getConversations().subscribe(conversations => this.conversations = conversations)
+    this.chatService.getConversations().subscribe(conversations => {
+      this.conversations = conversations
+
+      if (this.activeUserItem.id !== null) {
+        this.activeConversation = this.conversations[this.activeUserItem.id]
+      }
+    })
     
     // Adds new messages to the client.
     this.socket.on('newMessage', data => {
