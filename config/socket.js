@@ -86,6 +86,12 @@
        socket.to(receiver.socketId).emit('cancelCall')
      })
 
+     socket.on('answered', async id => {
+       const receiver = await User.findOne({ _id: id })
+
+       socket.to(receiver.socketId).emit('answered')
+     })
+
      // Friend requests
      socket.on('addUser', async id => {
        const currentUser = await User.findOne({ socketId: socket.id })

@@ -25,6 +25,7 @@ export class FeedHeaderComponent implements OnInit {
   localStream: any
   callInformation: object
   dialInformation: any
+  answered: boolean
 
   constructor
     (private chatService: ChatService,
@@ -41,7 +42,7 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
     this.popupService.answerCallObs.subscribe(type => { if (type && this.data) {this.answerCall() } })
     this.popupService.hangUpObs.subscribe(type => { if (type && this.data) { this.hangUp() } })
-    this.popupService.cancelCallObs.subscribe(type => { if (type && this.data) { this.cancelCall() } })
+    this.popupService.cancelCallObs.subscribe(type => { if (type && this.dialInformation) { this.cancelCall() } })
     this.chatService.currentError.subscribe(error => { if (error) { this.newError() } })
 
     try {
@@ -76,6 +77,8 @@ export class FeedHeaderComponent implements OnInit {
         this.chatService.changeCalling(false)
         this.stopAudio()
       })
+
+      this.socket.on('answered', () => this.answered = true)
     } catch (err) {
       this.chatService.changeError({ error: true, message: 'An error occured when trying to establish a connection, please try again...' })
       console.log(err)
@@ -107,6 +110,8 @@ export class FeedHeaderComponent implements OnInit {
         audio: true,
         video: true
       }, id, 'offer', 'video', null)
+
+      setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
     } catch (err) {
       this.chatService.changeError({ error: true, message: 'An error occured when trying to start a video call.' })
       console.log(err)
@@ -129,6 +134,8 @@ export class FeedHeaderComponent implements OnInit {
         audio: true,
         video: false
       }, id, 'offer', 'voice', null)
+
+      setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
     } catch (err) {
       this.chatService.changeError({ error: true, message: 'An error occured when trying to start a voice call.' })
       console.log(err)
@@ -184,6 +191,8 @@ export class FeedHeaderComponent implements OnInit {
   // Answer the incoming call.
   answerCall() {
     try {
+      this.socket.emit('answered', this.data.id)
+
       if (this.data.chatType === 'video') {
         this.createPeer({
           audio: true,
@@ -272,6 +281,7 @@ export class FeedHeaderComponent implements OnInit {
             this.stopAudio()
 
             this.chatService.changePeer(this.peer)
+
             this.chatService.changeError(false)
 
             this.popupService.hangUpEvent(false)
@@ -291,7 +301,10 @@ export class FeedHeaderComponent implements OnInit {
             })
           })
 
-          peerx.on('stream', stream => this.chatService.changeStream(stream))
+          peerx.on('stream', stream => {
+            this.chatService.changeStream(stream)
+            this.chatService.changeLocalStream(this.localStream)
+          })
 
           peerx.on('close', () => {
             this.localStream.getTracks().forEach(x => x.stop())
