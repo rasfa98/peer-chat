@@ -26,6 +26,7 @@ export class FeedHeaderComponent implements OnInit {
   callInformation: object
   dialInformation: any
   answered: boolean
+  friends: any
 
   constructor
     (private chatService: ChatService,
@@ -44,6 +45,7 @@ export class FeedHeaderComponent implements OnInit {
     this.popupService.hangUpObs.subscribe(type => { if (type && this.data) { this.hangUp() } })
     this.popupService.cancelCallObs.subscribe(type => { if (type && this.dialInformation) { this.cancelCall() } })
     this.chatService.currentError.subscribe(error => { if (error) { this.newError() } })
+    this.chatService.currentFriends.subscribe(friends => this.friends = friends)
 
     try {
       // When the users gets a Peer2Peer call.
@@ -192,6 +194,9 @@ export class FeedHeaderComponent implements OnInit {
   answerCall() {
     try {
       this.socket.emit('answered', this.data.id)
+
+      this.chatService.changeActiveUserItem(this.friends.filter(x => x.id === this.data.id)[0])
+      this.chatService.changeActiveConversation(this.friends.filter(x => x.id === this.data.id)[0].id)
 
       if (this.data.chatType === 'video') {
         this.createPeer({
