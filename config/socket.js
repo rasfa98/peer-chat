@@ -10,6 +10,12 @@ function removeFriendRequest (id, requests) {
   }
 }
 
+function removeFriend (user, id) {
+  user.friends.forEach((x, i) => {
+    if (x.id === id.toString()) { user.friends.splice(i, 1) }
+  })
+}
+
 module.exports.run = (server) => {
   const io = socket(server)
 
@@ -17,9 +23,7 @@ module.exports.run = (server) => {
     socket.on('newUser', async user => {
       await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id, status: 'online' })
 
-      const currentUser = await User.findOne({ socketId: socket.id })
-
-      io.emit('updateFriendStatus', { id: currentUser._id, status: 'online' })
+      io.emit('updateFriendStatus', { id: user._id, status: 'online' })
       socket.emit('updateCurrentUserStatus', 'online')
     })
 
@@ -45,13 +49,8 @@ module.exports.run = (server) => {
       const currentUser = await User.findOne({ socketId: socket.id })
       const friend = await User.findOne({ _id: id })
 
-      currentUser.friends.forEach((x, i) => {
-        if (x.id === friend._id.toString()) { currentUser.friends.splice(i, 1) }
-      })
-
-      friend.friends.forEach((x, i) => {
-        if (x.id === currentUser._id.toString()) { friend.friends.splice(i, 1) }
-      })
+      removeFriend(currentUser, id)
+      removeFriend(friend, currentUser._id)
 
       await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
       await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
