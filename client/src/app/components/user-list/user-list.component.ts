@@ -66,7 +66,7 @@ export class UserListComponent implements OnInit {
 
   // Sends a friend request to a specific user.
   addUser(id) {
-    this.socket.emit('addUser', id)
+    this.socket.emit('newRequest', id)
     this.chatService.changeState("friendList")
     this.chatService.changeInfo({ info: true, message: 'Friend request has been sent.', type: 'success' })
   }
