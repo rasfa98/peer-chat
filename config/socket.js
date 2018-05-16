@@ -4,6 +4,12 @@ const socket = require('socket.io')
 const User = require('../models/User')
 const emoji = require('../lib/emoji')
 
+function removeFriendRequest (id, requests) {
+  for (let i = 0; i < requests.length; i++) {
+    if (requests[i].id === id) { requests.splice(i, 1) }
+  }
+}
+
 module.exports.run = (server) => {
   const io = socket(server)
 
@@ -54,7 +60,6 @@ module.exports.run = (server) => {
       socket.to(friend.socketId).emit('updateFriends', friend.friends)
     })
 
-    // Peer2Peer
     socket.on('sendSignal', async data => {
       const currentUser = await User.findOne({ socketId: socket.id })
       const receiver = await User.findOne({ _id: data.id })
@@ -105,15 +110,10 @@ module.exports.run = (server) => {
 
     socket.on('declineRequest', async id => {
       const currentUser = await User.findOne({ socketId: socket.id })
-      const friendRequests = currentUser.friendRequests
 
-      for (let i = 0; i < friendRequests.length; i++) {
-        if (friendRequests[i].id === id) {
-          friendRequests.splice(i, 1)
-        }
-      }
+      removeFriendRequest(id, currentUser.friendRequests)
 
-      await User.findOneAndUpdate({ _id: currentUser._id }, { friendRequests: friendRequests })
+      await User.findOneAndUpdate({ _id: currentUser._id }, { friendRequests: currentUser.friendRequests })
     })
 
     socket.on('acceptRequest', async id => {
@@ -130,15 +130,9 @@ module.exports.run = (server) => {
         currentUserFriendsArray.push({ id: sender._id })
         senderFriendsArray.push({ id: currentUser._id })
 
-        const currentUserFriendRequests = currentUser.friendRequests
+        removeFriendRequest(id, currentUser.friendRequests)
 
-        for (let i = 0; i < currentUserFriendRequests.length; i++) {
-          if (currentUserFriendRequests[i].id === id) {
-            currentUserFriendRequests.splice(i, 1)
-          }
-        }
-
-        await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUserFriendRequests })
+        await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUser.friendRequests })
         await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriendsArray })
 
         socket.emit('acceptRequest')
@@ -146,7 +140,6 @@ module.exports.run = (server) => {
       }
     })
 
-    // Text messages
     socket.on('sendMessage', async data => {
       const currentUser = await User.findOne({ socketId: socket.id })
       const receiver = await User.findOne({ _id: data.id })
