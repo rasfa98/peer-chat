@@ -68,6 +68,7 @@ module.exports.run = (server) => {
 
     socket.on('hangUp', async id => {
       const receiver = await User.findOne({ _id: id })
+
       socket.to(receiver.socketId).emit('hangUp')
     })
 
@@ -82,11 +83,11 @@ module.exports.run = (server) => {
       socket.to(receiver.socketId).emit('answered')
     })
 
-    socket.on('addUser', async id => {
+    socket.on('newRequest', async id => {
       const currentUser = await User.findOne({ socketId: socket.id })
       const receiver = await User.findOne({ _id: id })
 
-      const filteredRequests = receiver.friendRequests.filter(x => x.id === id)
+      const filteredRequests = receiver.friendRequests.filter(x => x.id === currentUser._id.toString())
       const filteredFriends = currentUser.friends.filter(x => x.id === id)
 
       if (filteredRequests.length === 0 && filteredFriends.length === 0 && !receiver._id.equals(currentUser._id)) {
@@ -103,7 +104,7 @@ module.exports.run = (server) => {
 
         await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
 
-        socket.to(receiver.socketId).emit('addUser')
+        socket.to(receiver.socketId).emit('newRequest')
       }
     })
 
