@@ -8,7 +8,7 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./chatroom.component.css']
 })
 export class ChatroomComponent implements OnInit {
-  socket: void
+  socket: any
   displayWelcome: string
   displayChatComponents: string
   loading: boolean
@@ -21,7 +21,8 @@ export class ChatroomComponent implements OnInit {
   }
 
   ngOnInit() {
-    this.socket = this.websocketService.connect()
+    this.websocketService.connect()
+    this.socket = this.websocketService.socket
 
     this.chatService.calling.subscribe(calling => this.calling = calling)
     this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
@@ -38,6 +39,21 @@ export class ChatroomComponent implements OnInit {
       }
 
       this.loading = false
+    })
+
+    this.socket.on('friendResponseServer', data => {
+      if (data.type === 'success') {
+        this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'success' })
+        this.chatService.changeState("friendList")
+      }
+
+      if (data.type === 'error') {
+        this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'warning' })
+      }
+    })
+
+    this.socket.on('messageResponseServer', data => {
+      this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'warning' })
     })
   }
 }

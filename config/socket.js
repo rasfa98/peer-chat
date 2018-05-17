@@ -164,32 +164,36 @@ module.exports.run = (server) => {
     })
 
     socket.on('sendMessage', async data => {
-      const currentUser = await User.findOne({ socketId: socket.id })
-      const receiver = await User.findOne({ _id: data.id })
+      try {
+        const currentUser = await User.findOne({ socketId: socket.id })
+        const receiver = await User.findOne({ _id: data.id })
 
-      const message = emoji.addEmojis(data.message)
+        const message = emoji.addEmojis(data.message)
 
-      socket.emit('newMessage', { message: message, id: receiver.id, name: 'you' })
+        socket.emit('newMessage', { message: message, id: receiver.id, name: 'you' })
 
-      socket.to(receiver.socketId).emit('newMessage', { message: message, id: currentUser._id, name: currentUser.fullName })
-      socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
+        socket.to(receiver.socketId).emit('newMessage', { message: message, id: currentUser._id, name: currentUser.fullName })
+        socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
 
-      let currentUserConversations = currentUser.conversations.filter(x => x.id === receiver._id.toString())
-      let receiverConversations = receiver.conversations.filter(x => x.id === currentUser._id.toString())
+        let currentUserConversations = currentUser.conversations.filter(x => x.id === receiver._id.toString())
+        let receiverConversations = receiver.conversations.filter(x => x.id === currentUser._id.toString())
 
-      if (currentUserConversations.length > 0) {
-        currentUserConversations[0].messages.push({ message: message, sender: 'you' })
-        receiverConversations[0].messages.push({ message: message, sender: currentUser.fullName })
-      } else {
-        currentUserConversations.push({ id: data.id, messages: [ { message: message, sender: 'you' } ] })
-        receiverConversations.push({ id: currentUser._id, messages: [ { message: message, sender: currentUser.fullName } ] })
+        if (currentUserConversations.length > 0) {
+          currentUserConversations[0].messages.push({ message: message, sender: 'you' })
+          receiverConversations[0].messages.push({ message: message, sender: currentUser.fullName })
+        } else {
+          currentUserConversations.push({ id: data.id, messages: [ { message: message, sender: 'you' } ] })
+          receiverConversations.push({ id: currentUser._id, messages: [ { message: message, sender: currentUser.fullName } ] })
 
-        currentUser.conversations.push(currentUserConversations[0])
-        receiver.conversations.push(receiverConversations[0])
+          currentUser.conversations.push(currentUserConversations[0])
+          receiver.conversations.push(receiverConversations[0])
+        }
+
+        await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
+        await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
+      } catch (err) {
+        socket.emit('messageResponseServer', { message: 'An error occured when trying to send the message...' })
       }
-
-      await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
-      await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
     })
   })
 
