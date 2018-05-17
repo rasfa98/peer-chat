@@ -58,7 +58,6 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  // Changes the selected friend in the friend list.
   changeItem(user) {
     this.chatService.changeActiveUserItem(user)
     this.chatService.changeActiveConversation(user.id)
