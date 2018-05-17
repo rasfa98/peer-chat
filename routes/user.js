@@ -1,17 +1,8 @@
-/**
- * Module for the user routes.
- *
- * @module routes/user.js
- * @author Rasmus Falk
- * @version 1.0.0
- */
-
 'use strict'
 
 const router = require('express').Router()
 const User = require('../models/User')
 
-// Get the current user.
 router.route('/current')
     .get(async (req, res) => {
       const user = await User.findOne({ _id: res.locals.userId })
@@ -19,7 +10,6 @@ router.route('/current')
       res.send({ id: res.locals.userId, fullName: user.fullName, status: user.status, avatar: user.avatar })
     })
 
-// Find and return users from the database from a specific query.
 router.route('/query')
     .post(async (req, res) => {
       let users
@@ -39,7 +29,6 @@ router.route('/query')
       res.send({ users: users })
     })
 
-// Get the current users friend requests.
 router.route('/friendRequests')
     .get(async (req, res) => {
       const user = await User.findOne({ _id: req.session.userId })
@@ -47,7 +36,6 @@ router.route('/friendRequests')
       res.send({ requests: user.friendRequests })
     })
 
-// Get the current users friends.
 router.route('/friends')
     .get(async (req, res) => {
       const user = await User.findOne({ _id: req.session.userId })
@@ -78,5 +66,4 @@ router.route('/conversations')
       res.send({ conversations: structuredConversations })
     })
 
-// Exports
 module.exports = router

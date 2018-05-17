@@ -1,11 +1,3 @@
-/**
- * Module for the auth routes.
- *
- * @module routes/auth.js
- * @author Rasmus Falk
- * @version 1.0.0
- */
-
 'use strict'
 
 const router = require('express').Router()
@@ -29,5 +21,4 @@ router.route('/facebook/redirect')
       res.redirect('/chat')
     })
 
-// Exports
 module.exports = router

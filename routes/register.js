@@ -1,11 +1,3 @@
-/**
- * Module for the register routes.
- *
- * @module routes/register.js
- * @author Rasmus Falk
- * @version 1.0.0
- */
-
 'use strict'
 
 const router = require('express').Router()
@@ -15,6 +7,7 @@ const avatar = require('../lib/avatar')
 
 router.route('/')
     .get((req, res) => res.render('register'))
+
     .post(async (req, res) => {
       try {
         const user = new User({
@@ -46,5 +39,4 @@ router.route('/')
       }
     })
 
-// Exports
 module.exports = router

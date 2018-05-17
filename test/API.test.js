@@ -1,3 +1,5 @@
+'use strict'
+
 const expect = require('chai').expect
 const supertest = require('supertest')
 
@@ -24,6 +26,20 @@ describe('API /GET', () => {
     it('should return 200', done => {
       server
       .get('/user/current')
+      .expect(200)
+      .end((err, res) => {
+        expect(res.status).to.equal(200)
+        expect(res.body.error).to.not.exist
+        done()
+      })
+    })
+  })
+
+  describe('user/friends', () => {
+
+    it('should return 200', done => {
+      server
+      .get('/user/friends')
       .expect(200)
       .end((err, res) => {
         expect(res.status).to.equal(200)

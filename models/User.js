@@ -1,56 +1,47 @@
-/**
- * Module for the User schema.
- *
- * @module models/User.js
- * @author Rasmus Falk
- * @version 1.0.0
- */
+'use strict'
 
- 'use strict'
+const mongoose = require('mongoose')
+const bluebird = require('bluebird')
+const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
 
- const mongoose = require('mongoose')
- const bluebird = require('bluebird')
- const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
+const userSchema = mongoose.Schema({
+  fullName: { type: String, required: 'Full name is required!', trim: true },
+  email: { type: String, required: 'Email is required!', unique: true },
+  password: { type: String, required: 'Password is required!', trim: true },
+  status: { type: String, default: 'offline' },
+  avatar: { type: String },
+  friends: [{ id: String }],
+  friendRequests: [{
+    id: String,
+    fullName: String,
+    email: String,
+    avatar: String
+  }],
+  socketId: { type: String, default: null },
+  conversations: [{
+    id: String,
+    messages: [{
+      message: String,
+      sender: String
+    }]
+  }]
+})
 
- const userSchema = mongoose.Schema({
-   fullName: { type: String, required: 'Full name is required!', trim: true },
-   email: { type: String, required: 'Email is required!', unique: true },
-   password: { type: String, required: 'Password is required!', trim: true },
-   changedStatus: { type: String, default: 'online' },
-   status: { type: String, default: 'offline' },
-   avatar: { type: String },
-   friends: [{ id: String }],
-   friendRequests: [{
-     fullName: String,
-     id: String,
-     email: String,
-     avatar: String
-   }],
-   socketId: { type: String, default: null },
-   conversations: [{
-     id: String,
-     messages: [{
-       message: String,
-       sender: String
-     }]
-   }]
- })
+// Hashing of password.
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) { next() }
 
- // Hashing of password.
- userSchema.pre('save', async function (next) {
-   if (!this.isModified('password')) { next() }
+  const salt = await bcrypt.genSaltAsync(10)
+  const hash = await bcrypt.hashAsync(this.password, salt, null)
 
-   const salt = await bcrypt.genSaltAsync(10)
-   const hash = await bcrypt.hashAsync(this.password, salt, null)
+  this.password = hash
 
-   this.password = hash
+  next()
+})
 
-   next()
- })
+// Compare guessed password to stored password.
+userSchema.methods.compare = function (password) {
+  return bcrypt.compareAsync(password, this.password)
+}
 
- // Compare guessed password to stored password.
- userSchema.methods.compare = function (password) {
-   return bcrypt.compareAsync(password, this.password)
- }
-
- module.exports = mongoose.model('User', userSchema)
+module.exports = mongoose.model('User', userSchema)

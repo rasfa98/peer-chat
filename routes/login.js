@@ -1,11 +1,3 @@
-/**
- * Module for the login routes.
- *
- * @module routes/login.js
- * @author Rasmus Falk
- * @version 1.0.0
- */
-
 'use strict'
 
 const router = require('express').Router()
@@ -13,6 +5,7 @@ const User = require('../models/User')
 
 router.route('/')
     .get((req, res) => res.render('login'))
+
     .post(async (req, res) => {
       const user = await User.findOne({ email: req.body.email })
 
@@ -41,5 +34,4 @@ router.route('/')
       }
     })
 
-// Exports
 module.exports = router

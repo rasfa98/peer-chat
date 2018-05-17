@@ -11,31 +11,30 @@
 </head>
 
 <body>
-        <nav class="navbar static-nav" role="navigation" aria-label="main navigation">
-            <div class="navbar-brand">
-                <a class="navbar-item" href="/">
-                    <h1 class="title is-4 has-text-white">PeerChat</h1>
-                </a>
-            </div>
-
-            <div class="navbar-menu">
-                <div class="navbar-end">
-                    {{#if login}}
-                    <a class="navbar-item" href="/signout">Sign out</a>
-                    {{else}}
-                    <a class="navbar-item" href="/login">Login</a>
-                    {{/if}}
-                    <a class="navbar-item" href="/register">Register</a>
-                </div>
-            </div>
-        </nav>
-
-        <br>
-
-        <div class="container">
-            {{>cookie}}
-            {{{body}}}
+    <nav class="navbar static-nav" role="navigation" aria-label="main navigation">
+        <div class="navbar-brand">
+            <a class="navbar-item" href="/">
+                <h1 class="title is-4 has-text-white">PeerChat</h1>
+            </a>
         </div>
+
+        <div class="navbar-menu">
+            <div class="navbar-end">
+                {{#if login}}
+                <a class="navbar-item" href="/signout">Sign out</a>
+                {{else}}
+                <a class="navbar-item" href="/login">Login</a>
+                {{/if}}
+                <a class="navbar-item" href="/register">Register</a>
+            </div>
+        </div>
+    </nav>
+
+    <br>
+
+    <div class="container">
+        {{>cookie}} {{{body}}}
+    </div>
 </body>
 
 </html>
