@@ -16,13 +16,14 @@ export class UserListComponent implements OnInit {
   friendRequestUsers: object[]
   state: string
 
-  constructor(private websocketService: WebsocketService, private userService: UserService, private chatService: ChatService) {
-  }
+  constructor
+    (private websocketService: WebsocketService,
+      private userService: UserService,
+      private chatService: ChatService) {}
 
   ngOnInit() {
     this.socket = this.websocketService.socket
 
-    // Observables.
     this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.searchUsers.subscribe(searchUsers => this.searchUsers = searchUsers)
     this.chatService.state.subscribe(state => this.state = state)
@@ -64,21 +65,18 @@ export class UserListComponent implements OnInit {
     if (this.activeUserItem.notification) { this.activeUserItem.notification = false }
   }
 
-  // Sends a friend request to a specific user.
   addUser(id) {
     this.socket.emit('newRequest', id)
     this.chatService.changeState("friendList")
     this.chatService.changeFlashMessage({ type: 'info', message: 'Friend request has been sent.', color: 'success' })
   }
 
-  // Accepts a friend request.
   acceptRequest(id) {
     this.socket.emit('acceptRequest', id)
     this.chatService.changeState("friendList")
     this.chatService.changeFlashMessage({ type: 'info', message: 'User has been added to your friend list!', color: 'success' })
   }
 
-  // Declines a friend request.
   declineRequest(id) {
     this.socket.emit('declineRequest', id)
     this.chatService.changeState("friendList")

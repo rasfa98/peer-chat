@@ -9,18 +9,15 @@ import { ChatService } from '../../services/chat.service';
 export class FlashMessageComponent implements OnInit {
   flashMessage: any
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService) {}
 
   ngOnInit() {
     this.chatService.flashMessage.subscribe(flashMessage => {
       this.flashMessage = flashMessage
 
       if (flashMessage.type !== null) {
-        setTimeout(() => {
-          this.chatService.changeFlashMessage({ type: null, message: null })
-        }, 4000)
+        setTimeout(() => { this.chatService.changeFlashMessage({ type: null, message: null }) }, 4000)
       }
     })
   }
-
 }

@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { WebsocketService } from '../../services/websocket.service'
+import { WebsocketService } from '../../services/websocket.service';
 import { ChatService } from '../../services/chat.service';
 
 @Component({
@@ -33,11 +33,9 @@ export class SendComponent implements OnInit {
   ngOnInit() {
     this.socket = this.websocketService.socket
 
-    // Observables.
     this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
   }
 
-  // Sends a message to user with matching id.
   sendMessage(message, id) {
     this.socket.emit('sendMessage', { message: message, id: id })
     this.input.nativeElement.value = ""

@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { PopupService } from '../../services/popup.service';
-import { ChatService } from '../../services/chat.service'
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-popup',
@@ -16,17 +16,15 @@ export class PopupComponent implements OnInit {
   calling: boolean
   dialing: boolean
 
-  constructor(private popupService: PopupService, private chatService: ChatService) { }
+  constructor(private popupService: PopupService, private chatService: ChatService) {}
 
   ngOnInit() {
-    // Observables.
     this.chatService.callInformation.subscribe(callInformation => this.callInformation = callInformation)
     this.chatService.dialInformation.subscribe(dialInformation => this.dialInformation = dialInformation)
     this.chatService.calling.subscribe(calling => this.calling = calling)
     this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
 }
 
-  // Triggers answerCall() in feed-header component.
   answerCall() {
     this.answerBtn.nativeElement.disabled = true
     this.hangUpBtn.nativeElement.disabled = true
@@ -34,7 +32,6 @@ export class PopupComponent implements OnInit {
     this.popupService.answerCallEvent(true)
   }
 
-  // Triggers hangUp() in feed-header component
   hangUp() {
     this.popupService.hangUpEvent(true)
   }

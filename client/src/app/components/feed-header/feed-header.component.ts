@@ -37,7 +37,6 @@ export class FeedHeaderComponent implements OnInit {
   ngOnInit() {
     this.socket = this.websocketService.socket
 
-    // Observables.
     this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.calling.subscribe(calling => this.calling = calling)
     this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
@@ -47,7 +46,6 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.friends.subscribe(friends => this.friends = friends)
 
     try {
-      // When the users gets a Peer2Peer call.
       this.socket.on('newSignal', data => {
         if (data.type === 'offer') {
           this.startAudioRinging()
@@ -56,18 +54,12 @@ export class FeedHeaderComponent implements OnInit {
 
           this.data = data
 
-          this.callInformation = {
-            caller: data.caller,
-            callType: data.chatType
-          }
+          this.callInformation = { caller: data.caller, callType: data.chatType }
 
           this.chatService.changeCallInformation(this.callInformation)
-        } else {
-          this.peer.signal(data.peerId)
-        }
+        } else { this.peer.signal(data.peerId) }
       })
 
-      // When the called user hangs up.
       this.socket.on('hangUp', () => {
         this.chatService.changeDialing(false)
         this.stopAudio()
@@ -96,22 +88,14 @@ export class FeedHeaderComponent implements OnInit {
     }
   }
 
-  // Starts a new video call.
   startVideoCall(id) {
     try {
-      this.dialInformation = {
-        id: this.activeUserItem.id,
-        receiver: this.activeUserItem.fullName,
-        dialType: 'video'
-      }
+      this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
 
       this.chatService.changeDialInformation(this.dialInformation)
       this.chatService.changeDialing(true)
       this.startAudioDial()
-      this.createPeer({
-        audio: true,
-        video: true
-      }, id, 'offer', 'video', null)
+      this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
 
       setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
     } catch (err) {
@@ -123,19 +107,12 @@ export class FeedHeaderComponent implements OnInit {
   // Starts a new voice call.
   startVoiceCall(id) {
     try {
-      this.dialInformation = {
-        id: this.activeUserItem.id,
-        receiver: this.activeUserItem.fullName,
-        dialType: 'voice'
-      }
+      this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' }
 
       this.chatService.changeDialInformation(this.dialInformation)
       this.chatService.changeDialing(true)
       this.startAudioDial()
-      this.createPeer({
-        audio: true,
-        video: false
-      }, id, 'offer', 'voice', null)
+      this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
 
       setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
     } catch (err) {
@@ -146,9 +123,7 @@ export class FeedHeaderComponent implements OnInit {
 
   newError() {
     try {
-      if (this.localStream) {
-        this.localStream.getTracks().forEach(x => x.stop())
-      }
+      if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
 
       this.chatService.changeDialing(false)
       this.chatService.changeCalling(false)
@@ -161,7 +136,7 @@ export class FeedHeaderComponent implements OnInit {
   // Starts the dial sound.
   startAudioDial() {
     try {
-      this.audio.nativeElement.src = '../../../assets/dialing.mp3'
+      this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3'
       this.audio.nativeElement.play()
     } catch (err) {
       this.chatService.changeFlashMessage({ error: true, message: 'An error occured when trying to start the dial sound.' })
@@ -182,7 +157,7 @@ export class FeedHeaderComponent implements OnInit {
   // Starts teh ringing sound.
   startAudioRinging() {
     try {
-      this.audio.nativeElement.src = '../../../assets/ringing.mp3'
+      this.audio.nativeElement.src = '../../../assets/sounds/ringing.mp3'
       this.audio.nativeElement.play()
     } catch (err) {
       this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to start the ringing sound.', color: 'warning' })
@@ -199,16 +174,10 @@ export class FeedHeaderComponent implements OnInit {
       this.chatService.changeActiveConversation(this.friends.filter(x => x.id === this.data.id)[0].id)
 
       if (this.data.chatType === 'video') {
-        this.createPeer({
-          audio: true,
-          video: true
-        }, this.data.id, 'answer', null, this.data.peerId)
+        this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId)
       }
       if (this.data.chatType !== 'video') {
-        this.createPeer({
-          audio: true,
-          video: false
-        }, this.data.id, 'answer', null, this.data.peerId)
+        this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId)
       }
     } catch (err) {
       this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to answer the call...', color: 'warning' })
@@ -250,10 +219,7 @@ export class FeedHeaderComponent implements OnInit {
 
       type === 'offer' ? init = true : init = false
 
-      navigator.mediaDevices.getUserMedia({
-          video: options.video,
-          audio: options.audio
-        })
+      navigator.mediaDevices.getUserMedia({ video: options.video, audio: options.audio })
         .then(stream => {
           this.localStream = stream
 
@@ -300,12 +266,7 @@ export class FeedHeaderComponent implements OnInit {
 
           peerx.on('signal', data => {
             this.peerId = data
-            this.socket.emit('sendSignal', {
-              id: receiver,
-              peerId: data,
-              chatType: chatType,
-              type: type
-            })
+            this.socket.emit('sendSignal', { id: receiver, peerId: data, chatType: chatType, type: type })
           })
 
           peerx.on('stream', stream => {
@@ -327,7 +288,6 @@ export class FeedHeaderComponent implements OnInit {
       // Sets "dummy variable" values when view is fully rendered.
       setTimeout(() => {
         this.peer = peerx
-
         type === 'answer' ? this.peer.signal(peerId) : null
       }, 2000)
     } catch (err) {

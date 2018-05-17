@@ -9,19 +9,16 @@ import { ChatService } from '../../services/chat.service';
 })
 export class SearchComponent implements OnInit {
 
-  constructor(private userService: UserService, private chatService: ChatService) { }
+  constructor(private userService: UserService, private chatService: ChatService) {}
 
   ngOnInit() {}
 
-  // Find the users by using the given query.
   search(query) {
     if (query !== "") {
       this.userService.getUsersByQuery(query).subscribe(users => {
         this.chatService.changeState("search")
         this.chatService.changeSearchUsers(users.users)
       })
-    } else {
-      this.chatService.changeState('friendList')
-    }
+    } else { this.chatService.changeState('friendList') }
   }
 }

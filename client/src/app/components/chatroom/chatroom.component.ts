@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { WebsocketService } from '../../services/websocket.service'
-import { ChatService } from '../../services/chat.service'
+import { WebsocketService } from '../../services/websocket.service';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-chatroom',
@@ -23,7 +23,6 @@ export class ChatroomComponent implements OnInit {
   ngOnInit() {
     this.socket = this.websocketService.connect()
 
-    // Observables.
     this.chatService.calling.subscribe(calling => this.calling = calling)
     this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
     this.chatService.flashMessage.subscribe(flashMessage => this.flashMessage  = flashMessage)

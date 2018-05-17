@@ -22,6 +22,8 @@ import { SearchComponent } from './components/search/search.component';
 import { FriendRequestsComponent } from './components/friend-requests/friend-requests.component';
 import { PopupComponent } from './components/popup/popup.component';
 import { LoadingComponent } from './components/loading/loading.component';
+import { CurrentUserComponent } from './components/current-user/current-user.component';
+import { FlashMessageComponent } from './components/flash-message/flash-message.component';
 
 const appRoutes: Routes = [
   { path: '', component: ChatroomComponent },
@@ -41,7 +43,9 @@ const appRoutes: Routes = [
     SearchComponent,
     FriendRequestsComponent,
     PopupComponent,
-    LoadingComponent
+    LoadingComponent,
+    CurrentUserComponent,
+    FlashMessageComponent
   ],
   imports: [
     BrowserModule,

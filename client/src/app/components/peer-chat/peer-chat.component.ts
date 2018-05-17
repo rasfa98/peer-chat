@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
-import { Router } from '@angular/router'
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-peer-chat',
@@ -32,7 +32,6 @@ export class PeerChatComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Observables.
     this.chatService.localStream.subscribe(stream => {
       if (!this.hasPlayedLocal) {
         this.localStream = stream
@@ -59,9 +58,7 @@ export class PeerChatComponent implements OnInit {
   
           this.videoChat.nativeElement.srcObject = stream
           this.videoChat.nativeElement.play()
-          .then(() => {
-            this.hasPlayedPeer = true
-          })
+          .then(() => this.hasPlayedPeer = true)
           .catch(err => {
             this.hasPlayedPeer = false
             this.peer.destroy()
@@ -73,7 +70,6 @@ export class PeerChatComponent implements OnInit {
     })
   }
 
-  // Ends the current Peer2Peer call.
   endCall() {
     this.peer.destroy()
   }

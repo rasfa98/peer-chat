@@ -20,9 +20,9 @@ export class FeedComponent implements OnInit {
   ngOnInit() {
     this.socket = this.websocketService.socket
 
-    // Observables.
     this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.activeConversation.subscribe(id => this.activeConversation = this.conversations[id])
+  
     this.chatService.getConversations().subscribe(conversations => {
       this.conversations = conversations
 
@@ -31,7 +31,6 @@ export class FeedComponent implements OnInit {
       }
     })
     
-    // Adds new messages to the client.
     this.socket.on('newMessage', data => {
       if (this.conversations[data.id]) {
         this.conversations[data.id].push({ message: data.message, sender: data.name })
