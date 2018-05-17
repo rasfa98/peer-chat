@@ -46,17 +46,22 @@ module.exports.run = (server) => {
     })
 
     socket.on('removeFriend', async id => {
-      const currentUser = await User.findOne({ socketId: socket.id })
-      const friend = await User.findOne({ _id: id })
+      try {
+        const currentUser = await User.findOne({ socketId: socket.id })
+        const friend = await User.findOne({ _id: id })
 
-      removeFriend(currentUser, id)
-      removeFriend(friend, currentUser._id)
+        removeFriend(currentUser, id)
+        removeFriend(friend, currentUser._id)
 
-      await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
-      await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
+        await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
+        await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
 
-      socket.emit('updateFriends', currentUser.friends)
-      socket.to(friend.socketId).emit('updateFriends', friend.friends)
+        socket.emit('updateFriends', currentUser.friends)
+        socket.to(friend.socketId).emit('updateFriends', friend.friends)
+        socket.emit('friendResponseServer', { type: 'success', message: 'The selected friend has been removed.' })
+      } catch (err) {
+        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to remove the selected friend, please try again...' })
+      }
     })
 
     socket.on('sendSignal', async data => {
@@ -84,59 +89,77 @@ module.exports.run = (server) => {
     })
 
     socket.on('newRequest', async id => {
-      const currentUser = await User.findOne({ socketId: socket.id })
-      const receiver = await User.findOne({ _id: id })
+      try {
+        const currentUser = await User.findOne({ socketId: socket.id })
+        const receiver = await User.findOne({ _id: id })
 
-      const filteredRequests = receiver.friendRequests.filter(x => x.id === currentUser._id.toString())
-      const filteredFriends = currentUser.friends.filter(x => x.id === id)
+        const filteredRequests = receiver.friendRequests.filter(x => x.id === currentUser._id.toString())
+        const filteredFriends = currentUser.friends.filter(x => x.id === id)
 
-      if (filteredRequests.length === 0 && filteredFriends.length === 0 && !receiver._id.equals(currentUser._id)) {
-        const friendRequests = receiver.friendRequests
+        if (filteredRequests.length === 0 && filteredFriends.length === 0 && !receiver._id.equals(currentUser._id)) {
+          const friendRequests = receiver.friendRequests
 
-        const newRequest = {
-          fullName: currentUser.fullName,
-          email: currentUser.email,
-          id: currentUser._id,
-          avatar: currentUser.avatar
+          const newRequest = {
+            fullName: currentUser.fullName,
+            email: currentUser.email,
+            id: currentUser._id,
+            avatar: currentUser.avatar
+          }
+
+          friendRequests.push(newRequest)
+
+          await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
+
+          socket.to(receiver.socketId).emit('newRequest')
+          socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been sent!' })
+        } else {
+          socket.emit('friendResponseServer', { type: 'error', message: 'You have already sent a request to this user.' })
         }
-
-        friendRequests.push(newRequest)
-
-        await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
-
-        socket.to(receiver.socketId).emit('newRequest')
+      } catch (err) {
+        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to send the request, please try again...' })
       }
     })
 
     socket.on('declineRequest', async id => {
-      const currentUser = await User.findOne({ socketId: socket.id })
-
-      removeFriendRequest(id, currentUser.friendRequests)
-
-      await User.findOneAndUpdate({ _id: currentUser._id }, { friendRequests: currentUser.friendRequests })
-    })
-
-    socket.on('acceptRequest', async id => {
-      const currentUser = await User.findOne({ socketId: socket.id })
-      const sender = await User.findOne({ _id: id })
-
-      const matchingFriendRequests = currentUser.friendRequests.filter(x => x.id === id)
-      const currentUserFriends = currentUser.friends.filter(x => x.id === id)
-
-      if (matchingFriendRequests.length === 1 && currentUserFriends.length === 0) {
-        const currentUserFriendsArray = currentUser.friends
-        const senderFriendsArray = sender.friends
-
-        currentUserFriendsArray.push({ id: sender._id })
-        senderFriendsArray.push({ id: currentUser._id })
+      try {
+        const currentUser = await User.findOne({ socketId: socket.id })
 
         removeFriendRequest(id, currentUser.friendRequests)
 
-        await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUser.friendRequests })
-        await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriendsArray })
+        await User.findOneAndUpdate({ _id: currentUser._id }, { friendRequests: currentUser.friendRequests })
 
-        socket.emit('acceptRequest')
-        socket.to(sender.socketId).emit('acceptRequest')
+        socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been declined.' })
+      } catch (err) {
+        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to decline the request, please try again...' })
+      }
+    })
+
+    socket.on('acceptRequest', async id => {
+      try {
+        const currentUser = await User.findOne({ socketId: socket.id })
+        const sender = await User.findOne({ _id: id })
+
+        const matchingFriendRequests = currentUser.friendRequests.filter(x => x.id === id)
+        const currentUserFriends = currentUser.friends.filter(x => x.id === id)
+
+        if (matchingFriendRequests.length === 1 && currentUserFriends.length === 0) {
+          const currentUserFriendsArray = currentUser.friends
+          const senderFriendsArray = sender.friends
+
+          currentUserFriendsArray.push({ id: sender._id })
+          senderFriendsArray.push({ id: currentUser._id })
+
+          removeFriendRequest(id, currentUser.friendRequests)
+
+          await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUser.friendRequests })
+          await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriendsArray })
+
+          socket.emit('acceptRequest')
+          socket.to(sender.socketId).emit('acceptRequest')
+          socket.emit('friendResponseServer', { type: 'success', message: 'The user has been added to your friend list!' })
+        }
+      } catch (err) {
+        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to accept the request, please try again...' })
       }
     })
 

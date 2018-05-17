@@ -56,6 +56,17 @@ export class UserListComponent implements OnInit {
         this.chatService.changeFlashMessage({ type: 'info', message: 'You have a new message!', color: 'info' })
       }
     })
+
+    this.socket.on('friendResponseServer', data => {
+      if (data.type === 'success') {
+        this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'success' })
+        this.chatService.changeState("friendList")
+      }
+
+      if (data.type === 'error') {
+        this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'danger' })
+      }
+    })
   }
 
   changeItem(user) {
@@ -67,20 +78,14 @@ export class UserListComponent implements OnInit {
 
   addUser(id) {
     this.socket.emit('newRequest', id)
-    this.chatService.changeState("friendList")
-    this.chatService.changeFlashMessage({ type: 'info', message: 'Friend request has been sent.', color: 'success' })
   }
 
   acceptRequest(id) {
-    this.socket.emit('acceptRequest', id)
-    this.chatService.changeState("friendList")
-    this.chatService.changeFlashMessage({ type: 'info', message: 'User has been added to your friend list!', color: 'success' })
+    this.socket.emit('acceptRequest', id)    
   }
 
   declineRequest(id) {
     this.socket.emit('declineRequest', id)
-    this.chatService.changeState("friendList")
-    this.chatService.changeFlashMessage({ type: 'info', message: 'Friend request has been declined...', color: 'danger' })
   }
 
   back() {
