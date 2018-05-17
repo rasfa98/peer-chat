@@ -56,17 +56,6 @@ export class UserListComponent implements OnInit {
         this.chatService.changeFlashMessage({ type: 'info', message: 'You have a new message!', color: 'info' })
       }
     })
-
-    this.socket.on('friendResponseServer', data => {
-      if (data.type === 'success') {
-        this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'success' })
-        this.chatService.changeState("friendList")
-      }
-
-      if (data.type === 'error') {
-        this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'danger' })
-      }
-    })
   }
 
   changeItem(user) {

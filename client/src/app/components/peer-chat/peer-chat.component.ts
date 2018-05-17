@@ -63,7 +63,6 @@ export class PeerChatComponent implements OnInit {
             this.hasPlayedPeer = false
             this.peer.destroy()
             this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error with the stream, please try again...', color: 'warning' })
-            console.log(err)
           })
         }) 
       }

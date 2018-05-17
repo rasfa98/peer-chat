@@ -59,159 +59,102 @@ export class FeedHeaderComponent implements OnInit {
           this.chatService.changeCallInformation(this.callInformation)
         } else { this.peer.signal(data.peerId) }
       })
-
-      this.socket.on('hangUp', () => {
-        this.chatService.changeDialing(false)
-        this.stopAudio()
-        this.localStream.getTracks().forEach(x => x.stop())
-      })
-
-      this.socket.on('cancelCall', () => {
-        this.chatService.changeCalling(false)
-        this.stopAudio()
-      })
-
-      this.socket.on('answered', () => this.answered = true)
     } catch (err) {
       this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
-      console.log(err)
     }
-  }
+    
+    this.socket.on('hangUp', () => {
+      this.chatService.changeDialing(false)
+      this.stopAudio()
+      this.localStream.getTracks().forEach(x => x.stop())
+    })
 
+    this.socket.on('cancelCall', () => {
+      this.chatService.changeCalling(false)
+      this.stopAudio()
+    })
+  
+    this.socket.on('answered', () => this.answered = true)
+  }
+  
   removeFriend(id) {
-    try {
-      this.socket.emit('removeFriend', id)
-      this.chatService.changeFlashMessage({ type: 'info', message: 'Friend has been removed', color: 'danger' })
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to remove one of your friends.', color: 'warning' })
-      console.log(err)
-    }
+    this.socket.emit('removeFriend', id)
   }
 
   startVideoCall(id) {
-    try {
-      this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
+    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
 
-      this.chatService.changeDialInformation(this.dialInformation)
-      this.chatService.changeDialing(true)
-      this.startAudioDial()
-      this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
+    this.chatService.changeDialInformation(this.dialInformation)
+    this.chatService.changeDialing(true)
+    this.startAudioDial()
+    this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
 
-      setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to start a video call.', color: 'warning' })
-      console.log(err)
-    }
+    setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
   }
 
-  // Starts a new voice call.
   startVoiceCall(id) {
-    try {
-      this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' }
+    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' }
 
-      this.chatService.changeDialInformation(this.dialInformation)
-      this.chatService.changeDialing(true)
-      this.startAudioDial()
-      this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+    this.chatService.changeDialInformation(this.dialInformation)
+    this.chatService.changeDialing(true)
+    this.startAudioDial()
+    this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
 
-      setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to start a voice call.', color: 'warning' })
-      console.log(err)
-    }
+    setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
   }
 
   newError() {
-    try {
-      if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
+    if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
 
-      this.chatService.changeDialing(false)
-      this.chatService.changeCalling(false)
-      this.stopAudio()
-    } catch (err) {
-      console.log(err)
-    }
+    this.chatService.changeDialing(false)
+    this.chatService.changeCalling(false)
+    this.stopAudio()
   }
 
-  // Starts the dial sound.
   startAudioDial() {
-    try {
-      this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3'
-      this.audio.nativeElement.play()
-    } catch (err) {
-      this.chatService.changeFlashMessage({ error: true, message: 'An error occured when trying to start the dial sound.' })
-      console.log(err)
-    }
+    this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3'
+    this.audio.nativeElement.play()
   }
 
-  // Stops the call audio (dial/ringing)
   stopAudio() {
-    try {
-      this.audio.nativeElement.pause()
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to stop the audio...', color: 'warning' })
-      console.log(err)
-    }
+    this.audio.nativeElement.pause()
   }
 
-  // Starts teh ringing sound.
   startAudioRinging() {
-    try {
-      this.audio.nativeElement.src = '../../../assets/sounds/ringing.mp3'
-      this.audio.nativeElement.play()
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to start the ringing sound.', color: 'warning' })
-      console.log(err)
-    }
+    this.audio.nativeElement.src = '../../../assets/sounds/ringing.mp3'
+    this.audio.nativeElement.play()
   }
 
-  // Answer the incoming call.
   answerCall() {
-    try {
-      this.socket.emit('answered', this.data.id)
+    this.socket.emit('answered', this.data.id)
 
-      this.chatService.changeActiveUserItem(this.friends.filter(x => x.id === this.data.id)[0])
-      this.chatService.changeActiveConversation(this.friends.filter(x => x.id === this.data.id)[0].id)
+    this.chatService.changeActiveUserItem(this.friends.filter(x => x.id === this.data.id)[0])
+    this.chatService.changeActiveConversation(this.friends.filter(x => x.id === this.data.id)[0].id)
 
-      if (this.data.chatType === 'video') {
-        this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId)
-      }
-      if (this.data.chatType !== 'video') {
-        this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId)
-      }
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to answer the call...', color: 'warning' })
-      console.log(err)
+    if (this.data.chatType === 'video') {
+      this.createPeer({ audio: true, video: true }, this.data.id, 'answer', null, this.data.peerId)
+    }
+
+    if (this.data.chatType !== 'video') {
+      this.createPeer({ audio: true, video: false }, this.data.id, 'answer', null, this.data.peerId)
     }
   }
 
   cancelCall() {
-    try {
-      this.chatService.changeDialing(false)
-      this.stopAudio()
-      this.localStream.getTracks().forEach(x => x.stop())
+    this.chatService.changeDialing(false)
+    this.stopAudio()
+    this.localStream.getTracks().forEach(x => x.stop())
 
-      this.socket.emit('cancelCall', this.dialInformation.id)
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to cancel the call...', color: 'warning' })
-      console.log(err)
-    }
+    this.socket.emit('cancelCall', this.dialInformation.id)
   }
 
-  // Decline incoming call.
   hangUp() {
-    try {
-      this.chatService.changeCalling(false)
-      this.stopAudio()
+    this.chatService.changeCalling(false)
+    this.stopAudio()
 
-      this.socket.emit('hangUp', this.data.id)
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to hang up...', color: 'warning' })
-      console.log(err)
-    }
+    this.socket.emit('hangUp', this.data.id)
   }
 
-  // Creates a new Peer.
   createPeer(options, receiver, type, chatType, peerId) {
     try {
       let peerx
@@ -282,7 +225,6 @@ export class FeedHeaderComponent implements OnInit {
         })
         .catch(err => {
           this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
-          console.log(err)
         })
 
       // Sets "dummy variable" values when view is fully rendered.
@@ -292,8 +234,6 @@ export class FeedHeaderComponent implements OnInit {
       }, 2000)
     } catch (err) {
       this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error when trying to use your camera/microphone', color: 'warning' })
-      console.log(err)
     }
   }
 }
-
