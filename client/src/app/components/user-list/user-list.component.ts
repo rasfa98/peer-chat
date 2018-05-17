@@ -23,11 +23,11 @@ export class UserListComponent implements OnInit {
     this.socket = this.websocketService.socket
 
     // Observables.
-    this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
-    this.chatService.currentSearchUsers.subscribe(searchUsers => this.searchUsers = searchUsers)
-    this.chatService.currentState.subscribe(state => this.state = state)
-    this.chatService.currentFriendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
-    this.chatService.currentFriends.subscribe(friends => this.friends = friends)
+    this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
+    this.chatService.searchUsers.subscribe(searchUsers => this.searchUsers = searchUsers)
+    this.chatService.state.subscribe(state => this.state = state)
+    this.chatService.friendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
+    this.chatService.friends.subscribe(friends => this.friends = friends)
     this.chatService.getFriends().subscribe(friends => {
       this.friends = friends
       this.chatService.changeFriends(friends)
@@ -68,21 +68,21 @@ export class UserListComponent implements OnInit {
   addUser(id) {
     this.socket.emit('newRequest', id)
     this.chatService.changeState("friendList")
-    this.chatService.changeInfo({ info: true, message: 'Friend request has been sent.', type: 'success' })
+    this.chatService.changeFlashMessage({ type: 'info', message: 'Friend request has been sent.', color: 'success' })
   }
 
   // Accepts a friend request.
   acceptRequest(id) {
     this.socket.emit('acceptRequest', id)
     this.chatService.changeState("friendList")
-    this.chatService.changeInfo({ info: true, message: 'User has been added to your friend list!', type: 'success' })
+    this.chatService.changeFlashMessage({ type: 'info', message: 'User has been added to your friend list!', color: 'success' })
   }
 
   // Declines a friend request.
   declineRequest(id) {
     this.socket.emit('declineRequest', id)
     this.chatService.changeState("friendList")
-    this.chatService.changeInfo({ info: true, message: 'Friend request has been declined...', type: 'danger' })
+    this.chatService.changeFlashMessage({ type: 'info', message: 'Friend request has been declined...', color: 'danger' })
   }
 
   back() {

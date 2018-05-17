@@ -34,7 +34,7 @@ export class SendComponent implements OnInit {
     this.socket = this.websocketService.socket
 
     // Observables.
-    this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
+    this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
   }
 
   // Sends a message to user with matching id.

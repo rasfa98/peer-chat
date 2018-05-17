@@ -33,7 +33,7 @@ export class PeerChatComponent implements OnInit {
 
   ngOnInit() {
     // Observables.
-    this.chatService.currentLocalStream.subscribe(stream => {
+    this.chatService.localStream.subscribe(stream => {
       if (!this.hasPlayedLocal) {
         this.localStream = stream
 
@@ -48,11 +48,11 @@ export class PeerChatComponent implements OnInit {
       }
     })
 
-    this.chatService.currentStream.subscribe(stream => {
+    this.chatService.stream.subscribe(stream => {
       if (!this.hasPlayedPeer) {
         this.stream = stream
 
-        this.chatService.currentPeer.subscribe(peer => {
+        this.chatService.peer.subscribe(peer => {
           this.peer = peer
   
           this.endCallBtn.nativeElement.disabled = false
@@ -65,7 +65,7 @@ export class PeerChatComponent implements OnInit {
           .catch(err => {
             this.hasPlayedPeer = false
             this.peer.destroy()
-            this.chatService.changeError({ error: true, message: 'There was an error with the stream, please try again...' })
+            this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error with the stream, please try again...', color: 'warning' })
             console.log(err)
           })
         }) 

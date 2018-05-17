@@ -19,13 +19,12 @@ export class PopupComponent implements OnInit {
   constructor(private popupService: PopupService, private chatService: ChatService) { }
 
   ngOnInit() {
-
     // Observables.
-    this.chatService.currentCallInformation.subscribe(callInformation => this.callInformation = callInformation)
-    this.chatService.currentDialInformation.subscribe(dialInformation => this.dialInformation = dialInformation)
-    this.chatService.currentCalling.subscribe(calling => this.calling = calling)
-    this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
-  }
+    this.chatService.callInformation.subscribe(callInformation => this.callInformation = callInformation)
+    this.chatService.dialInformation.subscribe(dialInformation => this.dialInformation = dialInformation)
+    this.chatService.calling.subscribe(calling => this.calling = calling)
+    this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
+}
 
   // Triggers answerCall() in feed-header component.
   answerCall() {

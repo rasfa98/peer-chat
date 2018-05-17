@@ -8,7 +8,7 @@
     height: 100px;
 }
 
-.error {
+.error, .info {
     position: absolute;
     width: 100%
 }

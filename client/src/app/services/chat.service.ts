@@ -6,37 +6,35 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class ChatService {
-  private activeUserItem = new BehaviorSubject({ id: null, fullName: 'no user selected' })
-  private stream = new BehaviorSubject(null)
-  private peer = new BehaviorSubject(null)
-  private activeConversation = new BehaviorSubject(null)
-  private searchUsers = new BehaviorSubject(null)
-  private friendRequestUsers = new BehaviorSubject(null)
-  private friends = new BehaviorSubject([])
-  private state = new BehaviorSubject('friendList')
-  private calling = new BehaviorSubject(false)
-  private callInformation = new BehaviorSubject(null)
-  private dialing = new BehaviorSubject(false)
-  private dialInformation = new BehaviorSubject(null)
-  private error = new BehaviorSubject({ error: false, message: null })
-  private localStream = new BehaviorSubject(null)
-  private chatType = new BehaviorSubject(null)
+  private ActiveUserItem = new BehaviorSubject({ id: null, fullName: 'no user selected' })
+  private Stream = new BehaviorSubject(null)
+  private Peer = new BehaviorSubject(null)
+  private ActiveConversation = new BehaviorSubject(null)
+  private SearchUsers = new BehaviorSubject(null)
+  private FriendRequestUsers = new BehaviorSubject(null)
+  private Friends = new BehaviorSubject([])
+  private State = new BehaviorSubject('friendList')
+  private Calling = new BehaviorSubject(false)
+  private CallInformation = new BehaviorSubject(null)
+  private Dialing = new BehaviorSubject(false)
+  private DialInformation = new BehaviorSubject(null)
+  private FlashMessage = new BehaviorSubject({ type: null, message: null, color: null })
+  private LocalStream = new BehaviorSubject(null)
 
-  currentActiveUserItem = this.activeUserItem.asObservable()
-  currentStream = this.stream.asObservable()
-  currentPeer = this.peer.asObservable()
-  currentActiveConversation = this.activeConversation.asObservable()
-  currentSearchUsers = this.searchUsers.asObservable()
-  currentState = this.state.asObservable()
-  currentFriendRequestUsers = this.friendRequestUsers.asObservable()
-  currentFriends = this.friends.asObservable()
-  currentCalling = this.calling.asObservable()
-  currentDialing = this.dialing.asObservable()
-  currentCallInformation = this.callInformation.asObservable()
-  currentDialInformation = this.dialInformation.asObservable()
-  currentError = this.error.asObservable()
-  currentLocalStream = this.localStream.asObservable()
-  currentChatType = this.chatType.asObservable()
+  activeUserItem = this.ActiveUserItem.asObservable()
+  stream = this.Stream.asObservable()
+  peer = this.Peer.asObservable()
+  activeConversation = this.ActiveConversation.asObservable()
+  searchUsers = this.SearchUsers.asObservable()
+  state = this.State.asObservable()
+  friendRequestUsers = this.FriendRequestUsers.asObservable()
+  friends = this.Friends.asObservable()
+  calling = this.Calling.asObservable()
+  dialing = this.Dialing.asObservable()
+  callInformation = this.CallInformation.asObservable()
+  dialInformation = this.DialInformation.asObservable()
+  flashMessage = this.FlashMessage.asObservable()
+  localStream = this.LocalStream.asObservable()
 
   BASE_URL: string = environment.BASE_URL
   
@@ -44,72 +42,66 @@ export class ChatService {
 
   // Changes values that's shared between components.
   changeActiveUserItem(user) {
-    this.activeUserItem.next(user)
+    this.ActiveUserItem.next(user)
   }
 
   changeStream(stream) {
-    this.stream.next(stream)
+    this.Stream.next(stream)
   }
 
   changeLocalStream(stream) {
-    this.localStream.next(stream)
+    this.LocalStream.next(stream)
   }
 
   changeActiveConversation(conversation) {
-    this.activeConversation.next(conversation)
+    this.ActiveConversation.next(conversation)
   }
 
   changePeer(peer) {
-    this.peer.next(peer)
+    this.Peer.next(peer)
   }
 
   changeSearchUsers(searchUsers) {
-    this.searchUsers.next(searchUsers)
+    this.SearchUsers.next(searchUsers)
   }
 
   changeState(state) {
-    this.state.next(state)
+    this.State.next(state)
   }
 
   changeFriendRequestUsers(friendRequestUsers) {
-    this.friendRequestUsers.next(friendRequestUsers)
+    this.FriendRequestUsers.next(friendRequestUsers)
   }
 
   changeFriends(friends) {
-    this.friends.next(friends)
+    this.Friends.next(friends)
   }
 
   changeCalling(calling) {
-    this.calling.next(calling)
+    this.Calling.next(calling)
   }
 
   changeDialing(dialing) {
-    this.dialing.next(dialing)
+    this.Dialing.next(dialing)
   }
 
   changeCallInformation(callInformation) {
-    this.callInformation.next(callInformation)
+    this.CallInformation.next(callInformation)
   }
 
   changeDialInformation(dialInformation) {
-    this.dialInformation.next(dialInformation)
+    this.DialInformation.next(dialInformation)
   }
 
-  changeError(error) {
-    this.error.next(error)
+  changeFlashMessage(flashMessage) {
+    this.FlashMessage.next(flashMessage)
   }
 
-  changeChatType(chatType) {
-    this.chatType.next(chatType)
-  }
-
-  // Gets the current users friend requests.
   getFriendRequests() {
     return this.http.get(`${this.BASE_URL}/user/friendRequests`)
     .map(res => res.json().requests)
   }
 
-  // Gets the current users friends.
   getFriends() {
     return this.http.get(`${this.BASE_URL}/user/friends`)
     .map(res => res.json().friends)

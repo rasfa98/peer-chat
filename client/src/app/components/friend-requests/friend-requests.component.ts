@@ -19,9 +19,9 @@ export class FriendRequestsComponent implements OnInit {
     this.socket = this.websocketService.socket
 
     // Observables.
-    this.chatService.currentState.subscribe(state => this.state = state)
+    this.chatService.state.subscribe(state => this.state = state)
 
-    this.socket.on('addUser', () => {
+    this.socket.on('newRequest', () => {
       this.chatService.getFriendRequests().subscribe(friendRequests => {
         this.chatService.changeFriendRequestUsers(friendRequests)
 

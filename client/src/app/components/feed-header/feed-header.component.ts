@@ -38,14 +38,13 @@ export class FeedHeaderComponent implements OnInit {
     this.socket = this.websocketService.socket
 
     // Observables.
-    this.chatService.currentActiveUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
-    this.chatService.currentCalling.subscribe(calling => this.calling = calling)
-    this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
-    this.popupService.answerCallObs.subscribe(type => { if (type && this.data) {this.answerCall() } })
-    this.popupService.hangUpObs.subscribe(type => { if (type && this.data) { this.hangUp() } })
-    this.popupService.cancelCallObs.subscribe(type => { if (type && this.dialInformation) { this.cancelCall() } })
-    this.chatService.currentError.subscribe(error => { if (error) { this.newError() } })
-    this.chatService.currentFriends.subscribe(friends => this.friends = friends)
+    this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
+    this.chatService.calling.subscribe(calling => this.calling = calling)
+    this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
+    this.popupService.answerCall.subscribe(type => { if (type && this.data) {this.answerCall() } })
+    this.popupService.hangUp.subscribe(type => { if (type && this.data) { this.hangUp() } })
+    this.popupService.cancelCall.subscribe(type => { if (type && this.dialInformation) { this.cancelCall() } })
+    this.chatService.friends.subscribe(friends => this.friends = friends)
 
     try {
       // When the users gets a Peer2Peer call.
@@ -82,7 +81,7 @@ export class FeedHeaderComponent implements OnInit {
 
       this.socket.on('answered', () => this.answered = true)
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to establish a connection, please try again...' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
       console.log(err)
     }
   }
@@ -90,9 +89,9 @@ export class FeedHeaderComponent implements OnInit {
   removeFriend(id) {
     try {
       this.socket.emit('removeFriend', id)
-      this.chatService.changeInfo({ info: true, message: 'Friend has been removed', type: 'danger' })
+      this.chatService.changeFlashMessage({ type: 'info', message: 'Friend has been removed', color: 'danger' })
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to remove one of your friends.' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to remove one of your friends.', color: 'warning' })
       console.log(err)
     }
   }
@@ -116,7 +115,7 @@ export class FeedHeaderComponent implements OnInit {
 
       setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to start a video call.' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to start a video call.', color: 'warning' })
       console.log(err)
     }
   }
@@ -140,7 +139,7 @@ export class FeedHeaderComponent implements OnInit {
 
       setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to start a voice call.' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to start a voice call.', color: 'warning' })
       console.log(err)
     }
   }
@@ -165,7 +164,7 @@ export class FeedHeaderComponent implements OnInit {
       this.audio.nativeElement.src = '../../../assets/dialing.mp3'
       this.audio.nativeElement.play()
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to start the dial sound.' })
+      this.chatService.changeFlashMessage({ error: true, message: 'An error occured when trying to start the dial sound.' })
       console.log(err)
     }
   }
@@ -175,7 +174,7 @@ export class FeedHeaderComponent implements OnInit {
     try {
       this.audio.nativeElement.pause()
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to stop the audio...' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to stop the audio...', color: 'warning' })
       console.log(err)
     }
   }
@@ -186,7 +185,7 @@ export class FeedHeaderComponent implements OnInit {
       this.audio.nativeElement.src = '../../../assets/ringing.mp3'
       this.audio.nativeElement.play()
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to start the ringing sound.' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to start the ringing sound.', color: 'warning' })
       console.log(err)
     }
   }
@@ -212,7 +211,7 @@ export class FeedHeaderComponent implements OnInit {
         }, this.data.id, 'answer', null, this.data.peerId)
       }
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to answer the call...' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to answer the call...', color: 'warning' })
       console.log(err)
     }
   }
@@ -225,7 +224,7 @@ export class FeedHeaderComponent implements OnInit {
 
       this.socket.emit('cancelCall', this.dialInformation.id)
     } catch (err) {
-      this.chatService.changeError(true)
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to cancel the call...', color: 'warning' })
       console.log(err)
     }
   }
@@ -238,7 +237,7 @@ export class FeedHeaderComponent implements OnInit {
 
       this.socket.emit('hangUp', this.data.id)
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'An error occured when trying to hang up...' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to hang up...', color: 'warning' })
       console.log(err)
     }
   }
@@ -279,7 +278,9 @@ export class FeedHeaderComponent implements OnInit {
             }
           })
 
-          peerx.on('error', err => this.chatService.changeError({ error: true, message: 'An error occured when trying to establish a connection, please try again...' }))
+          peerx.on('error', err => {
+            this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
+          })
 
           peerx.on('connect', () => {
             this.chatService.changeCalling(false)
@@ -288,7 +289,7 @@ export class FeedHeaderComponent implements OnInit {
 
             this.chatService.changePeer(this.peer)
 
-            this.chatService.changeError(false)
+            this.chatService.changeFlashMessage(false)
 
             this.popupService.hangUpEvent(false)
             this.popupService.answerCallEvent(false)
@@ -319,7 +320,7 @@ export class FeedHeaderComponent implements OnInit {
           })
         })
         .catch(err => {
-          this.chatService.changeError({ error: true, message: 'An error occured when trying to establish a connection, please try again...' })
+          this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
           console.log(err)
         })
 
@@ -330,7 +331,7 @@ export class FeedHeaderComponent implements OnInit {
         type === 'answer' ? this.peer.signal(peerId) : null
       }, 2000)
     } catch (err) {
-      this.chatService.changeError({ error: true, message: 'There was an error when trying to use your camera/microphone' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error when trying to use your camera/microphone', color: 'warning' })
       console.log(err)
     }
   }

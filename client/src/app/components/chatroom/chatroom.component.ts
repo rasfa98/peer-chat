@@ -14,7 +14,7 @@ export class ChatroomComponent implements OnInit {
   loading: boolean
   calling: boolean
   dialing: boolean
-  error: boolean
+  flashMessage: any
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.loading = true
@@ -24,11 +24,12 @@ export class ChatroomComponent implements OnInit {
     this.socket = this.websocketService.connect()
 
     // Observables.
-    this.chatService.currentCalling.subscribe(calling => this.calling = calling)
-    this.chatService.currentDialing.subscribe(dialing => this.dialing = dialing)
-    this.chatService.currentError.subscribe(error => this.error = error)
+    this.chatService.calling.subscribe(calling => this.calling = calling)
+    this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
+    this.chatService.flashMessage.subscribe(flashMessage => this.flashMessage  = flashMessage)
+    
 
-    this.chatService.currentActiveUserItem.subscribe(activeUserItem => {
+    this.chatService.activeUserItem.subscribe(activeUserItem => {
       if (activeUserItem.id === null) {
         this.displayWelcome = 'block'
         this.displayChatComponents = 'none'
