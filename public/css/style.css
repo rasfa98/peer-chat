@@ -1,0 +1,12 @@
+#login, #register {
+    width: 40%;
+    margin: 0 auto;
+}
+
+#loginBtn, #registerBtn, #cancel {
+    width: 100%;
+}
+
+.oauthBtn {
+    width: 49.5%;
+}
