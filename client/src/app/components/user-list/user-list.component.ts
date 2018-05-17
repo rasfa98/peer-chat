@@ -53,6 +53,7 @@ export class UserListComponent implements OnInit {
 
       if (this.activeUserItem.id !== id) {
         friend.notification = true
+        this.chatService.changeFlashMessage({ type: 'info', message: 'You have a new message!', color: 'info' })
       }
     })
   }

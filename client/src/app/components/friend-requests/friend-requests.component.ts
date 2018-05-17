@@ -23,7 +23,10 @@ export class FriendRequestsComponent implements OnInit {
       this.chatService.getFriendRequests().subscribe(friendRequests => {
         this.chatService.changeFriendRequestUsers(friendRequests)
 
-        if (this.state !== "friendRequest") { this.notification = true }
+        if (this.state !== "friendRequest") {
+          this.notification = true
+          this.chatService.changeFlashMessage({ type: 'info', message: 'You have a new friend request!', color: 'info' })
+        }
       })
     })
 
