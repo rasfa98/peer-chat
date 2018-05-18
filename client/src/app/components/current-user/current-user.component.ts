@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { WebsocketService } from '../../services/websocket.service';
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-current-user',
@@ -8,6 +9,8 @@ import { WebsocketService } from '../../services/websocket.service';
   styleUrls: ['./current-user.component.css']
 })
 export class CurrentUserComponent implements OnInit {
+  BASE_URL: string = environment.BASE_URL
+
   currentUser: any
   socket: any
 
@@ -29,6 +32,10 @@ export class CurrentUserComponent implements OnInit {
   }
 
   changeStatus(status) {
-    this.socket.emit('updateStatus', status)
+    if (status === 'signout') {
+      window.location.href = `${this.BASE_URL}/signout`
+    } else {
+      this.socket.emit('updateStatus', status)
+    }
   }
 }
