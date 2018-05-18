@@ -11,6 +11,7 @@ const userSchema = mongoose.Schema({
   status: { type: String, default: 'offline' },
   avatar: { type: String },
   friends: [{ id: String }],
+  audio: { type: String, default: false },
   friendRequests: [{
     id: String,
     fullName: String,
