@@ -62,16 +62,15 @@
     background-color: rgb(247, 6, 6);
 }
 
-:host .signout {
-    background-color: transparent;
-    top: -15px;
-    position: absolute;
-    margin-left: 10vw;
-    padding: 0px;
+:host button {
+    height: 70px;
+    width: 70px;
+    margin: 15px;
+    margin-top: -63px;
+    border-radius: 100%;
     float: right;
-    font-size: 50px;
 }
 
-:host .signout:hover {
-    color: rgb(205, 17, 226);
+:host button span {
+    font-size: 43px;
 }

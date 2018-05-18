@@ -11,8 +11,13 @@
       <option value="away">away</option>
       <option value="busy">busy</option>
       <option value="offline">offline</option>
+      <hr>
       <option value="signout">sign out</option>
     </select>
   </div>
 
-  <a href="/signout" class="button signout is-primary"><span class="icon is-small"><i class="ion-android-exit"></i></span></a>
+  <button class="button is-primary" (click)="toggleAudio()">
+    <span class="icon is-small">
+      <i [ngClass]="{'ion-ios-volume-high' : allowAudio, 'ion-android-volume-off' : !allowAudio}"></i>
+    </span>
+  </button>

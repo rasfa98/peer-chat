@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UserService } from '../../services/user.service';
 import { WebsocketService } from '../../services/websocket.service';
 import { environment } from '../../../environments/environment';
+import { ChatService } from '../../services/chat.service';
 
 @Component({
   selector: 'app-current-user',
@@ -13,13 +14,16 @@ export class CurrentUserComponent implements OnInit {
 
   currentUser: any
   socket: any
+  allowAudio: boolean
 
-  constructor(private userService: UserService, private websocketService: WebsocketService) {
+  constructor(private userService: UserService, private websocketService: WebsocketService, private chatService: ChatService) {
     this.currentUser = { id: 0, fullName: 'Getting user...', status: 'offline', avatar: '../../assets/avatars/avatar-1.png' }
   }
 
   ngOnInit() {
     this.socket = this.websocketService.socket
+
+    this.chatService.audio.subscribe(audio => this.allowAudio = audio)
 
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user
@@ -37,5 +41,9 @@ export class CurrentUserComponent implements OnInit {
     } else {
       this.socket.emit('updateStatus', status)
     }
+  }
+
+  toggleAudio() {
+    this.chatService.changeAudio(!this.allowAudio)
   }
 }
