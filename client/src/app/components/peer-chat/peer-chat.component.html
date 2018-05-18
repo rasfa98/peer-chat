@@ -9,37 +9,19 @@
   <video class="you" #localVideo poster="../../../assets/images/poster.png"></video>
 
   <div class="buttons">
-    <div *ngIf="clickMic">
-      <button class="button is-primary" (click)="toggleMicrophone()" #mic>
-        <span class="icon is-small">
-          <i class="ion-android-microphone"></i>
-        </span>
-      </button>
-    </div>
+    <button class="button" [ngClass]="{'is-primary' : clickMic, 'is-default' : !clickMic}" (click)="toggleMicrophone()" #mic>
+      <span class="icon is-small">
+        <i class="ion-android-microphone"></i>
+      </span>
+    </button>
 
-    <div *ngIf="!clickMic">
-      <button class="button is-default" (click)="toggleMicrophone()" #mic>
-        <span class="icon is-small">
-          <i class="ion-android-microphone"></i>
-        </span>
-      </button>
-    </div>
 
-    <div *ngIf="clickVid">
-      <button class="button is-primary" (click)="toggleCamera()" #video>
-        <span class="icon is-small">
-          <i class="ion-android-camera"></i>
-        </span>
-      </button>
-    </div>
+    <button class="button" [ngClass]="{'is-primary' : clickVid, 'is-default' : !clickVid}" (click)="toggleCamera()" #video>
+      <span class="icon is-small">
+        <i class="ion-android-camera"></i>
+      </span>
+    </button>
 
-    <div *ngIf="!clickVid">
-      <button class="button is-default" (click)="toggleCamera()" #video>
-        <span class="icon is-small">
-          <i class="ion-android-camera"></i>
-        </span>
-      </button>
-    </div>
 
     <button class="button is-danger" (click)="endCall()" #end>
       <span class="icon is-small">

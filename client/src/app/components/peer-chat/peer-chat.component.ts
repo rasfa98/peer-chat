@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, NgZone } from '@angular/core';
 import { ChatService } from '../../services/chat.service';
 import { Router } from '@angular/router';
 
@@ -25,7 +25,7 @@ export class PeerChatComponent implements OnInit {
   clickVid: boolean
   clickMic: boolean
 
-  constructor(private chatService: ChatService, private router: Router) {
+  constructor(private chatService: ChatService, private router: Router, private zone: NgZone) {
     this.loading = true
     this.clickMic = true
     this.clickVid = true
@@ -54,8 +54,6 @@ export class PeerChatComponent implements OnInit {
         this.chatService.peer.subscribe(peer => {
           this.peer = peer
   
-          this.endCallBtn.nativeElement.disabled = false
-  
           this.videoChat.nativeElement.srcObject = stream
           this.videoChat.nativeElement.play()
           .then(() => this.hasPlayedPeer = true)
@@ -76,11 +74,13 @@ export class PeerChatComponent implements OnInit {
   toggleCamera() {
     this.localStream.getVideoTracks().forEach(x => x.enabled = !x.enabled)
     this.clickVid = !this.clickVid
+    this.zone.run(() => {})
   }
 
   toggleMicrophone() {
     this.localStream.getAudioTracks().forEach(x => x.enabled = !x.enabled)
     this.clickMic = !this.clickMic
+    this.zone.run(() => {})
   }
 
   getCallType() {

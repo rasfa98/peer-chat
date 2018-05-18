@@ -33,7 +33,3 @@
     font-size: 30px;
     border-radius: 100%;
 }
-
-:host .buttons div {
-    display: inline;
-}
