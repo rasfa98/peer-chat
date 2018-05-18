@@ -4,7 +4,7 @@
 }
 
 :host .message {
-    width: 30%;
+    max-width: 30%;
     word-wrap: break-word;
     clear: both;
     font-size: 16px;
