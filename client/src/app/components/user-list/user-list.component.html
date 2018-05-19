@@ -35,7 +35,11 @@
             <span class="name">{{user.fullName}}</span>
             <br>
             <span class="email">{{user.email}}</span>
-            <button (click)="addUser(user.id)" class="button add is-primary"><span class="icon is-small"><i class="ion-android-person-add"></i></span></button>
+            <button (click)="addUser(user.id)" class="button add is-primary">
+              <span class="icon is-small">
+                <i class="ion-android-person-add"></i>
+              </span>
+            </button>
           </a>
         </li>
       </ul>
@@ -59,8 +63,14 @@
             <span class="name">{{request.fullName}}</span>
             <br>
             <span class="email">{{request.email}}</span>
-            <button (click)="acceptRequest(request.id)" class="button accept is-primary"><span class="icon is-small"><i class="ion-android-done"></i></span></button>
-            <button (click)="declineRequest(request.id)" class="button decline is-primary"><span class="icon is-small"><i class="ion-android-close"></i></span></button>
+
+            <div class="select">
+              <select #friendRequest (input)="answerRequest(friendRequest.value, request.id)">
+                <option selected disabled hidden></option>
+                <option value="accept">accept</option>
+                <option value="decline">decline</option>
+              </select>
+            </div>
           </a>
         </li>
       </ul>

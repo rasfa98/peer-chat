@@ -80,4 +80,12 @@ export class UserListComponent implements OnInit {
   back() {
     this.chatService.changeState('friendList')
   }
+
+  answerRequest(answer, id) {
+    if (answer === 'accept') {
+      this.acceptRequest(id)
+    } else if (answer === 'decline') {
+      this.declineRequest(id)
+    }
+  }
 }
