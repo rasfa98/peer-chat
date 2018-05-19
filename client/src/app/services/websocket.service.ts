@@ -4,8 +4,9 @@ import { environment } from '../../environments/environment';
 
 @Injectable()
 export class WebsocketService {
-  socket: any
   BASE_URL: string = environment.BASE_URL
+
+  socket: any
 
   constructor() {}
 

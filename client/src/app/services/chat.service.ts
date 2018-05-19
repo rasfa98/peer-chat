@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs/BehaviorSubject';
 import { Http } from '@angular/http';
-import 'rxjs/add/operator/map';
 import { environment } from '../../environments/environment';
+import 'rxjs/add/operator/map';
 
 @Injectable()
 export class ChatService {
@@ -20,6 +20,7 @@ export class ChatService {
   private DialInformation = new BehaviorSubject(null)
   private FlashMessage = new BehaviorSubject({ type: null, message: null, color: null })
   private LocalStream = new BehaviorSubject(null)
+  private Audio = new BehaviorSubject(false)
 
   activeUserItem = this.ActiveUserItem.asObservable()
   stream = this.Stream.asObservable()
@@ -35,6 +36,7 @@ export class ChatService {
   dialInformation = this.DialInformation.asObservable()
   flashMessage = this.FlashMessage.asObservable()
   localStream = this.LocalStream.asObservable()
+  audio = this.Audio.asObservable()
 
   BASE_URL: string = environment.BASE_URL
   
@@ -95,6 +97,10 @@ export class ChatService {
 
   changeFlashMessage(flashMessage) {
     this.FlashMessage.next(flashMessage)
+  }
+
+  changeAudio(audio) {
+    this.Audio.next(audio)
   }
 
   getFriendRequests() {

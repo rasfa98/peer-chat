@@ -7,9 +7,10 @@ router.route('/current')
     .get(async (req, res) => {
       const user = await User.findOne({ _id: res.locals.userId })
 
-      res.send({ id: res.locals.userId, fullName: user.fullName, status: user.status, avatar: user.avatar })
+      res.send({ id: res.locals.userId, fullName: user.fullName, status: user.status, avatar: user.avatar, audio: user.audio })
     })
 
+// Search and return the users with the matching query (full name or email)
 router.route('/query')
     .post(async (req, res) => {
       let users

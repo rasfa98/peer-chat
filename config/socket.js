@@ -59,9 +59,7 @@ module.exports.run = (server) => {
         socket.emit('updateFriends', currentUser.friends)
         socket.to(friend.socketId).emit('updateFriends', friend.friends)
         socket.emit('friendResponseServer', { type: 'success', message: 'The selected friend has been removed.' })
-      } catch (err) {
-        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to remove the selected friend, please try again...' })
-      }
+      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to remove the selected friend, please try again...' }) }
     })
 
     socket.on('sendSignal', async data => {
@@ -115,9 +113,7 @@ module.exports.run = (server) => {
         } else {
           socket.emit('friendResponseServer', { type: 'error', message: 'You have already sent a request to this user.' })
         }
-      } catch (err) {
-        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to send the request, please try again...' })
-      }
+      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to send the request, please try again...' }) }
     })
 
     socket.on('declineRequest', async id => {
@@ -129,9 +125,7 @@ module.exports.run = (server) => {
         await User.findOneAndUpdate({ _id: currentUser._id }, { friendRequests: currentUser.friendRequests })
 
         socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been declined.' })
-      } catch (err) {
-        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to decline the request, please try again...' })
-      }
+      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to decline the request, please try again...' }) }
     })
 
     socket.on('acceptRequest', async id => {
@@ -158,9 +152,7 @@ module.exports.run = (server) => {
           socket.to(sender.socketId).emit('acceptRequest')
           socket.emit('friendResponseServer', { type: 'success', message: 'The user has been added to your friend list!' })
         }
-      } catch (err) {
-        socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to accept the request, please try again...' })
-      }
+      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to accept the request, please try again...' }) }
     })
 
     socket.on('sendMessage', async data => {
@@ -191,9 +183,7 @@ module.exports.run = (server) => {
 
         await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
         await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
-      } catch (err) {
-        socket.emit('messageResponseServer', { message: 'An error occured when trying to send the message...' })
-      }
+      } catch (err) { socket.emit('messageResponseServer', { message: 'An error occured when trying to send the message...' }) }
     })
   })
 

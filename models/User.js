@@ -11,14 +11,13 @@ const userSchema = mongoose.Schema({
   status: { type: String, default: 'offline' },
   avatar: { type: String },
   friends: [{ id: String }],
-  audio: { type: String, default: false },
+  socketId: { type: String, default: null },
   friendRequests: [{
     id: String,
     fullName: String,
     email: String,
     avatar: String
   }],
-  socketId: { type: String, default: null },
   conversations: [{
     id: String,
     messages: [{

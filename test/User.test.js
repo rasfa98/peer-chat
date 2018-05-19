@@ -1,10 +1,11 @@
 'use strict'
 
 const expect = require('chai').expect
+const describe = require('chai').describe
+const it = require('chai').it
 const User = require('../models/User')
 
-describe('User model', () => {
-
+describe('User model validation', () => {
   it('should be able to register a user if all details are provided', done => {
     const user = new User({
       fullName: 'test',

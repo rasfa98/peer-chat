@@ -34,9 +34,7 @@ router.route('/')
 
           res.redirect('/login')
         }
-      } catch (err) {
-        checkError(err, req, res)
-      }
+      } catch (err) { checkError(err, req, res) }
     })
 
 module.exports = router
