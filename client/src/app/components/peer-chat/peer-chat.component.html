@@ -11,21 +11,21 @@
   <div class="buttons">
     <button class="button" [ngClass]="{'is-primary' : clickMic, 'is-default' : !clickMic}" (click)="toggleMicrophone()" #mic>
       <span class="icon is-small">
-        <i class="ion-android-microphone"></i>
+        <i class="ion-md-mic"></i>
       </span>
     </button>
 
 
     <button class="button" [ngClass]="{'is-primary' : clickVid, 'is-default' : !clickVid}" (click)="toggleCamera()" #video>
       <span class="icon is-small">
-        <i class="ion-android-camera"></i>
+        <i class="ion-md-videocam"></i>
       </span>
     </button>
 
 
     <button class="button is-danger" (click)="endCall()" #end>
       <span class="icon is-small">
-        <i class="ion-android-call"></i>
+        <i class="ion-md-call"></i>
       </span>
     </button>
   </div>
