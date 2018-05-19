@@ -228,16 +228,15 @@ export class FeedHeaderComponent implements OnInit {
           })
         })
         .catch(err => {
-          this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
+          this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error when trying to use your camera/microphone', color: 'warning' })
         })
 
-      // Sets "dummy variable" values when view is fully rendered.
       setTimeout(() => {
         this.peer = peerx
         type === 'answer' ? this.peer.signal(peerId) : null
-      }, 2000)
+      }, 5000)
     } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error when trying to use your camera/microphone', color: 'warning' })
+      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
     }
   }
 }
