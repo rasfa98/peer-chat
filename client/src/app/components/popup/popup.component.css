@@ -1,28 +1,28 @@
 :host .card {
-    width: 70vw;
-    position: absolute;
-    z-index: 200;
-    margin-top: 20vh;
-    display: block;
-    left: 50%;
-    margin-left: -35%;
-    box-shadow: 14px 14px 39px -3px rgba(0,0,0,0.75);
+  width: 70vw;
+  position: absolute;
+  z-index: 200;
+  margin-top: 20vh;
+  display: block;
+  left: 50%;
+  margin-left: -35%;
+  box-shadow: 14px 14px 39px -3px rgba(0, 0, 0, 0.75);
 }
 
 :host h1 {
-    padding: 20px;
+  padding: 20px;
 }
 
 :host .card-header {
-    background-color: rgb(205, 17, 226);
+  background-color: rgb(205, 17, 226);
 }
 
 :host button {
-    margin: 10px;
-    font-size: 20px;
-    width: 95%;
+  margin: 10px;
+  font-size: 20px;
+  width: 95%;
 }
 
 :host .card-content {
-    padding: 0px;
+  padding: 0px;
 }

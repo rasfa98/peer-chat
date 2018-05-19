@@ -16,7 +16,10 @@ export class CurrentUserComponent implements OnInit {
   socket: any
   allowAudio: boolean
 
-  constructor(private userService: UserService, private websocketService: WebsocketService, private chatService: ChatService) {
+  constructor
+    (private userService: UserService,
+      private websocketService: WebsocketService,
+      private chatService: ChatService) {
     this.currentUser = { id: 0, fullName: 'Getting user...', status: 'offline', avatar: '../../assets/avatars/avatar-1.png' }
   }
 

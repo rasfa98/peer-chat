@@ -6,18 +6,18 @@
 </div>
 
 <div class="select">
-    <select #status (input)="changeStatus(status.value)">
-      <option value="online" selected>online</option>
-      <option value="away">away</option>
-      <option value="busy">busy</option>
-      <option value="offline">offline</option>
-      <hr>
-      <option value="signout">sign out</option>
-    </select>
-  </div>
+  <select #status (input)="changeStatus(status.value)">
+    <option value="online" selected>online</option>
+    <option value="away">away</option>
+    <option value="busy">busy</option>
+    <option value="offline">offline</option>
+    <hr>
+    <option value="signout">sign out</option>
+  </select>
+</div>
 
-  <button class="button is-primary" (click)="toggleAudio()">
-    <span class="icon is-small">
-      <i [ngClass]="{'ion-ios-volume-high' : allowAudio, 'ion-android-volume-off' : !allowAudio}"></i>
-    </span>
-  </button>
+<button class="button is-primary" (click)="toggleAudio()">
+  <span class="icon is-small">
+    <i [ngClass]="{'ion-ios-volume-high' : allowAudio, 'ion-android-volume-off' : !allowAudio}"></i>
+  </span>
+</button>

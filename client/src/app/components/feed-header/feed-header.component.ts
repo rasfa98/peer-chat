@@ -16,7 +16,7 @@ export class FeedHeaderComponent implements OnInit {
 
   socket: any
   activeUserItem: any
-  stream: any
+  stream: object
   peerId: string
   peer: any
   calling: boolean
@@ -27,6 +27,7 @@ export class FeedHeaderComponent implements OnInit {
   dialInformation: any
   answered: boolean
   friends: any
+  allowAudio: boolean
 
   constructor
     (private chatService: ChatService,
@@ -44,6 +45,7 @@ export class FeedHeaderComponent implements OnInit {
     this.popupService.hangUp.subscribe(type => { if (type && this.data) { this.hangUp() } })
     this.popupService.cancelCall.subscribe(type => { if (type && this.dialInformation) { this.cancelCall() } })
     this.chatService.friends.subscribe(friends => this.friends = friends)
+    this.chatService.audio.subscribe(audio => this.allowAudio = audio)
 
     try {
       this.socket.on('newSignal', data => {
@@ -112,8 +114,10 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   startAudioDial() {
-    this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3'
-    this.audio.nativeElement.play()
+    if (this.allowAudio) {
+      this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3'
+      this.audio.nativeElement.play()
+    }
   }
 
   stopAudio() {
@@ -121,8 +125,10 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   startAudioRinging() {
-    this.audio.nativeElement.src = '../../../assets/sounds/ringing.mp3'
-    this.audio.nativeElement.play()
+    if (this.allowAudio) {
+      this.audio.nativeElement.src = '../../../assets/sounds/ringing.mp3'
+      this.audio.nativeElement.play()
+    }
   }
 
   answerCall() {
@@ -197,8 +203,6 @@ export class FeedHeaderComponent implements OnInit {
             this.stopAudio()
 
             this.chatService.changePeer(this.peer)
-
-            this.chatService.changeFlashMessage(false)
 
             this.popupService.hangUpEvent(false)
             this.popupService.answerCallEvent(false)

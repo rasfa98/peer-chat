@@ -11,9 +11,9 @@ export class SendComponent implements OnInit {
   @ViewChild('message') input: any
 
   socket: any
-  activeUserItem: any
+  activeUserItem: object
   showEmojis: boolean
-  emojis: any
+  emojis: object
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.showEmojis = false

@@ -1,20 +1,20 @@
 .loading:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    height: 100px;
-    width: 100px;
-    margin-top: -50px;
-    margin-left: -50px;
-    border-radius: 50%;
-    border: 7px solid rgb(145, 145, 145);
-    border-top-color: rgb(205, 17, 226);
-    animation: spinner 0.8s linear infinite;
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  height: 100px;
+  width: 100px;
+  margin-top: -50px;
+  margin-left: -50px;
+  border-radius: 50%;
+  border: 7px solid rgb(145, 145, 145);
+  border-top-color: rgb(205, 17, 226);
+  animation: spinner 0.8s linear infinite;
 }
 
 @keyframes spinner {
-    to {
-        transform: rotate(360deg);
-    }
+  to {
+    transform: rotate(360deg);
+  }
 }

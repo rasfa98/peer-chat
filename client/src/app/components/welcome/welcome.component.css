@@ -1,8 +1,8 @@
 :host {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 :host h1 {
-    font-size: 70px;
+  font-size: 70px;
 }

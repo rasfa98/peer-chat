@@ -9,7 +9,7 @@ import { ChatService } from '../../services/chat.service';
 })
 export class FriendRequestsComponent implements OnInit {
   socket: any
-  notification: any
+  notification: boolean
   state: string
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {}

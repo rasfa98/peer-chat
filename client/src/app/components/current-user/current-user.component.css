@@ -1,76 +1,77 @@
 :host div {
-    margin-left: 1vw;
-    padding-top: 10px;
+  margin-left: 12px;
+  padding-top: 10px;
 }
 
 :host img {
-    height: 80px;
-    margin-right: 20px;
-    border-radius: 100%;
-    float: left;
-    clear: both;
+  height: 80px;
+  margin-right: 20px;
+  border-radius: 100%;
+  float: left;
+  clear: both;
 }
 
 :host .name {
-    padding-top: 10px;
-    color: white;
-    font-size: 25px;
-    font-weight: 900;
-    display: block;
+  padding-top: 10px;
+  color: white;
+  font-size: 25px;
+  font-weight: 900;
+  display: block;
 }
 
 :host .select {
-    margin-top: -30px;
-    margin-left: -7px;
-    font-size: 18px;
+  margin-top: -30px;
+  margin-left: -7px;
+  font-size: 18px;
 }
 
 :host .select select {
-    background-color: transparent;
-    border: none;
-    color: white;
-    margin-top: -15px;
+  background-color: transparent;
+  border: none;
+  color: white;
+  margin-top: -15px;
 }
 
 :host .select:after {
-    margin-right: 5px;
+  margin-right: 1.5vw;
+  margin-top: -7px;
 }
 
 :host .status {
-    height: 20px;
-    width: 20px;
-    border-radius: 100%;
-    display: inline-block;
-    position: absolute;
-    margin-top: 55px;
-    margin-left: -40px;
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  display: inline-block;
+  position: absolute;
+  margin-top: 55px;
+  margin-left: -40px;
 }
 
 .online {
-    background-color: rgb(4, 214, 134);
+  background-color: rgb(4, 214, 134);
 }
 
 .offline {
-    background-color: rgb(255, 255, 255);
+  background-color: rgb(255, 255, 255);
 }
 
 .away {
-    background-color: rgb(243, 247, 3);
+  background-color: rgb(243, 247, 3);
 }
 
 .busy {
-    background-color: rgb(247, 6, 6);
+  background-color: rgb(247, 6, 6);
 }
 
 :host button {
-    height: 70px;
-    width: 70px;
-    margin: 15px;
-    margin-top: -63px;
-    border-radius: 100%;
-    float: right;
+  height: 70px;
+  width: 70px;
+  margin: 15px;
+  margin-top: -63px;
+  border-radius: 100%;
+  float: right;
 }
 
 :host button span {
-    font-size: 43px;
+  font-size: 43px;
 }

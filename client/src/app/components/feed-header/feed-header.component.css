@@ -1,21 +1,21 @@
 :host {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 :host h1 {
-    font-size: 30px;
-    margin: 10px;
+  font-size: 30px;
+  margin: 10px;
 }
 
 :host button {
-    margin: 10px;
+  margin: 10px;
 }
 
 :host .navbar {
-    background-color: white;
+  background-color: white;
 }
 
 :host .title {
-    margin-top: 20px;
+  margin-top: 20px;
 }

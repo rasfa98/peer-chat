@@ -3,7 +3,7 @@
 <div *ngIf="!calling && !dialing">
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <h1 class="title is-4">{{activeUserItem.fullName}}</h1>
+      <h1 class="title is-4">{{activeUserItem.fullName}}</h1>
     </div>
 
     <div class="navbar-menu">
@@ -21,15 +21,15 @@
 <div *ngIf="calling">
   <nav class="navbar" role="navigation" aria-label="main navigation">
     <div class="navbar-brand">
-        <h1 class="title is-4">Incoming {{callInformation.callType}} call from {{callInformation.caller}}...</h1>
+      <h1 class="title is-4">Incoming {{callInformation.callType}} call from {{callInformation.caller}}...</h1>
     </div>
   </nav>
 </div>
 
 <div *ngIf="dialing">
-    <nav class="navbar" role="navigation" aria-label="main navigation">
-      <div class="navbar-brand">
-          <h1 class="title is-4">Making a {{dialInformation.dialType}} call to {{dialInformation.receiver}}...</h1>
-      </div>
-    </nav>
-  </div>
+  <nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+      <h1 class="title is-4">Making a {{dialInformation.dialType}} call to {{dialInformation.receiver}}...</h1>
+    </div>
+  </nav>
+</div>

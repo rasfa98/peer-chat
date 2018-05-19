@@ -1,57 +1,57 @@
 :host {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 :host input {
-    height: 40px;
-    width: 52vw;
+  height: 40px;
+  width: 52vw;
 }
 
 :host .emojis {
-    height: 40px;
-    width: 5vw;
+  height: 40px;
+  width: 5vw;
 }
 
 :host .send {
-    height: 40px;
-    width: 10vw;
+  height: 40px;
+  width: 10vw;
 }
 
 :host button i {
-    font-size: 25px;
+  font-size: 25px;
 }
 
 :host .emojiPopup {
-    position: absolute;
-    text-align: center;
-    display: block;
-    width: 60%;
-    bottom: 75px;
-    margin-left: 10px;
-    border-radius: 7px;
-    background-color: white;
+  position: absolute;
+  text-align: center;
+  display: block;
+  width: 60%;
+  bottom: 75px;
+  margin-left: 10px;
+  border-radius: 7px;
+  background-color: white;
 }
 
 :host .emojiPopup:before {
-    background-color: white;
-    position: absolute;
-    display: block;
-    margin-left: 10px;
-    width: 30px;
-    height: 26px;
-    bottom: -10px;
-    content: "";
-    transform: rotate(29deg) skew(-25deg);
-    z-index: -100;
+  background-color: white;
+  position: absolute;
+  display: block;
+  margin-left: 10px;
+  width: 30px;
+  height: 26px;
+  bottom: -10px;
+  content: "";
+  transform: rotate(29deg) skew(-25deg);
+  z-index: -100;
 }
 
 :host ul li {
-    display: inline;
-    font-size: 30px;
-    padding: 7px;
+  display: inline;
+  font-size: 30px;
+  padding: 7px;
 }
 
 :host ul li:hover {
-    opacity: 0.7;
+  opacity: 0.7;
 }

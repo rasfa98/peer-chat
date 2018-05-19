@@ -7,7 +7,7 @@ import { ChatService } from '../../services/chat.service';
   styleUrls: ['./flash-message.component.css']
 })
 export class FlashMessageComponent implements OnInit {
-  flashMessage: any
+  flashMessage: object
 
   constructor(private chatService: ChatService) {}
 
@@ -16,7 +16,7 @@ export class FlashMessageComponent implements OnInit {
       this.flashMessage = flashMessage
 
       if (flashMessage.type !== null) {
-        setTimeout(() => { this.chatService.changeFlashMessage({ type: null, message: null }) }, 4000)
+        setTimeout(() => { this.chatService.changeFlashMessage({ type: null, message: null, color: null }) }, 5000)
       }
     })
   }

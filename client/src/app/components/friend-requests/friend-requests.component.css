@@ -1,17 +1,17 @@
 :host button {
-    height: 40px;
-    width: 31vw;
-    margin-left: 1vw;
-    margin-top: 9px;
+  height: 40px;
+  width: 31vw;
+  margin-left: 1vw;
+  margin-top: 9px;
 }
 
 :host .notificationDot {
-    height: 20px;
-    width: 20px;
-    border-radius: 100%;
-    display: inline-block;
-    position: absolute;
-    margin-top: 19px;
-    margin-left: -40px;
-    background-color: rgb(205, 17, 226);
+  height: 20px;
+  width: 20px;
+  border-radius: 100%;
+  display: inline-block;
+  position: absolute;
+  margin-top: 19px;
+  margin-left: -40px;
+  background-color: rgb(205, 17, 226);
 }

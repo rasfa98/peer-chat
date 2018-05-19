@@ -14,7 +14,7 @@ export class ChatroomComponent implements OnInit {
   loading: boolean
   calling: boolean
   dialing: boolean
-  flashMessage: any
+  flashMessage: object
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.loading = true

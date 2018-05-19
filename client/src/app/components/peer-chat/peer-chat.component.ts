@@ -16,7 +16,7 @@ export class PeerChatComponent implements OnInit {
   @ViewChild('chat') chatComponents: any
 
   peer: any
-  stream: any
+  stream: object
   localStream: any
   chatType: string
   loading: boolean
