@@ -29,6 +29,7 @@ export class CurrentUserComponent implements OnInit {
 
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user
+
       this.socket.emit('newUser', user)
     })
 

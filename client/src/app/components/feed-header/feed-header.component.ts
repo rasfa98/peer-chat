@@ -63,12 +63,21 @@ export class FeedHeaderComponent implements OnInit {
       })
     } catch (err) {
       this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
+      this.newError()
     }
+
+    this.socket.on('callError', () => {
+      if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
+
+      this.chatService.changeDialing(false)
+      this.chatService.changeCalling(false)
+      this.stopAudio()
+    })
     
     this.socket.on('hangUp', () => {
       this.chatService.changeDialing(false)
       this.stopAudio()
-      this.localStream.getTracks().forEach(x => x.stop())
+      if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
     })
 
     this.socket.on('cancelCall', () => {
@@ -111,6 +120,10 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.changeDialing(false)
     this.chatService.changeCalling(false)
     this.stopAudio()
+
+    if (this.data) {
+      this.socket.emit('callError', this.data.id)
+    }
   }
 
   startAudioDial() {
@@ -149,7 +162,7 @@ export class FeedHeaderComponent implements OnInit {
   cancelCall() {
     this.chatService.changeDialing(false)
     this.stopAudio()
-    this.localStream.getTracks().forEach(x => x.stop())
+    if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
 
     this.socket.emit('cancelCall', this.dialInformation.id)
   }
@@ -195,6 +208,7 @@ export class FeedHeaderComponent implements OnInit {
 
           peerx.on('error', err => {
             this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
+            this.newError()
           })
 
           peerx.on('connect', () => {
@@ -222,21 +236,26 @@ export class FeedHeaderComponent implements OnInit {
           })
 
           peerx.on('close', () => {
-            this.localStream.getTracks().forEach(x => x.stop())
+            if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
 
             this.router.navigate([''])
           })
         })
         .catch(err => {
           this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error when trying to use your camera/microphone', color: 'warning' })
+          this.newError()
         })
 
       setTimeout(() => {
         this.peer = peerx
-        type === 'answer' ? this.peer.signal(peerId) : null
+
+        if (this.peer) {
+          type === 'answer' ? this.peer.signal(peerId) : null
+        }
       }, 5000)
     } catch (err) {
       this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
+      this.newError()
     }
   }
 }
