@@ -23,7 +23,7 @@ module.exports.run = (server) => {
     socket.on('newUser', async user => {
       await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id, status: 'online' })
 
-      io.emit('updateFriendStatus', { id: user._id, status: 'online' })
+      io.emit('updateFriendStatus', { id: user.id, status: 'online' })
       socket.emit('updateCurrentUserStatus', 'online')
     })
 
@@ -184,6 +184,12 @@ module.exports.run = (server) => {
         await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
         await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
       } catch (err) { socket.emit('messageResponseServer', { message: 'An error occured when trying to send the message...' }) }
+    })
+
+    socket.on('callError', async id => {
+      const receiver = await User.findOne({ _id: id })
+
+      socket.to(receiver.socketId).emit('callError')
     })
   })
 

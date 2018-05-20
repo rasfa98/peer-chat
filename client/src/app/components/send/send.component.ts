@@ -11,7 +11,7 @@ export class SendComponent implements OnInit {
   @ViewChild('message') input: any
 
   socket: any
-  activeUserItem: object
+  activeUserItem: any
   showEmojis: boolean
   emojis: object
 
