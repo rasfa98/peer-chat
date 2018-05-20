@@ -105,16 +105,37 @@ export class ChatService {
 
   getFriendRequests() {
     return this.http.get(`${this.BASE_URL}/user/friendRequests`)
-    .map(res => res.json().requests)
+    .map(res => {
+      const data = res.json()
+
+      if (data.resStatus === 'error') {
+        this.changeFlashMessage({ type: 'error', message: 'Could not get your friend requests, please try again...', color: 'warning' })
+        return []
+      } else { return data.requests }
+    })
   }
 
   getFriends() {
     return this.http.get(`${this.BASE_URL}/user/friends`)
-    .map(res => res.json().friends)
+    .map(res => {
+      const data = res.json()
+
+      if (data.resStatus === 'error') {
+        this.changeFlashMessage({ type: 'error', message: 'Could not get your friends, please refresh the page...', color: 'warning' })
+        return []
+      } else { return data.friends }
+    })
   }
 
   getConversations() {
     return this.http.get(`${this.BASE_URL}/user/conversations`)
-    .map(res => res.json().conversations)
+    .map(res => {
+      const data = res.json()
+
+      if (data.resStatus === 'error') {
+        this.changeFlashMessage({ type: 'error', message: 'Could not get your conversations, please refresh the page...', color: 'warning' })
+        return []
+      } else { return data.conversations }
+    })
   }
 }
