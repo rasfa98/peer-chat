@@ -1,0 +1,21 @@
+#login, #register {
+    width: 40%;
+    margin: 0 auto;
+}
+
+#loginBtn, #registerBtn, #cancel {
+    width: 100%;
+}
+
+.oauthBtn {
+    width: 100%;
+}
+
+.facebook {
+    margin-top: 11px
+}
+
+.field p {
+    margin-top: 15px;
+    font-size: 16px;
+}
