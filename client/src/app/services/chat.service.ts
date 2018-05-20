@@ -18,9 +18,10 @@ export class ChatService {
   private CallInformation = new BehaviorSubject(null)
   private Dialing = new BehaviorSubject(false)
   private DialInformation = new BehaviorSubject(null)
-  private FlashMessage = new BehaviorSubject({ type: null, message: null, color: null })
+  private FlashMessage = new BehaviorSubject({ type: null, message: null, color: null, dataType: null })
   private LocalStream = new BehaviorSubject(null)
   private Audio = new BehaviorSubject(false)
+  private Conversations = new BehaviorSubject(null)
 
   activeUserItem = this.ActiveUserItem.asObservable()
   stream = this.Stream.asObservable()
@@ -37,12 +38,12 @@ export class ChatService {
   flashMessage = this.FlashMessage.asObservable()
   localStream = this.LocalStream.asObservable()
   audio = this.Audio.asObservable()
+  conversations = this.Conversations.asObservable()
 
   BASE_URL: string = environment.BASE_URL
   
   constructor(private http: Http) { }
 
-  // Changes values that's shared between components.
   changeActiveUserItem(user) {
     this.ActiveUserItem.next(user)
   }
@@ -103,6 +104,10 @@ export class ChatService {
     this.Audio.next(audio)
   }
 
+  changeConversations(conversations) {
+    this.Conversations.next(conversations)
+  }
+
   getFriendRequests() {
     return this.http.get(`${this.BASE_URL}/user/friendRequests`)
     .map(res => {
@@ -121,7 +126,7 @@ export class ChatService {
       const data = res.json()
 
       if (data.resStatus === 'error') {
-        this.changeFlashMessage({ type: 'error', message: 'Could not get your friends, please refresh the page...', color: 'warning' })
+        this.changeFlashMessage({ type: 'retry', message: 'Could not get your friends, please try again...', color: 'warning', dataType: 'friends' })
         return []
       } else { return data.friends }
     })
@@ -133,7 +138,7 @@ export class ChatService {
       const data = res.json()
 
       if (data.resStatus === 'error') {
-        this.changeFlashMessage({ type: 'error', message: 'Could not get your conversations, please refresh the page...', color: 'warning' })
+        this.changeFlashMessage({ type: 'retry', message: 'Could not get your conversations, please try again...', color: 'warning', dataType: 'conversations' })
         return []
       } else { return data.conversations }
     })

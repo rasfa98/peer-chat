@@ -17,7 +17,7 @@ export class SearchComponent implements OnInit {
     if (query !== "") {
       this.userService.getUsersByQuery(query).subscribe(users => {
         this.chatService.changeState("search")
-        this.chatService.changeSearchUsers(users.users)
+        this.chatService.changeSearchUsers(users)
       })
     } else { this.chatService.changeState('friendList') }
   }

@@ -22,7 +22,7 @@ export class FeedComponent implements OnInit {
 
     this.chatService.activeUserItem.subscribe(activeUserItem => this.activeUserItem = activeUserItem)
     this.chatService.activeConversation.subscribe(id => this.activeConversation = this.conversations[id])
-  
+    this.chatService.conversations.subscribe(conversations => this.conversations = conversations)
     this.chatService.getConversations().subscribe(conversations => {
       this.conversations = conversations
 

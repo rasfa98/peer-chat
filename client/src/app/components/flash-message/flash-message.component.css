@@ -5,3 +5,23 @@
   text-align: center;
   font-size: 16px;
 }
+
+:host p {
+  display: inline-block;
+}
+
+:host button {
+  background-color: transparent;
+  height: 50px;
+  padding: 0px;
+  float: right;
+  font-size: 50px;
+  clear: both;
+  margin-top: -28px;
+  margin-left: 10px;
+}
+
+:host button:hover {
+  color: rgb(205, 17, 226);
+  background-color: transparent;
+}

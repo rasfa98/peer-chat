@@ -19,14 +19,13 @@ export class CurrentUserComponent implements OnInit {
   constructor
     (private userService: UserService,
       private websocketService: WebsocketService,
-      private chatService: ChatService) {
-    this.currentUser = { id: 0, fullName: 'Getting user...', status: 'offline', avatar: '../../assets/avatars/avatar-1.png' }
-  }
+      private chatService: ChatService) {}
 
   ngOnInit() {
     this.socket = this.websocketService.socket
 
     this.chatService.audio.subscribe(audio => this.allowAudio = audio)
+    this.userService.currentUser.subscribe(currentUser => this.currentUser = currentUser)
 
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user
