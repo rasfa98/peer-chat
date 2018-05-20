@@ -110,8 +110,10 @@ module.exports.run = (server) => {
 
           socket.to(receiver.socketId).emit('newRequest')
           socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been sent!' })
-        } else {
+        } else if (filteredRequests.length > 0) {
           socket.emit('friendResponseServer', { type: 'error', message: 'You have already sent a request to this user.' })
+        } else if (filteredFriends.length > 0) {
+          socket.emit('friendResponseServer', { type: 'error', message: 'You already have this user in your friend list.' })
         }
       } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to send the request, please try again...' }) }
     })
