@@ -9,7 +9,7 @@
       "outDir": "../public",
       "assets": [
         "assets",
-        "favicon.ico"
+        "favicon.png"
       ],
       "index": "chat.html",
       "main": "main.ts",

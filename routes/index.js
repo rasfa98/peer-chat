@@ -3,6 +3,6 @@
 const router = require('express').Router()
 
 router.route('/')
-    .get((req, res) => res.redirect('/login'))
+    .get((req, res) => res.render('index'))
 
 module.exports = router

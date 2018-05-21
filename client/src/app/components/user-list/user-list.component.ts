@@ -29,7 +29,10 @@ export class UserListComponent implements OnInit {
     this.chatService.state.subscribe(state => this.state = state)
     this.chatService.friendRequestUsers.subscribe(friendRequestUsers => this.friendRequestUsers = friendRequestUsers)
     this.chatService.friends.subscribe(friends => this.friends = friends)
-    this.chatService.getFriends().subscribe(friends => this.friends = friends)
+    this.chatService.getFriends().subscribe(friends => {
+      this.friends = friends
+      this.chatService.changeFriends(friends)
+    })
 
     this.socket.on('updateFriendStatus', friend => {
       for (let i = 0; i < this.friends.length; i++) {

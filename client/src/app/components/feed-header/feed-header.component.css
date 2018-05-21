@@ -8,14 +8,23 @@
   margin: 10px;
 }
 
-:host button {
-  margin: 10px;
-}
-
 :host .navbar {
   background-color: white;
 }
 
 :host .title {
   margin-top: 20px;
+}
+
+:host button {
+  height: 60px;
+  width: 60px;
+  margin-right: 20px;
+  font-size: 25px;
+  border-radius: 100%;
+  margin-top: -2px;
+}
+
+:host .trash {
+  margin-right: 35px;
 }

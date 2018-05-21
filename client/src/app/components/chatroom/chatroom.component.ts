@@ -28,7 +28,6 @@ export class ChatroomComponent implements OnInit {
     this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
     this.chatService.flashMessage.subscribe(flashMessage => this.flashMessage  = flashMessage)
     
-
     this.chatService.activeUserItem.subscribe(activeUserItem => {
       if (activeUserItem.id === null) {
         this.displayWelcome = 'block'

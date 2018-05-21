@@ -9,9 +9,27 @@
     <div class="navbar-menu">
       <div class="navbar-end">
         <div class="navbar-item">
-          <button class="button is-primary" (click)="startVideoCall(activeUserItem.id)">Video call</button>
+          <!-- <button class="button is-primary" (click)="startVideoCall(activeUserItem.id)">Video call</button>
           <button class="button is-primary" (click)="startVoiceCall(activeUserItem.id)">Voice call</button>
-          <button class="button is-danger" (click)="removeFriend(activeUserItem.id)">Remove friend</button>
+          <button class="button is-danger" (click)="removeFriend(activeUserItem.id)">Remove friend</button> -->
+
+          <button class="button is-primary" (click)="startVideoCall(activeUserItem.id)">
+            <span class="icon is-small">
+              <i class="ion-md-videocam"></i>
+            </span>
+          </button>
+
+          <button class="button is-primary" (click)="startVoiceCall(activeUserItem.id)">
+            <span class="icon is-small">
+              <i class="ion-md-call"></i>
+            </span>
+          </button>
+
+          <button class="button is-danger trash" (click)="removeFriend(activeUserItem.id)">
+            <span class="icon is-small">
+              <i class="ion-md-trash"></i>
+            </span>
+          </button>
         </div>
       </div>
     </div>
