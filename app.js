@@ -8,6 +8,7 @@ const passport = require('passport')
 const session = require('express-session')
 const MongoStore = require('connect-mongo')(session)
 const csrf = require('csurf')
+const helmet = require('helmet')
 
 const app = express.run()
 
@@ -15,6 +16,19 @@ mongooseConfiguration.run(app).catch(err => {
   console.log(err)
   process.exit(1)
 })
+
+app.use(helmet())
+
+app.use(helmet.contentSecurityPolicy({
+  directives: {
+    defaultSrc: ["'self'"],
+    styleSrc: ["'self'", 'jenil.github.io', 'fonts.googleapis.com', 'unpkg.com', "'unsafe-inline'"],
+    fontSrc: ["'self'", 'fonts.gstatic.com', 'unpkg.com'],
+    scriptSrc: ["'self'", "'unsafe-eval'"],
+    connectSrc: ['*']
+  },
+  browserSniff: false
+}))
 
 app.use(session({
   name: 'PeerChat',
