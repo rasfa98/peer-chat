@@ -56,8 +56,8 @@ module.exports.run = (server) => {
         await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
         await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
 
-        socket.emit('updateFriends', currentUser.friends)
-        socket.to(friend.socketId).emit('updateFriends', friend.friends)
+        socket.emit('updateFriends')
+        socket.to(friend.socketId).emit('updateFriends')
         socket.emit('friendResponseServer', { type: 'success', message: 'The selected friend has been removed.' })
       } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to remove the selected friend, please try again...' }) }
     })
