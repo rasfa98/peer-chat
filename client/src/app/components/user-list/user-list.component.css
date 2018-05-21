@@ -112,6 +112,10 @@
   clear: both;
 }
 
+:host .add:active, :host .add:focus {
+  box-shadow: none;
+}
+
 :host .add:hover {
   color: rgb(205, 17, 226);
 }
@@ -179,4 +183,8 @@
   margin-right: 20px;
   margin-top: -15px;
   font-size: 35px;
+}
+
+:host select:active, :host select:focus {
+  box-shadow: none;
 }

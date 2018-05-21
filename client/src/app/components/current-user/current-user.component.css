@@ -37,6 +37,10 @@
   margin-top: -7px;
 }
 
+:host select:active, :host select:focus {
+  box-shadow: none;
+}
+
 :host .status {
   height: 20px;
   width: 20px;

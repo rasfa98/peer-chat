@@ -10,6 +10,7 @@ import { ChatService } from '../../services/chat.service';
 export class SendComponent implements OnInit {
   @ViewChild('message') input: any
   @ViewChild('popup') popup: any
+  @ViewChild('sendBtn') send: any
 
   socket: any
   activeUserItem: any
@@ -65,5 +66,14 @@ export class SendComponent implements OnInit {
 
   addEmoji(index) {
     this.input.nativeElement.value += `${this.emojis[index].text} `
+    this.send.nativeElement.disabled = false
+  }
+
+  toggleSendBtn() {
+    if (this.input.nativeElement.value.trim() === '') {
+      this.send.nativeElement.disabled = true
+    } else {
+      this.send.nativeElement.disabled = false
+    }
   }
 }

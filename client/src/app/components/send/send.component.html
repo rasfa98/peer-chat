@@ -17,10 +17,10 @@
     </button>
   </div>
   <div class="control">
-    <input type="text" placeholder="Enter message..." class="input" #message>
+    <input type="text" placeholder="Enter message..." class="input" #message (input)="toggleSendBtn()">
   </div>
   <div class="control">
-    <button type="btn" class="button is-primary send" (click)="sendMessage(message.value, activeUserItem.id)">
+    <button #sendBtn disabled type="btn" class="button is-primary send" (click)="sendMessage(message.value, activeUserItem.id)">
       <span class="icon is-small">
         <i class="ion-md-send"></i>
       </span>
