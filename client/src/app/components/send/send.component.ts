@@ -9,14 +9,17 @@ import { ChatService } from '../../services/chat.service';
 })
 export class SendComponent implements OnInit {
   @ViewChild('message') input: any
+  @ViewChild('popup') popup: any
 
   socket: any
   activeUserItem: any
   showEmojis: boolean
   emojis: object
+  focused: boolean
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.showEmojis = false
+    this.focused = false
 
     this.emojis = [
       { code: '&#x1F642', text: ':smile:' }, { code: '&#x1F600', text: ':happy:' }, { code: '&#x1F60E', text: ':cool:' },
@@ -41,8 +44,23 @@ export class SendComponent implements OnInit {
     this.input.nativeElement.value = ""
   }
 
+  removeFocus() {
+    setTimeout(() => {
+      this.showEmojis = false
+      this.focused = false
+    }, 10)
+  }
+
   getEmojis() {
-    this.showEmojis = !this.showEmojis
+    if (this.focused) {
+      this.showEmojis = false
+    } else {
+      this.showEmojis = true
+    }
+    
+    if (this.showEmojis) {
+      setTimeout(() => { this.popup.nativeElement.focus() }, 10)
+    }
   }
 
   addEmoji(index) {

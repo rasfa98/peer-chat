@@ -1,5 +1,5 @@
-<div *ngIf="showEmojis">
-  <div class="emojiPopup">
+<div [hidden]="!showEmojis">
+  <div class="emojiPopup" (focusout)="removeFocus()" #popup tabindex="20">
     <ul>
       <li *ngFor="let emoji of emojis; let x = index">
         <a [innerHtml]="emoji.code" (click)="addEmoji(x)"></a>
