@@ -6,7 +6,7 @@ const User = require('../models/User')
 describe('User model validation', () => {
   it('should be able to register a user if all details are provided', done => {
     const user = new User({
-      fullName: 'test',
+      fullName: 'test test',
       password: 'test123',
       email: 'test@test.se'
     })
