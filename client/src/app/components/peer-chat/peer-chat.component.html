@@ -15,13 +15,11 @@
       </span>
     </button>
 
-
     <button class="button" [ngClass]="{'is-primary' : clickVid, 'is-default' : !clickVid}" (click)="toggleCamera()" #video>
       <span class="icon is-small">
         <i class="ion-md-videocam"></i>
       </span>
     </button>
-
 
     <button class="button is-danger" (click)="endCall()" #end>
       <span class="icon is-small">

@@ -35,3 +35,7 @@ img {
 .hero h1 {
     margin-bottom: 30px !important;
 }
+
+#login, #register {
+    margin-top: 20px;
+}

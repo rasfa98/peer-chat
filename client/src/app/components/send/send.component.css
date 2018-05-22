@@ -30,7 +30,7 @@
   bottom: 75px;
   margin-left: 10px;
   border-radius: 7px;
-  background-color: white;
+  background-color: #8e44ad;
 }
 
 :host .emojiPopup:focus {
@@ -38,7 +38,7 @@
 }
 
 :host .emojiPopup:before {
-  background-color: white;
+  background-color: #8e44ad;
   position: absolute;
   display: block;
   margin-left: 10px;

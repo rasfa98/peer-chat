@@ -37,7 +37,8 @@
   margin-top: -7px;
 }
 
-:host select:active, :host select:focus {
+:host select:active,
+:host select:focus {
   box-shadow: none;
 }
 

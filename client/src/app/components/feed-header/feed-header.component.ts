@@ -114,18 +114,6 @@ export class FeedHeaderComponent implements OnInit {
     setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
   }
 
-  newError() {
-    if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
-
-    this.chatService.changeDialing(false)
-    this.chatService.changeCalling(false)
-    this.stopAudio()
-
-    if (this.data) {
-      this.socket.emit('callError', this.data.id)
-    }
-  }
-
   startAudioDial() {
     if (this.allowAudio) {
       this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3'
@@ -172,6 +160,16 @@ export class FeedHeaderComponent implements OnInit {
     this.stopAudio()
 
     this.socket.emit('hangUp', this.data.id)
+  }
+
+  newError() {
+    if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
+
+    this.chatService.changeDialing(false)
+    this.chatService.changeCalling(false)
+    this.stopAudio()
+
+    if (this.data) { this.socket.emit('callError', this.data.id) }
   }
 
   createPeer(options, receiver, type, chatType, peerId) {
@@ -248,10 +246,7 @@ export class FeedHeaderComponent implements OnInit {
 
       setTimeout(() => {
         this.peer = peerx
-
-        if (this.peer) {
-          type === 'answer' ? this.peer.signal(peerId) : null
-        }
+        if (this.peer) { type === 'answer' ? this.peer.signal(peerId) : null }
       }, 5000)
     } catch (err) {
       this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })

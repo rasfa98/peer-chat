@@ -27,6 +27,15 @@ const userSchema = mongoose.Schema({
   }]
 })
 
+// Validate full name.
+userSchema.path('fullName').validate(function (value) {
+  return value.match(/^[a-z]+$/i)
+}, 'Please provide a full name with characters only.')
+
+userSchema.path('fullName').validate(function (value) {
+  return value.trim().length <= 20
+}, 'Please provide a full name with a length of maximum 20 characters.')
+
 // Validate email.
 userSchema.path('email').validate(function (value) {
   return value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
@@ -35,15 +44,6 @@ userSchema.path('email').validate(function (value) {
 userSchema.path('email').validate(function (value) {
   return value.trim().length <= 50
 }, 'Please provide an email with a length of maximum 50 characters.')
-
-// Validate name.
-userSchema.path('fullName').validate(function (value) {
-  return value.match(/^[a-z]+$/i)
-}, 'Please provide a full name with characters only.')
-
-userSchema.path('fullName').validate(function (value) {
-  return value.trim().length <= 20
-}, 'Please provide a full name with a length of maximum 20 characters.')
 
 // Validate password.
 userSchema.path('password').validate(function (value) {

@@ -112,7 +112,8 @@
   clear: both;
 }
 
-:host .add:active, :host .add:focus {
+:host .add:active,
+:host .add:focus {
   box-shadow: none;
 }
 
@@ -185,6 +186,7 @@
   font-size: 35px;
 }
 
-:host select:active, :host select:focus {
+:host select:active,
+:host select:focus {
   box-shadow: none;
 }

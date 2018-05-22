@@ -55,13 +55,9 @@ export class SendComponent implements OnInit {
   getEmojis() {
     if (this.focused) {
       this.showEmojis = false
-    } else {
-      this.showEmojis = true
-    }
+    } else { this.showEmojis = true }
     
-    if (this.showEmojis) {
-      setTimeout(() => { this.popup.nativeElement.focus() }, 10)
-    }
+    if (this.showEmojis) { setTimeout(() => { this.popup.nativeElement.focus() }, 10) }
   }
 
   addEmoji(index) {
@@ -72,8 +68,6 @@ export class SendComponent implements OnInit {
   toggleSendBtn() {
     if (this.input.nativeElement.value.trim() === '') {
       this.send.nativeElement.disabled = true
-    } else {
-      this.send.nativeElement.disabled = false
-    }
+    } else { this.send.nativeElement.disabled = false }
   }
 }
