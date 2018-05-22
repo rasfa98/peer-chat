@@ -24,11 +24,12 @@
         <div class="navbar-menu">
             <div class="navbar-end">
                 {{#if login}}
+                <a class="navbar-item" href="/chat">Enter chat</a>
                 <a class="navbar-item" href="/signout">Sign out</a>
                 {{else}}
                 <a class="navbar-item" href="/login">Login</a>
-                {{/if}}
                 <a class="navbar-item" href="/register">Register</a>
+                {{/if}}
             </div>
         </div>
     </nav>
