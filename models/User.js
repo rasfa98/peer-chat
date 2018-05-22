@@ -29,7 +29,7 @@ const userSchema = mongoose.Schema({
 
 // Validate full name.
 userSchema.path('fullName').validate(function (value) {
-  return value.match(/^[a-z]+$/i)
+  return value.match(/^[a-zA-Z ]+$/)
 }, 'Please provide a full name with characters only.')
 
 userSchema.path('fullName').validate(function (value) {
