@@ -1,8 +1,16 @@
-'use strict'
+/**
+ * Index routes
+ *
+ * @module routes/index.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const router = require('express').Router()
+ 'use strict'
 
-router.route('/')
-    .get((req, res) => res.render('index'))
+ const router = require('express').Router()
 
-module.exports = router
+ router.route('/')
+     .get((req, res) => res.render('index'))
+
+ module.exports = router

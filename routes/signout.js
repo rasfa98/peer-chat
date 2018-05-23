@@ -1,15 +1,22 @@
-'use strict'
+/**
+ * Signout routes
+ *
+ * @module routes/signout.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const User = require('../models/User')
+ 'use strict'
 
-const router = require('express').Router()
+ const User = require('../models/User')
+ const router = require('express').Router()
 
-router.route('/')
-    .get(async (req, res) => {
-      await User.findOneAndUpdate({ socketId: req.session.userId }, { status: 'offline', socketId: null })
+ router.route('/')
+     .get(async (req, res) => {
+       await User.findOneAndUpdate({ socketId: req.session.userId }, { status: 'offline', socketId: null })
 
-      req.session.destroy()
-      res.redirect('/')
-    })
+       req.session.destroy()
+       res.redirect('/')
+     })
 
-module.exports = router
+ module.exports = router

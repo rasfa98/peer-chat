@@ -1,36 +1,44 @@
-'use strict'
+/**
+ * Express configuration.
+ *
+ * @module config/express.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const express = require('express')
-const path = require('path')
-const cors = require('cors')
-const bodyParser = require('body-parser')
-const dotenv = require('dotenv')
-const handlebars = require('express-handlebars')
-const socket = require('./socket')
+ 'use strict'
 
-module.exports.run = () => {
-  const app = express()
-  const port = 8000
+ const express = require('express')
+ const path = require('path')
+ const cors = require('cors')
+ const bodyParser = require('body-parser')
+ const dotenv = require('dotenv')
+ const handlebars = require('express-handlebars')
+ const socket = require('./socket')
 
-  dotenv.config()
+ module.exports.run = () => {
+   const app = express()
+   const port = 8000
 
-  app.use(cors())
+   dotenv.config()
 
-  app.engine('.hbs', handlebars({
-    defaultLayout: 'main',
-    extname: '.hbs'
-  }))
+   app.use(cors())
 
-  app.set('view engine', '.hbs')
+   app.engine('.hbs', handlebars({
+     defaultLayout: 'main',
+     extname: '.hbs'
+   }))
 
-  app.use(bodyParser.json())
-  app.use(bodyParser.urlencoded({ extended: true }))
+   app.set('view engine', '.hbs')
 
-  app.use(express.static(path.join(__dirname, '../public')))
+   app.use(bodyParser.json())
+   app.use(bodyParser.urlencoded({ extended: true }))
 
-  const server = app.listen(port, console.log(`Server running on PORT: ${port}...`))
+   app.use(express.static(path.join(__dirname, '../public')))
 
-  app.set('io', socket.run(server))
+   const server = app.listen(port, console.log(`Server running on PORT: ${port}...`))
 
-  return app
-}
+   app.set('io', socket.run(server))
+
+   return app
+ }

@@ -1,199 +1,207 @@
-'use strict'
+/**
+ * Websocket configuration.
+ *
+ * @module config/socket.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const socket = require('socket.io')
-const User = require('../models/User')
-const emoji = require('../lib/emoji')
+ 'use strict'
 
-function removeFriendRequest (id, requests) {
-  for (let i = 0; i < requests.length; i++) {
-    if (requests[i].id === id) { requests.splice(i, 1) }
-  }
-}
+ const socket = require('socket.io')
+ const User = require('../models/User')
+ const misc = require('../lib/misc')
 
-function removeFriend (user, id) {
-  user.friends.forEach((x, i) => {
-    if (x.id === id.toString()) { user.friends.splice(i, 1) }
-  })
-}
+ function removeFriendRequest (id, requests) {
+   for (let i = 0; i < requests.length; i++) {
+     if (requests[i].id === id) { requests.splice(i, 1) }
+   }
+ }
 
-module.exports.run = (server) => {
-  const io = socket(server)
+ function removeFriend (user, id) {
+   user.friends.forEach((x, i) => {
+     if (x.id === id.toString()) { user.friends.splice(i, 1) }
+   })
+ }
 
-  io.on('connection', async socket => {
-    socket.on('newUser', async user => {
-      await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id, status: 'online' })
+ module.exports.run = (server) => {
+   const io = socket(server)
 
-      io.emit('updateFriendStatus', { id: user.id, status: 'online' })
-      socket.emit('updateCurrentUserStatus', 'online')
-    })
+   io.on('connection', async socket => {
+     socket.on('newUser', async user => {
+       await User.findOneAndUpdate({ _id: user.id }, { socketId: socket.id, status: 'online' })
 
-    socket.on('disconnect', async () => {
-      const currentUser = await User.findOne({ socketId: socket.id })
+       io.emit('updateFriendStatus', { id: user.id, status: 'online' })
+       socket.emit('updateCurrentUserStatus', 'online')
+     })
 
-      await User.findOneAndUpdate({ _id: currentUser._id }, { status: 'offline', socketId: null })
+     socket.on('disconnect', async () => {
+       const currentUser = await User.findOne({ socketId: socket.id })
 
-      io.emit('updateFriendStatus', { id: currentUser._id, status: 'offline' })
-      socket.emit('updateCurrentUserStatus', 'offline')
-    })
+       await User.findOneAndUpdate({ _id: currentUser._id }, { status: 'offline', socketId: null })
 
-    socket.on('updateStatus', async status => {
-      const currentUser = await User.findOne({ socketId: socket.id })
+       io.emit('updateFriendStatus', { id: currentUser._id, status: 'offline' })
+       socket.emit('updateCurrentUserStatus', 'offline')
+     })
 
-      await User.findOneAndUpdate({ _id: currentUser.id }, { status: status })
+     socket.on('updateStatus', async status => {
+       const currentUser = await User.findOne({ socketId: socket.id })
 
-      io.emit('updateFriendStatus', { id: currentUser._id, status: status })
-      socket.emit('updateCurrentUserStatus', status)
-    })
+       await User.findOneAndUpdate({ _id: currentUser.id }, { status: status })
 
-    socket.on('removeFriend', async id => {
-      try {
-        const currentUser = await User.findOne({ socketId: socket.id })
-        const friend = await User.findOne({ _id: id })
+       io.emit('updateFriendStatus', { id: currentUser._id, status: status })
+       socket.emit('updateCurrentUserStatus', status)
+     })
 
-        removeFriend(currentUser, id)
-        removeFriend(friend, currentUser._id)
+     socket.on('removeFriend', async id => {
+       try {
+         const currentUser = await User.findOne({ socketId: socket.id })
+         const friend = await User.findOne({ _id: id })
 
-        await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
-        await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
+         removeFriend(currentUser, id)
+         removeFriend(friend, currentUser._id)
 
-        socket.emit('updateFriends')
-        socket.to(friend.socketId).emit('updateFriends')
-        socket.emit('friendResponseServer', { type: 'success', message: 'The selected friend has been removed.' })
-      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to remove the selected friend, please try again...' }) }
-    })
+         await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
+         await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
 
-    socket.on('sendSignal', async data => {
-      const currentUser = await User.findOne({ socketId: socket.id })
-      const receiver = await User.findOne({ _id: data.id })
+         socket.emit('updateFriends')
+         socket.to(friend.socketId).emit('updateFriends')
+         socket.emit('friendResponseServer', { type: 'success', message: 'The selected friend has been removed.' })
+       } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to remove the selected friend, please try again...' }) }
+     })
 
-      socket.to(receiver.socketId).emit('newSignal', { peerId: data.peerId, id: currentUser.id, type: data.type, chatType: data.chatType, caller: currentUser.fullName })
-    })
+     socket.on('sendSignal', async data => {
+       const currentUser = await User.findOne({ socketId: socket.id })
+       const receiver = await User.findOne({ _id: data.id })
 
-    socket.on('hangUp', async id => {
-      const receiver = await User.findOne({ _id: id })
+       socket.to(receiver.socketId).emit('newSignal', { peerId: data.peerId, id: currentUser.id, type: data.type, chatType: data.chatType, caller: currentUser.fullName })
+     })
 
-      socket.to(receiver.socketId).emit('hangUp')
-    })
+     socket.on('hangUp', async id => {
+       const receiver = await User.findOne({ _id: id })
 
-    socket.on('cancelCall', async id => {
-      const receiver = await User.findOne({ _id: id })
-      socket.to(receiver.socketId).emit('cancelCall')
-    })
+       socket.to(receiver.socketId).emit('hangUp')
+     })
 
-    socket.on('answered', async id => {
-      const receiver = await User.findOne({ _id: id })
+     socket.on('cancelCall', async id => {
+       const receiver = await User.findOne({ _id: id })
+       socket.to(receiver.socketId).emit('cancelCall')
+     })
 
-      socket.to(receiver.socketId).emit('answered')
-    })
+     socket.on('answered', async id => {
+       const receiver = await User.findOne({ _id: id })
 
-    socket.on('newRequest', async id => {
-      try {
-        const currentUser = await User.findOne({ socketId: socket.id })
-        const receiver = await User.findOne({ _id: id })
+       socket.to(receiver.socketId).emit('answered')
+     })
 
-        const filteredRequests = receiver.friendRequests.filter(x => x.id === currentUser._id.toString())
-        const filteredFriends = currentUser.friends.filter(x => x.id === id)
+     socket.on('newRequest', async id => {
+       try {
+         const currentUser = await User.findOne({ socketId: socket.id })
+         const receiver = await User.findOne({ _id: id })
 
-        if (filteredRequests.length === 0 && filteredFriends.length === 0 && !receiver._id.equals(currentUser._id)) {
-          const friendRequests = receiver.friendRequests
+         const filteredRequests = receiver.friendRequests.filter(x => x.id === currentUser._id.toString())
+         const filteredFriends = currentUser.friends.filter(x => x.id === id)
 
-          const newRequest = {
-            fullName: currentUser.fullName,
-            email: currentUser.email,
-            id: currentUser._id,
-            avatar: currentUser.avatar
-          }
+         if (filteredRequests.length === 0 && filteredFriends.length === 0 && !receiver._id.equals(currentUser._id)) {
+           const friendRequests = receiver.friendRequests
 
-          friendRequests.push(newRequest)
+           const newRequest = {
+             fullName: currentUser.fullName,
+             email: currentUser.email,
+             id: currentUser._id,
+             avatar: currentUser.avatar
+           }
 
-          await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
+           friendRequests.push(newRequest)
 
-          socket.to(receiver.socketId).emit('newRequest')
-          socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been sent!' })
-        } else if (filteredRequests.length > 0) {
-          socket.emit('friendResponseServer', { type: 'error', message: 'You have already sent a request to this user.' })
-        } else if (filteredFriends.length > 0) {
-          socket.emit('friendResponseServer', { type: 'error', message: 'You already have this user in your friend list.' })
-        }
-      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to send the request, please try again...' }) }
-    })
+           await User.findOneAndUpdate({ _id: id }, { friendRequests: friendRequests })
 
-    socket.on('declineRequest', async id => {
-      try {
-        const currentUser = await User.findOne({ socketId: socket.id })
+           socket.to(receiver.socketId).emit('newRequest')
+           socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been sent!' })
+         } else if (filteredRequests.length > 0) {
+           socket.emit('friendResponseServer', { type: 'error', message: 'You have already sent a request to this user.' })
+         } else if (filteredFriends.length > 0) {
+           socket.emit('friendResponseServer', { type: 'error', message: 'You already have this user in your friend list.' })
+         }
+       } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to send the request, please try again...' }) }
+     })
 
-        removeFriendRequest(id, currentUser.friendRequests)
+     socket.on('declineRequest', async id => {
+       try {
+         const currentUser = await User.findOne({ socketId: socket.id })
 
-        await User.findOneAndUpdate({ _id: currentUser._id }, { friendRequests: currentUser.friendRequests })
+         removeFriendRequest(id, currentUser.friendRequests)
 
-        socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been declined.' })
-      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to decline the request, please try again...' }) }
-    })
+         await User.findOneAndUpdate({ _id: currentUser._id }, { friendRequests: currentUser.friendRequests })
 
-    socket.on('acceptRequest', async id => {
-      try {
-        const currentUser = await User.findOne({ socketId: socket.id })
-        const sender = await User.findOne({ _id: id })
+         socket.emit('friendResponseServer', { type: 'success', message: 'Friend request has been declined.' })
+       } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to decline the request, please try again...' }) }
+     })
 
-        const matchingFriendRequests = currentUser.friendRequests.filter(x => x.id === id)
-        const currentUserFriends = currentUser.friends.filter(x => x.id === id)
+     socket.on('acceptRequest', async id => {
+       try {
+         const currentUser = await User.findOne({ socketId: socket.id })
+         const sender = await User.findOne({ _id: id })
 
-        if (matchingFriendRequests.length === 1 && currentUserFriends.length === 0) {
-          const currentUserFriendsArray = currentUser.friends
-          const senderFriendsArray = sender.friends
+         const matchingFriendRequests = currentUser.friendRequests.filter(x => x.id === id)
+         const currentUserFriends = currentUser.friends.filter(x => x.id === id)
 
-          currentUserFriendsArray.push({ id: sender._id })
-          senderFriendsArray.push({ id: currentUser._id })
+         if (matchingFriendRequests.length === 1 && currentUserFriends.length === 0) {
+           const currentUserFriendsArray = currentUser.friends
+           const senderFriendsArray = sender.friends
 
-          removeFriendRequest(id, currentUser.friendRequests)
+           currentUserFriendsArray.push({ id: sender._id })
+           senderFriendsArray.push({ id: currentUser._id })
 
-          await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUser.friendRequests })
-          await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriendsArray })
+           removeFriendRequest(id, currentUser.friendRequests)
 
-          socket.emit('acceptRequest')
-          socket.to(sender.socketId).emit('acceptRequest')
-          socket.emit('friendResponseServer', { type: 'success', message: 'The user has been added to your friend list!' })
-        }
-      } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to accept the request, please try again...' }) }
-    })
+           await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUser.friendRequests })
+           await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriendsArray })
 
-    socket.on('sendMessage', async data => {
-      try {
-        const currentUser = await User.findOne({ socketId: socket.id })
-        const receiver = await User.findOne({ _id: data.id })
+           socket.emit('acceptRequest')
+           socket.to(sender.socketId).emit('acceptRequest')
+           socket.emit('friendResponseServer', { type: 'success', message: 'The user has been added to your friend list!' })
+         }
+       } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to accept the request, please try again...' }) }
+     })
 
-        const message = emoji.addEmojis(data.message)
+     socket.on('sendMessage', async data => {
+       try {
+         const currentUser = await User.findOne({ socketId: socket.id })
+         const receiver = await User.findOne({ _id: data.id })
 
-        socket.emit('newMessage', { message: message, id: receiver.id, name: 'you' })
+         const message = misc.addEmojis(data.message)
 
-        socket.to(receiver.socketId).emit('newMessage', { message: message, id: currentUser._id, name: currentUser.fullName })
-        socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
+         socket.emit('newMessage', { message: message, id: receiver.id, name: 'you' })
 
-        let currentUserConversations = currentUser.conversations.filter(x => x.id === receiver._id.toString())
-        let receiverConversations = receiver.conversations.filter(x => x.id === currentUser._id.toString())
+         socket.to(receiver.socketId).emit('newMessage', { message: message, id: currentUser._id, name: currentUser.fullName })
+         socket.to(receiver.socketId).emit('messageNotification', currentUser.id)
 
-        if (currentUserConversations.length > 0) {
-          currentUserConversations[0].messages.push({ message: message, sender: 'you' })
-          receiverConversations[0].messages.push({ message: message, sender: currentUser.fullName })
-        } else {
-          currentUserConversations.push({ id: data.id, messages: [ { message: message, sender: 'you' } ] })
-          receiverConversations.push({ id: currentUser._id, messages: [ { message: message, sender: currentUser.fullName } ] })
+         let currentUserConversations = currentUser.conversations.filter(x => x.id === receiver._id.toString())
+         let receiverConversations = receiver.conversations.filter(x => x.id === currentUser._id.toString())
 
-          currentUser.conversations.push(currentUserConversations[0])
-          receiver.conversations.push(receiverConversations[0])
-        }
+         if (currentUserConversations.length > 0) {
+           currentUserConversations[0].messages.push({ message: message, sender: 'you' })
+           receiverConversations[0].messages.push({ message: message, sender: currentUser.fullName })
+         } else {
+           currentUserConversations.push({ id: data.id, messages: [ { message: message, sender: 'you' } ] })
+           receiverConversations.push({ id: currentUser._id, messages: [ { message: message, sender: currentUser.fullName } ] })
 
-        await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
-        await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
-      } catch (err) { socket.emit('messageResponseServer', { message: 'An error occured when trying to send the message...' }) }
-    })
+           currentUser.conversations.push(currentUserConversations[0])
+           receiver.conversations.push(receiverConversations[0])
+         }
 
-    socket.on('callError', async id => {
-      const receiver = await User.findOne({ _id: id })
+         await User.findOneAndUpdate({ _id: currentUser._id }, { conversations: currentUser.conversations })
+         await User.findOneAndUpdate({ _id: receiver._id }, { conversations: receiver.conversations })
+       } catch (err) { socket.emit('messageResponseServer', { message: 'An error occured when trying to send the message...' }) }
+     })
 
-      socket.to(receiver.socketId).emit('callError')
-    })
-  })
+     socket.on('callError', async id => {
+       const receiver = await User.findOne({ _id: id })
 
-  return io
-}
+       socket.to(receiver.socketId).emit('callError')
+     })
+   })
+
+   return io
+ }

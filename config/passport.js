@@ -1,81 +1,89 @@
-'use strict'
+/**
+ * Passport configuration.
+ *
+ * @module config/passport.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const passport = require('passport')
-const GoogleStrategy = require('passport-google-oauth20')
-const FacebookStrategy = require('passport-facebook')
-const User = require('../models/User')
-const uniqId = require('uniqid')
-const avatar = require('../lib/avatar')
+ 'use strict'
 
-module.exports.run = (req) => {
-  passport.serializeUser((user, done) => done(null, user.id))
+ const passport = require('passport')
+ const GoogleStrategy = require('passport-google-oauth20')
+ const FacebookStrategy = require('passport-facebook')
+ const User = require('../models/User')
+ const uniqId = require('uniqid')
+ const misc = require('../lib/misc')
 
-  passport.deserializeUser(async (id, done) => {
-    const user = await User.findById(id)
+ module.exports.run = (req) => {
+   passport.serializeUser((user, done) => done(null, user.id))
 
-    done(null, user)
-  })
+   passport.deserializeUser(async (id, done) => {
+     const user = await User.findById(id)
 
-  // Google strategy
-  passport.use(new GoogleStrategy({
-    callbackURL: 'https://rasmusfalk.se/auth/google/redirect',
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET
-  }, async (accessToken, refreshToken, profile, done) => {
-    const email = profile.emails[0].value
+     done(null, user)
+   })
 
-    const currentUser = await User.findOne({ email: email })
+   // Google strategy
+   passport.use(new GoogleStrategy({
+     callbackURL: 'https://rasmusfalk.se/auth/google/redirect',
+     clientID: process.env.GOOGLE_CLIENT_ID,
+     clientSecret: process.env.GOOGLE_CLIENT_SECRET
+   }, async (accessToken, refreshToken, profile, done) => {
+     const email = profile.emails[0].value
 
-    if (currentUser) {
-      req.session.userId = currentUser._id
-      done(null, currentUser)
-    } else {
-      const newUser = new User({
-        fullName: profile.displayName,
-        email: email,
-        password: uniqId(),
-        avatar: avatar()
-      })
+     const currentUser = await User.findOne({ email: email })
 
-      await newUser.save()
+     if (currentUser) {
+       req.session.userId = currentUser._id
+       done(null, currentUser)
+     } else {
+       const newUser = new User({
+         fullName: profile.displayName,
+         email: email,
+         password: uniqId(),
+         avatar: misc.randomAvatar()
+       })
 
-      const user = await User.findOne({ email: email })
+       await newUser.save()
 
-      req.session.userId = user._id
+       const user = await User.findOne({ email: email })
 
-      done(null, newUser)
-    }
-  }))
+       req.session.userId = user._id
 
-  // Facebook strategy
-  passport.use(new FacebookStrategy({
-    callbackURL: 'https://rasmusfalk.se/auth/facebook/redirect',
-    clientID: process.env.FACEBOOK_APP_ID,
-    clientSecret: process.env.FACEBOOK_APP_SECRET,
-    profileFields: ['displayName', 'email']
-  }, async (accessToken, refreshToken, profile, done) => {
-    const email = profile.emails[0].value
+       done(null, newUser)
+     }
+   }))
 
-    const currentUser = await User.findOne({ email: email })
+   // Facebook strategy
+   passport.use(new FacebookStrategy({
+     callbackURL: 'https://rasmusfalk.se/auth/facebook/redirect',
+     clientID: process.env.FACEBOOK_APP_ID,
+     clientSecret: process.env.FACEBOOK_APP_SECRET,
+     profileFields: ['displayName', 'email']
+   }, async (accessToken, refreshToken, profile, done) => {
+     const email = profile.emails[0].value
 
-    if (currentUser) {
-      req.session.userId = currentUser._id
-      done(null, currentUser)
-    } else {
-      const newUser = new User({
-        fullName: profile.displayName,
-        email: email,
-        password: uniqId(),
-        avatar: avatar()
-      })
+     const currentUser = await User.findOne({ email: email })
 
-      await newUser.save()
+     if (currentUser) {
+       req.session.userId = currentUser._id
+       done(null, currentUser)
+     } else {
+       const newUser = new User({
+         fullName: profile.displayName,
+         email: email,
+         password: uniqId(),
+         avatar: misc.randomAvatar()
+       })
 
-      const user = await User.findOne({ email: email })
+       await newUser.save()
 
-      req.session.userId = user._id
+       const user = await User.findOne({ email: email })
 
-      done(null, newUser)
-    }
-  }))
-}
+       req.session.userId = user._id
+
+       done(null, newUser)
+     }
+   }))
+ }

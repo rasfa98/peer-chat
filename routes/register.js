@@ -1,40 +1,48 @@
-'use strict'
+/**
+ * Register routes
+ *
+ * @module routes/register.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const router = require('express').Router()
-const User = require('../models/User')
-const checkError = require('../lib/checkError')
-const avatar = require('../lib/avatar')
+ 'use strict'
 
-router.route('/')
-    .get((req, res) => res.render('register'))
+ const router = require('express').Router()
+ const User = require('../models/User')
+ const checkError = require('../lib/checkError')
+ const misc = require('../lib/misc')
 
-    .post(async (req, res) => {
-      try {
-        const user = new User({
-          fullName: req.body.fullName,
-          email: req.body.email,
-          password: req.body.password,
-          avatar: avatar()
-        })
+ router.route('/')
+     .get((req, res) => res.render('register'))
 
-        if (req.body.password !== req.body.passwordRepeat) {
-          req.session.flash = {
-            type: 'danger',
-            message: 'The passwords do not match!'
-          }
+     .post(async (req, res) => {
+       try {
+         const user = new User({
+           fullName: req.body.fullName,
+           email: req.body.email,
+           password: req.body.password,
+           avatar: misc.randomAvatar()
+         })
 
-          res.redirect('back')
-        } else {
-          await user.save()
+         if (req.body.password !== req.body.passwordRepeat) {
+           req.session.flash = {
+             type: 'danger',
+             message: 'The passwords do not match!'
+           }
 
-          req.session.flash = {
-            type: 'success',
-            message: 'Account successfully created!'
-          }
+           res.redirect('back')
+         } else {
+           await user.save()
 
-          res.redirect('/login')
-        }
-      } catch (err) { checkError(err, req, res) }
-    })
+           req.session.flash = {
+             type: 'success',
+             message: 'Account successfully created!'
+           }
 
-module.exports = router
+           res.redirect('/login')
+         }
+       } catch (err) { checkError(err, req, res) }
+     })
+
+ module.exports = router

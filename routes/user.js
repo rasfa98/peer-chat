@@ -1,76 +1,84 @@
-'use strict'
+/**
+ * User routes
+ *
+ * @module routes/user.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const router = require('express').Router()
-const User = require('../models/User')
+ 'use strict'
 
-router.route('/current')
-    .get(async (req, res) => {
-      try {
-        const user = await User.findOne({ _id: res.locals.userId })
+ const router = require('express').Router()
+ const User = require('../models/User')
 
-        res.send({ resStatus: 'success', id: res.locals.userId, fullName: user.fullName, status: user.status, avatar: user.avatar, audio: user.audio })
-      } catch (err) { res.send({ resStatus: 'error' }) }
-    })
+ router.route('/current')
+     .get(async (req, res) => {
+       try {
+         const user = await User.findOne({ _id: res.locals.userId })
 
-// Search and return the users with the matching query (full name or email)
-router.route('/query')
-    .post(async (req, res) => {
-      try {
-        let users
+         res.send({ resStatus: 'success', id: res.locals.userId, fullName: user.fullName, status: user.status, avatar: user.avatar, audio: user.audio })
+       } catch (err) { res.send({ resStatus: 'error' }) }
+     })
 
-        if (req.body.query.indexOf('@') !== -1) {
-          users = await User.find({ email: { $regex: req.body.query, $options: 'i' } })
-        } else { users = await User.find({ fullName: { $regex: req.body.query, $options: 'i' } }) }
+ // Search and return the users with the matching query (full name or email)
+ router.route('/query')
+     .post(async (req, res) => {
+       try {
+         let users
 
-        users = users.map(x => { return { id: x._id, fullName: x.fullName, email: x.email, status: x.status, avatar: x.avatar } })
+         if (req.body.query.indexOf('@') !== -1) {
+           users = await User.find({ email: { $regex: req.body.query, $options: 'i' } })
+         } else { users = await User.find({ fullName: { $regex: req.body.query, $options: 'i' } }) }
 
-        users.forEach((x, i) => { if (x.id.equals(req.session.userId)) { users.splice(i, 1) } })
+         users = users.map(x => { return { id: x._id, fullName: x.fullName, email: x.email, status: x.status, avatar: x.avatar } })
 
-        res.send({ resStatus: 'success', users: users })
-      } catch (err) { res.send({ resStatus: 'error' }) }
-    })
+         users.forEach((x, i) => { if (x.id.equals(req.session.userId)) { users.splice(i, 1) } })
 
-router.route('/friendRequests')
-    .get(async (req, res) => {
-      try {
-        const user = await User.findOne({ _id: req.session.userId })
+         res.send({ resStatus: 'success', users: users })
+       } catch (err) { res.send({ resStatus: 'error' }) }
+     })
 
-        res.send({ resStatus: 'success', requests: user.friendRequests })
-      } catch (err) { res.send({ resStatus: 'error' }) }
-    })
+ router.route('/friendRequests')
+     .get(async (req, res) => {
+       try {
+         const user = await User.findOne({ _id: req.session.userId })
 
-router.route('/friends')
-    .get(async (req, res) => {
-      try {
-        const user = await User.findOne({ _id: req.session.userId })
+         res.send({ resStatus: 'success', requests: user.friendRequests })
+       } catch (err) { res.send({ resStatus: 'error' }) }
+     })
 
-        const friends = []
+ router.route('/friends')
+     .get(async (req, res) => {
+       try {
+         const user = await User.findOne({ _id: req.session.userId })
 
-        for (let i = 0; i < user.friends.length; i++) {
-          const currentFriend = await User.findOne({ _id: user.friends[i].id })
+         const friends = []
 
-          friends.push({ id: currentFriend._id, fullName: currentFriend.fullName, email: currentFriend.email, status: currentFriend.status, avatar: currentFriend.avatar })
-        }
+         for (let i = 0; i < user.friends.length; i++) {
+           const currentFriend = await User.findOne({ _id: user.friends[i].id })
 
-        res.send({ resStatus: 'success', friends: friends })
-      } catch (err) { res.send({ resStatus: 'error' }) }
-    })
+           friends.push({ id: currentFriend._id, fullName: currentFriend.fullName, email: currentFriend.email, status: currentFriend.status, avatar: currentFriend.avatar })
+         }
 
-router.route('/conversations')
-    .get(async (req, res) => {
-      try {
-        const user = await User.findOne({ _id: req.session.userId })
+         res.send({ resStatus: 'success', friends: friends })
+       } catch (err) { res.send({ resStatus: 'error' }) }
+     })
 
-        const conversations = user.conversations
+ router.route('/conversations')
+     .get(async (req, res) => {
+       try {
+         const user = await User.findOne({ _id: req.session.userId })
 
-        const structuredConversations = {}
+         const conversations = user.conversations
 
-        for (let i = 0; i < conversations.length; i++) {
-          structuredConversations[conversations[i].id] = conversations[i].messages
-        }
+         const structuredConversations = {}
 
-        res.send({ resStatus: 'success', conversations: structuredConversations })
-      } catch (err) { res.send({ resStatus: 'error' }) }
-    })
+         for (let i = 0; i < conversations.length; i++) {
+           structuredConversations[conversations[i].id] = conversations[i].messages
+         }
 
-module.exports = router
+         res.send({ resStatus: 'success', conversations: structuredConversations })
+       } catch (err) { res.send({ resStatus: 'error' }) }
+     })
+
+ module.exports = router

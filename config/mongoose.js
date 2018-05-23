@@ -1,27 +1,35 @@
-'use strict'
+/**
+ * Mongoose configuration.
+ *
+ * @module config/mongoose.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const mongoose = require('mongoose')
+ 'use strict'
 
-module.exports.run = async (app) => {
-  let connectionString
+ const mongoose = require('mongoose')
 
-  if (app.get('env') === 'development') { connectionString = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@ds247479.mlab.com:47479/peer-chat` }
-  if (app.get('env') === 'production') { connectionString = 'mongodb://localhost/PeerChat' }
+ module.exports.run = async (app) => {
+   let connectionString
 
-  app.set('connectionString', connectionString)
+   if (app.get('env') === 'development') { connectionString = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@ds247479.mlab.com:47479/peer-chat` }
+   if (app.get('env') === 'production') { connectionString = 'mongodb://localhost/PeerChat' }
 
-  mongoose.Promise = global.Promise
+   app.set('connectionString', connectionString)
 
-  mongoose.connection.on('connected', () => console.log('Mongoose connection is open.'))
-  mongoose.connection.on('error', (err) => console.log(`Mongoose connection error has occured: ${err}.`))
-  mongoose.connection.on('disconnected', () => console.log('Mongoose connection is closed.'))
+   mongoose.Promise = global.Promise
 
-  process.on('SIGINT', () => {
-    mongoose.connection.close(() => {
-      console.log('Mongoose connection is closed due to application termination.')
-      process.exit(0)
-    })
-  })
+   mongoose.connection.on('connected', () => console.log('Mongoose connection is open.'))
+   mongoose.connection.on('error', (err) => console.log(`Mongoose connection error has occured: ${err}.`))
+   mongoose.connection.on('disconnected', () => console.log('Mongoose connection is closed.'))
 
-  return mongoose.connect(connectionString)
-}
+   process.on('SIGINT', () => {
+     mongoose.connection.close(() => {
+       console.log('Mongoose connection is closed due to application termination.')
+       process.exit(0)
+     })
+   })
+
+   return mongoose.connect(connectionString)
+ }

@@ -1,70 +1,78 @@
-'use strict'
+/**
+ * Model representing a user.
+ *
+ * @module models/User.js
+ * @author Rasmus Falk
+ * @version 1.0.0
+ */
 
-const mongoose = require('mongoose')
-const bluebird = require('bluebird')
-const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
+ 'use strict'
 
-const userSchema = mongoose.Schema({
-  fullName: { type: String, required: 'Full name is required!', trim: true },
-  email: { type: String, required: 'Email is required!', unique: true },
-  password: { type: String, required: 'Password is required!', trim: true },
-  status: { type: String, default: 'offline' },
-  avatar: { type: String },
-  friends: [{ id: String }],
-  socketId: { type: String, default: null },
-  friendRequests: [{
-    id: String,
-    fullName: String,
-    email: String,
-    avatar: String
-  }],
-  conversations: [{
-    id: String,
-    messages: [{
-      message: String,
-      sender: String
-    }]
-  }]
-})
+ const mongoose = require('mongoose')
+ const bluebird = require('bluebird')
+ const bcrypt = bluebird.promisifyAll(require('bcrypt-nodejs'))
 
-// Validate full name.
-userSchema.path('fullName').validate(function (value) {
-  return value.match(/^[a-zA-Z ]+$/)
-}, 'Please provide a full name with characters only.')
+ const userSchema = mongoose.Schema({
+   fullName: { type: String, required: 'Full name is required!', trim: true },
+   email: { type: String, required: 'Email is required!', unique: true },
+   password: { type: String, required: 'Password is required!', trim: true },
+   status: { type: String, default: 'offline' },
+   avatar: { type: String },
+   friends: [{ id: String }],
+   socketId: { type: String, default: null },
+   friendRequests: [{
+     id: String,
+     fullName: String,
+     email: String,
+     avatar: String
+   }],
+   conversations: [{
+     id: String,
+     messages: [{
+       message: String,
+       sender: String
+     }]
+   }]
+ })
 
-userSchema.path('fullName').validate(function (value) {
-  return value.trim().length <= 20
-}, 'Please provide a full name with a length of maximum 20 characters.')
+ // Validate full name.
+ userSchema.path('fullName').validate(function (value) {
+   return value.match(/^[a-zA-Z ]+$/)
+ }, 'Please provide a full name with characters only.')
 
-// Validate email.
-userSchema.path('email').validate(function (value) {
-  return value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
-}, 'Please provide an email with a valid format.')
+ userSchema.path('fullName').validate(function (value) {
+   return value.trim().length <= 20
+ }, 'Please provide a full name with a length of maximum 20 characters.')
 
-userSchema.path('email').validate(function (value) {
-  return value.trim().length <= 50
-}, 'Please provide an email with a length of maximum 50 characters.')
+ // Validate email.
+ userSchema.path('email').validate(function (value) {
+   return value.match(/^[a-zA-Z0-9.!#$%&’*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
+ }, 'Please provide an email with a valid format.')
 
-// Validate password.
-userSchema.path('password').validate(function (value) {
-  return value.trim().length >= 5 && value.trim().length <= 30
-}, 'Please provide a password with a length of minimum 5 characters and maximum 30 characters.')
+ userSchema.path('email').validate(function (value) {
+   return value.trim().length <= 50
+ }, 'Please provide an email with a length of maximum 50 characters.')
 
-// Hashing of password.
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) { next() }
+ // Validate password.
+ userSchema.path('password').validate(function (value) {
+   return value.trim().length >= 5 && value.trim().length <= 30
+ }, 'Please provide a password with a length of minimum 5 characters and maximum 30 characters.')
 
-  const salt = await bcrypt.genSaltAsync(10)
-  const hash = await bcrypt.hashAsync(this.password, salt, null)
+ // Hashing of password.
+ userSchema.pre('save', async function (next) {
+   if (!this.isModified('password')) { next() }
 
-  this.password = hash
+   const salt = await bcrypt.genSaltAsync(10)
+   const hash = await bcrypt.hashAsync(this.password, salt, null)
 
-  next()
-})
+   this.password = hash
 
-// Compare guessed password to stored password.
-userSchema.methods.compare = function (password) {
-  return bcrypt.compareAsync(password, this.password)
-}
+   next()
+ })
 
-module.exports = mongoose.model('User', userSchema)
+ // Compare guessed password to stored password.
+ userSchema.methods.compare = function (password) {
+   return bcrypt.compareAsync(password, this.password)
+ }
+
+ module.exports = mongoose.model('User', userSchema)
