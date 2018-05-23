@@ -21,15 +21,15 @@
 }
 
 img {
-    height: calc(100vh - 45.5px);
-    width: 100%;
+    height: calc(100vh - 45.5px) !important;
+    width: 100% !important;
 }
 
 .hero {
-    position: absolute;
-    top: 200px;
-    width: 100%;
-    opacity: 0.9;
+    position: absolute !important;
+    top: 200px !important;
+    width: 100% !important;
+    opacity: 0.9 !important;
 }
 
 .hero h1 {
