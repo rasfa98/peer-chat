@@ -32,7 +32,7 @@ export class PopupComponent implements OnInit {
     this.chatService.calling.subscribe(calling => this.calling = calling)
     this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
 
-    this.socket.on('answered', () => this.cancelBtn.nativeElement.disabled = true)
+    this.socket.on('answered', () => { if (this.cancelBtn) { this.cancelBtn.nativeElement.disabled = true } })
 }
 
   answerCall() {
