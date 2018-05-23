@@ -27,9 +27,7 @@ export class FeedComponent implements OnInit {
     this.chatService.getConversations().subscribe(conversations => {
       this.conversations = conversations
 
-      if (this.activeUserItem.id !== null) {
-        this.activeConversation = this.conversations[this.activeUserItem.id]
-      }
+      if (this.activeUserItem.id !== null) { this.activeConversation = this.conversations[this.activeUserItem.id] }
     })
     
     this.socket.on('newMessage', data => {

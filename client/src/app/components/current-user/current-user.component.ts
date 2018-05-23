@@ -29,13 +29,10 @@ export class CurrentUserComponent implements OnInit {
 
     this.userService.getCurrentUser().subscribe(user => {
       this.currentUser = user
-
       this.socket.emit('newUser', user)
     })
 
-    this.socket.on('updateCurrentUserStatus', status => {
-      this.currentUser.status = status
-    })
+    this.socket.on('updateCurrentUserStatus', status => this.currentUser.status = status)
   }
 
   changeStatus(status) {

@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
   styleUrls: ['./peer-chat.component.css']
 })
 export class PeerChatComponent implements OnInit {
-  @ViewChild('videoChat') videoChat: any
+  @ViewChild('peerVideo') peerVideo: any
   @ViewChild('mic') micBtn: any
   @ViewChild('video') videoBtn: any
   @ViewChild('localVideo') localVideo: any
@@ -54,8 +54,8 @@ export class PeerChatComponent implements OnInit {
         this.chatService.peer.subscribe(peer => {
           this.peer = peer
   
-          this.videoChat.nativeElement.srcObject = stream
-          this.videoChat.nativeElement.play()
+          this.peerVideo.nativeElement.srcObject = stream
+          this.peerVideo.nativeElement.play()
           .then(() => this.hasPlayedPeer = true)
           .catch(err => {
             this.hasPlayedPeer = false

@@ -37,11 +37,6 @@
   margin-top: -7px;
 }
 
-:host select:active,
-:host select:focus {
-  box-shadow: none;
-}
-
 :host .status {
   height: 20px;
   width: 20px;
@@ -79,4 +74,13 @@
 
 :host button span {
   font-size: 43px;
+}
+
+select option {
+  background-color: #8e44ad;
+}
+
+select:active,
+select:focus {
+  box-shadow: none;
 }

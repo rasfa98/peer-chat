@@ -43,10 +43,7 @@ export class UserListComponent implements OnInit {
     })
 
     this.socket.on('updateFriends', () => {
-      this.chatService.getFriends().subscribe(friends => {
-        this.friends = friends
-      })
-
+      this.chatService.getFriends().subscribe(friends => this.friends = friends)
       this.chatService.changeActiveUserItem({ id: null, fullName: 'no user selected' });
       this.chatService.changeActiveConversation(null)
     })

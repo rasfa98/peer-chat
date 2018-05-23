@@ -186,7 +186,11 @@
   font-size: 35px;
 }
 
-:host select:active,
-:host select:focus {
+select option {
+  background-color: #8e44ad;
+}
+
+select:active,
+select:focus {
   box-shadow: none;
 }

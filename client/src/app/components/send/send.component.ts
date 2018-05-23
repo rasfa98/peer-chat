@@ -52,7 +52,7 @@ export class SendComponent implements OnInit {
     }, 10)
   }
 
-  getEmojis() {
+  viewEmojis() {
     if (this.focused) {
       this.showEmojis = false
     } else { this.showEmojis = true }
