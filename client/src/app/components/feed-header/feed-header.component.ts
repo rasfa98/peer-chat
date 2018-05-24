@@ -21,6 +21,7 @@ export class FeedHeaderComponent implements OnInit {
   dialInformation: any
   friends: any
   localStream: any
+  timeout: any
   stream: object
   callInformation: object
   peerId: string
@@ -93,7 +94,7 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.changeDialing(true)
     this.startAudio('dialing')
 
-    setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
+    this.timeout = setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
   }
 
   startAudio(name) {
@@ -140,6 +141,8 @@ export class FeedHeaderComponent implements OnInit {
   // Turns of the camera and closes popup.
   resetCallState() {
     if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
+
+    clearTimeout(this.timeout)
 
     this.chatService.changeDialing(false)
     this.chatService.changeCalling(false)
