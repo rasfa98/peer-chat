@@ -42,10 +42,13 @@ export class UserListComponent implements OnInit {
       }
     })
 
-    this.socket.on('updateFriends', () => {
+    this.socket.on('removeFriend', id => {
       this.chatService.getFriends().subscribe(friends => this.friends = friends)
-      this.chatService.changeActiveUserItem({ id: null, fullName: 'no user selected' });
-      this.chatService.changeActiveConversation(null)
+
+      if (id === this.activeUserItem.id) {
+        this.chatService.changeActiveUserItem({ id: null, fullName: 'no user selected' });
+        this.chatService.changeActiveConversation(null)
+      }
     })
 
     this.socket.on('messageNotification', id => {
@@ -58,7 +61,7 @@ export class UserListComponent implements OnInit {
     })
   }
 
-  changeItem(user) {
+  changeActiveUserItem(user) {
     this.chatService.changeActiveUserItem(user)
     this.chatService.changeActiveConversation(user.id)
 

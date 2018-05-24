@@ -4,7 +4,7 @@
   <div class="menu">
     <ul class="menu-list">
       <li *ngFor="let friend of friends">
-        <a (click)="changeItem(friend)">
+        <a (click)="changeActiveUserItem(friend)">
           <img src="{{friend.avatar}}">
           <span class="status" [ngClass]="{'online' : friend.status === 'online', 'offline' : friend.status === 'offline', 'away' : friend.status === 'away', 'busy' : friend.status === 'busy'}"></span>
           <span class="name">{{friend.fullName}}</span>
