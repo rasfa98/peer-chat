@@ -188,6 +188,7 @@
 
 select option {
   background-color: #8e44ad;
+  color: white;
 }
 
 select:active,
