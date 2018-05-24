@@ -8,16 +8,16 @@ import { Router } from '@angular/router';
   styleUrls: ['./peer-chat.component.css']
 })
 export class PeerChatComponent implements OnInit {
+  @ViewChild('localVideo') localVideo: any
   @ViewChild('peerVideo') peerVideo: any
   @ViewChild('mic') micBtn: any
   @ViewChild('video') videoBtn: any
-  @ViewChild('localVideo') localVideo: any
   @ViewChild('end') endCallBtn: any
   @ViewChild('chat') chatComponents: any
 
   peer: any
-  stream: object
   localStream: any
+  stream: object
   chatType: string
   loading: boolean
   hasPlayedLocal: boolean

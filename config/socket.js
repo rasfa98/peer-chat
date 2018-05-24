@@ -13,9 +13,9 @@
  const misc = require('../lib/misc')
 
  function removeFriendRequest (id, requests) {
-   for (let i = 0; i < requests.length; i++) {
-     if (requests[i].id === id) { requests.splice(i, 1) }
-   }
+   requests.forEach((x, i) => {
+     if (x.id === id) { requests.splice(i, 1) }
+   })
  }
 
  function removeFriend (user, id) {
@@ -64,8 +64,8 @@
          await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUser.friends })
          await User.findOneAndUpdate({ _id: friend._id }, { friends: friend.friends })
 
-         socket.emit('updateFriends')
-         socket.to(friend.socketId).emit('updateFriends')
+         socket.to(friend.socketId).emit('removeFriend', currentUser._id)
+         socket.emit('removeFriend', friend._id)
          socket.emit('friendResponseServer', { type: 'success', message: 'The selected friend has been removed.' })
        } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to remove the selected friend, please try again...' }) }
      })
@@ -79,7 +79,6 @@
 
      socket.on('hangUp', async id => {
        const receiver = await User.findOne({ _id: id })
-
        socket.to(receiver.socketId).emit('hangUp')
      })
 
@@ -90,7 +89,6 @@
 
      socket.on('answered', async id => {
        const receiver = await User.findOne({ _id: id })
-
        socket.to(receiver.socketId).emit('answered')
      })
 
@@ -158,8 +156,8 @@
            await User.findOneAndUpdate({ _id: currentUser._id }, { friends: currentUserFriendsArray, friendRequests: currentUser.friendRequests })
            await User.findOneAndUpdate({ _id: sender._id }, { friends: senderFriendsArray })
 
-           socket.emit('acceptRequest')
            socket.to(sender.socketId).emit('acceptRequest')
+           socket.emit('acceptRequest')
            socket.emit('friendResponseServer', { type: 'success', message: 'The user has been added to your friend list!' })
          }
        } catch (err) { socket.emit('friendResponseServer', { type: 'error', message: 'An error occured when trying to accept the request, please try again...' }) }
@@ -198,7 +196,6 @@
 
      socket.on('callError', async id => {
        const receiver = await User.findOne({ _id: id })
-
        socket.to(receiver.socketId).emit('callError')
      })
    })

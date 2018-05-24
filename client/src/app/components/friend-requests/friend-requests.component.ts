@@ -9,8 +9,8 @@ import { ChatService } from '../../services/chat.service';
 })
 export class FriendRequestsComponent implements OnInit {
   socket: any
-  notification: boolean
   state: string
+  notification: boolean
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {}
 
@@ -39,8 +39,8 @@ export class FriendRequestsComponent implements OnInit {
   viewFriendRequests() {
     this.chatService.getFriendRequests().subscribe(data => {
       this.chatService.changeFriendRequestUsers(data)
-      this.notification = false;
       this.chatService.changeState("friendRequest")
+      this.notification = false;
     })
   }
 }

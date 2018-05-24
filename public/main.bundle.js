@@ -211,6 +211,7 @@ var ChatroomComponent = /** @class */ (function () {
         this.chatService.calling.subscribe(function (calling) { return _this.calling = calling; });
         this.chatService.dialing.subscribe(function (dialing) { return _this.dialing = dialing; });
         this.chatService.flashMessage.subscribe(function (flashMessage) { return _this.flashMessage = flashMessage; });
+        // Checks if the welcome message should be displayed.
         this.chatService.activeUserItem.subscribe(function (activeUserItem) {
             if (activeUserItem.id === null) {
                 _this.displayWelcome = 'block';
@@ -222,6 +223,7 @@ var ChatroomComponent = /** @class */ (function () {
             }
             _this.loading = false;
         });
+        // Friend request feedback.
         this.socket.on('friendResponseServer', function (data) {
             if (data.type === 'success') {
                 _this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'success' });
@@ -253,7 +255,7 @@ var ChatroomComponent = /** @class */ (function () {
 /***/ "./src/app/components/current-user/current-user.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host div {\n  margin-left: 12px;\n  padding-top: 10px;\n}\n\n:host img {\n  height: 80px;\n  margin-right: 20px;\n  border-radius: 100%;\n  float: left;\n  clear: both;\n}\n\n:host .name {\n  padding-top: 10px;\n  color: white;\n  font-size: 25px;\n  font-weight: 900;\n  display: block;\n}\n\n:host .select {\n  margin-top: -30px;\n  margin-left: -7px;\n  font-size: 18px;\n}\n\n:host .select select {\n  background-color: transparent;\n  border: none;\n  color: white;\n  margin-top: -15px;\n}\n\n:host .select:after {\n  margin-right: 1.5vw;\n  margin-top: -7px;\n}\n\n:host select:active,\n:host select:focus {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n\n:host .status {\n  height: 20px;\n  width: 20px;\n  border-radius: 100%;\n  display: inline-block;\n  position: absolute;\n  margin-top: 55px;\n  margin-left: -40px;\n}\n\n.online {\n  background-color: rgb(4, 214, 134);\n}\n\n.offline {\n  background-color: rgb(255, 255, 255);\n}\n\n.away {\n  background-color: rgb(243, 247, 3);\n}\n\n.busy {\n  background-color: rgb(247, 6, 6);\n}\n\n:host button {\n  height: 70px;\n  width: 70px;\n  margin: 15px;\n  margin-top: -63px;\n  border-radius: 100%;\n  float: right;\n}\n\n:host button span {\n  font-size: 43px;\n}\n"
+module.exports = ":host div {\n  margin-left: 12px;\n  padding-top: 10px;\n}\n\n:host img {\n  height: 80px;\n  margin-right: 20px;\n  border-radius: 100%;\n  float: left;\n  clear: both;\n}\n\n:host .name {\n  padding-top: 10px;\n  color: white;\n  font-size: 25px;\n  font-weight: 900;\n  display: block;\n}\n\n:host .select {\n  margin-top: -30px;\n  margin-left: -7px;\n  font-size: 18px;\n}\n\n:host .select select {\n  background-color: transparent;\n  border: none;\n  color: white;\n  margin-top: -15px;\n}\n\n:host .select:after {\n  margin-right: 1.5vw;\n  margin-top: -7px;\n}\n\n:host .status {\n  height: 20px;\n  width: 20px;\n  border-radius: 100%;\n  display: inline-block;\n  position: absolute;\n  margin-top: 55px;\n  margin-left: -40px;\n}\n\n.online {\n  background-color: rgb(4, 214, 134);\n}\n\n.offline {\n  background-color: rgb(255, 255, 255);\n}\n\n.away {\n  background-color: rgb(243, 247, 3);\n}\n\n.busy {\n  background-color: rgb(247, 6, 6);\n}\n\n:host button {\n  height: 70px;\n  width: 70px;\n  margin: 15px;\n  margin-top: -63px;\n  border-radius: 100%;\n  float: right;\n}\n\n:host button span {\n  font-size: 43px;\n}\n\nselect option {\n  background-color: #8e44ad;\n}\n\nselect:active,\nselect:focus {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n"
 
 /***/ }),
 
@@ -304,9 +306,7 @@ var CurrentUserComponent = /** @class */ (function () {
             _this.currentUser = user;
             _this.socket.emit('newUser', user);
         });
-        this.socket.on('updateCurrentUserStatus', function (status) {
-            _this.currentUser.status = status;
-        });
+        this.socket.on('updateCurrentUserStatus', function (status) { return _this.currentUser.status = status; });
     };
     CurrentUserComponent.prototype.changeStatus = function (status) {
         if (status === 'signout') {
@@ -402,9 +402,10 @@ var FeedHeaderComponent = /** @class */ (function () {
         this.chatService.friends.subscribe(function (friends) { return _this.friends = friends; });
         this.chatService.audio.subscribe(function (audio) { return _this.allowAudio = audio; });
         try {
+            // Signals the remote peer.
             this.socket.on('newSignal', function (data) {
                 if (data.type === 'offer') {
-                    _this.startAudioRinging();
+                    _this.startAudio('ringing');
                     _this.chatService.changeCalling(true);
                     _this.data = data;
                     _this.callInformation = { caller: data.caller, callType: data.chatType };
@@ -419,24 +420,12 @@ var FeedHeaderComponent = /** @class */ (function () {
             this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' });
             this.newError();
         }
-        this.socket.on('callError', function () {
-            if (_this.localStream) {
-                _this.localStream.getTracks().forEach(function (x) { return x.stop(); });
-            }
-            _this.chatService.changeDialing(false);
-            _this.chatService.changeCalling(false);
-            _this.stopAudio();
-        });
+        this.socket.on('callError', function () { return _this.resetCallState(); });
         this.socket.on('hangUp', function () {
-            _this.chatService.changeDialing(false);
-            _this.stopAudio();
-            if (_this.localStream) {
-                _this.localStream.getTracks().forEach(function (x) { return x.stop(); });
-            }
+            _this.resetCallState();
         });
         this.socket.on('cancelCall', function () {
-            _this.chatService.changeCalling(false);
-            _this.stopAudio();
+            _this.resetCallState();
         });
         this.socket.on('answered', function () { return _this.answered = true; });
     };
@@ -444,41 +433,31 @@ var FeedHeaderComponent = /** @class */ (function () {
         this.socket.emit('removeFriend', id);
     };
     FeedHeaderComponent.prototype.startVideoCall = function (id) {
-        var _this = this;
-        this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' };
-        this.chatService.changeDialInformation(this.dialInformation);
-        this.chatService.changeDialing(true);
-        this.startAudioDial();
+        this.setupCall('video');
         this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null);
-        setTimeout(function () { if (_this.answered !== true) {
-            _this.cancelCall();
-        } }, 10000);
     };
     FeedHeaderComponent.prototype.startVoiceCall = function (id) {
+        this.setupCall('voice');
+        this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null);
+    };
+    FeedHeaderComponent.prototype.setupCall = function (type) {
         var _this = this;
-        this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' };
+        this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: type };
         this.chatService.changeDialInformation(this.dialInformation);
         this.chatService.changeDialing(true);
-        this.startAudioDial();
-        this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null);
+        this.startAudio('dialing');
         setTimeout(function () { if (_this.answered !== true) {
             _this.cancelCall();
         } }, 10000);
     };
-    FeedHeaderComponent.prototype.startAudioDial = function () {
+    FeedHeaderComponent.prototype.startAudio = function (name) {
         if (this.allowAudio) {
-            this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3';
+            this.audio.nativeElement.src = "../../../assets/sounds/" + name + ".mp3";
             this.audio.nativeElement.play();
         }
     };
     FeedHeaderComponent.prototype.stopAudio = function () {
         this.audio.nativeElement.pause();
-    };
-    FeedHeaderComponent.prototype.startAudioRinging = function () {
-        if (this.allowAudio) {
-            this.audio.nativeElement.src = '../../../assets/sounds/ringing.mp3';
-            this.audio.nativeElement.play();
-        }
     };
     FeedHeaderComponent.prototype.answerCall = function () {
         var _this = this;
@@ -493,28 +472,27 @@ var FeedHeaderComponent = /** @class */ (function () {
         }
     };
     FeedHeaderComponent.prototype.cancelCall = function () {
-        this.chatService.changeDialing(false);
-        this.stopAudio();
-        if (this.localStream) {
-            this.localStream.getTracks().forEach(function (x) { return x.stop(); });
-        }
+        this.resetCallState();
         this.socket.emit('cancelCall', this.dialInformation.id);
     };
     FeedHeaderComponent.prototype.hangUp = function () {
-        this.chatService.changeCalling(false);
-        this.stopAudio();
+        this.resetCallState();
         this.socket.emit('hangUp', this.data.id);
     };
     FeedHeaderComponent.prototype.newError = function () {
+        this.resetCallState();
+        if (this.data) {
+            this.socket.emit('callError', this.data.id);
+        }
+    };
+    // Turns of the camera and removes popup.
+    FeedHeaderComponent.prototype.resetCallState = function () {
         if (this.localStream) {
             this.localStream.getTracks().forEach(function (x) { return x.stop(); });
         }
         this.chatService.changeDialing(false);
         this.chatService.changeCalling(false);
         this.stopAudio();
-        if (this.data) {
-            this.socket.emit('callError', this.data.id);
-        }
     };
     FeedHeaderComponent.prototype.createPeer = function (options, receiver, type, chatType, peerId) {
         var _this = this;
@@ -578,6 +556,7 @@ var FeedHeaderComponent = /** @class */ (function () {
                 _this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error when trying to use your camera/microphone', color: 'warning' });
                 _this.newError();
             });
+            // Waits until the webRTC-ID has been created. 
             setTimeout(function () {
                 _this.peer = peerx_1;
                 if (_this.peer) {
@@ -664,6 +643,7 @@ var FeedComponent = /** @class */ (function () {
                 _this.activeConversation = _this.conversations[_this.activeUserItem.id];
             }
         });
+        // Stores the conversations on the client.
         this.socket.on('newMessage', function (data) {
             if (_this.conversations[data.id]) {
                 _this.conversations[data.id].push({ message: data.message, sender: data.name });
@@ -912,7 +892,7 @@ module.exports = ":host .background {\n  height: 100vh;\n  overflow-y: hidden;\n
 /***/ "./src/app/components/peer-chat/peer-chat.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div [hidden]=\"!loading\">\n  <div class=\"loading\">\n    <app-loading></app-loading>\n  </div>\n</div>\n\n<div class=\"has-text-centered background\" #chat hidden>\n  <video class=\"peer\" #videoChat poster=\"../../../assets/images/poster.png\"></video>\n  <video class=\"you\" #localVideo poster=\"../../../assets/images/poster.png\"></video>\n\n  <div class=\"buttons\">\n    <button class=\"button\" [ngClass]=\"{'is-primary' : clickMic, 'is-default' : !clickMic}\" (click)=\"toggleMicrophone()\" #mic>\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-mic\"></i>\n      </span>\n    </button>\n\n    <button class=\"button\" [ngClass]=\"{'is-primary' : clickVid, 'is-default' : !clickVid}\" (click)=\"toggleCamera()\" #video>\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-videocam\"></i>\n      </span>\n    </button>\n\n    <button class=\"button is-danger\" (click)=\"endCall()\" #end>\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-call\"></i>\n      </span>\n    </button>\n  </div>\n</div>\n"
+module.exports = "<div [hidden]=\"!loading\">\n  <div class=\"loading\">\n    <app-loading></app-loading>\n  </div>\n</div>\n\n<div class=\"has-text-centered background\" #chat hidden>\n  <video class=\"peer\" #peerVideo poster=\"../../../assets/images/poster.png\"></video>\n  <video class=\"you\" #localVideo poster=\"../../../assets/images/poster.png\"></video>\n\n  <div class=\"buttons\">\n    <button class=\"button\" [ngClass]=\"{'is-primary' : clickMic, 'is-default' : !clickMic}\" (click)=\"toggleMicrophone()\" #mic>\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-mic\"></i>\n      </span>\n    </button>\n\n    <button class=\"button\" [ngClass]=\"{'is-primary' : clickVid, 'is-default' : !clickVid}\" (click)=\"toggleCamera()\" #video>\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-videocam\"></i>\n      </span>\n    </button>\n\n    <button class=\"button is-danger\" (click)=\"endCall()\" #end>\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-call\"></i>\n      </span>\n    </button>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -963,8 +943,8 @@ var PeerChatComponent = /** @class */ (function () {
                 _this.stream = stream;
                 _this.chatService.peer.subscribe(function (peer) {
                     _this.peer = peer;
-                    _this.videoChat.nativeElement.srcObject = stream;
-                    _this.videoChat.nativeElement.play()
+                    _this.peerVideo.nativeElement.srcObject = stream;
+                    _this.peerVideo.nativeElement.play()
                         .then(function () { return _this.hasPlayedPeer = true; })
                         .catch(function (err) {
                         _this.hasPlayedPeer = false;
@@ -1000,9 +980,9 @@ var PeerChatComponent = /** @class */ (function () {
         }
     };
     __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_9" /* ViewChild */])('videoChat'),
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_9" /* ViewChild */])('peerVideo'),
         __metadata("design:type", Object)
-    ], PeerChatComponent.prototype, "videoChat", void 0);
+    ], PeerChatComponent.prototype, "peerVideo", void 0);
     __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["_9" /* ViewChild */])('mic'),
         __metadata("design:type", Object)
@@ -1217,7 +1197,7 @@ module.exports = ":host {\n  margin: 0px;\n  padding: 0px;\n}\n\n:host input {\n
 /***/ "./src/app/components/send/send.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div [hidden]=\"!showEmojis\">\n  <div class=\"emojiPopup\" (focusout)=\"removeFocus()\" #popup tabindex=\"20\">\n    <ul>\n      <li *ngFor=\"let emoji of emojis; let x = index\">\n        <a [innerHtml]=\"emoji.code\" (click)=\"addEmoji(x)\"></a>\n      </li>\n    </ul>\n  </div>\n</div>\n\n<div class=\"field has-addons\">\n  <div class=\"control\">\n    <button type=\"btn\" class=\"button is-primary emojis\" (click)=\"getEmojis()\">\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-happy\"></i>\n      </span>\n    </button>\n  </div>\n  <div class=\"control\">\n    <input type=\"text\" placeholder=\"Enter message...\" class=\"input\" #message (input)=\"toggleSendBtn()\">\n  </div>\n  <div class=\"control\">\n    <button #sendBtn disabled type=\"btn\" class=\"button is-primary send\" (click)=\"sendMessage(message.value, activeUserItem.id)\">\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-send\"></i>\n      </span>\n    </button>\n  </div>\n</div>\n"
+module.exports = "<div [hidden]=\"!showEmojis\">\n  <div class=\"emojiPopup\" (focusout)=\"removeFocus()\" #popup tabindex=\"20\">\n    <ul>\n      <li *ngFor=\"let emoji of emojis; let x = index\">\n        <a [innerHtml]=\"emoji.code\" (click)=\"addEmoji(x)\"></a>\n      </li>\n    </ul>\n  </div>\n</div>\n\n<div class=\"field has-addons\">\n  <div class=\"control\">\n    <button type=\"btn\" class=\"button is-primary emojis\" (click)=\"viewEmojis()\">\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-happy\"></i>\n      </span>\n    </button>\n  </div>\n  <div class=\"control\">\n    <input type=\"text\" placeholder=\"Enter message...\" class=\"input\" #message (input)=\"toggleSendBtn()\">\n  </div>\n  <div class=\"control\">\n    <button #sendBtn disabled type=\"btn\" class=\"button is-primary send\" (click)=\"sendMessage(message.value, activeUserItem.id)\">\n      <span class=\"icon is-small\">\n        <i class=\"ion-md-send\"></i>\n      </span>\n    </button>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1274,7 +1254,7 @@ var SendComponent = /** @class */ (function () {
             _this.focused = false;
         }, 10);
     };
-    SendComponent.prototype.getEmojis = function () {
+    SendComponent.prototype.viewEmojis = function () {
         var _this = this;
         if (this.focused) {
             this.showEmojis = false;
@@ -1328,14 +1308,14 @@ var SendComponent = /** @class */ (function () {
 /***/ "./src/app/components/user-list/user-list.component.css":
 /***/ (function(module, exports) {
 
-module.exports = ":host {\n  margin: 0px;\n  padding: 0px;\n}\n\n.user-item {\n  font-size: 30px;\n  margin-left: 20px;\n  margin-right: 20px;\n}\n\n.listTitle {\n  font-size: 20px;\n  margin-top: 10px;\n  margin-left: 20px;\n  margin-right: 20px;\n  padding-top: 5px;\n}\n\n.friends {\n  margin-top: 0px;\n}\n\n:host .back {\n  margin-top: 0vh;\n  margin-bottom: 10px;\n  height: 40px;\n  width: 31vw;\n  margin-left: 1vw;\n}\n\n:host .status {\n  font-size: 20px;\n  margin-left: 20px;\n  margin-right: 20px;\n  font-style: italic;\n}\n\n:host .menu {\n  background-color: rgb(72, 21, 78);\n  padding: 0px;\n}\n\n:host .menu li {\n  margin-bottom: 20px;\n}\n\n:host .menu a {\n  height: 84px;\n  ;\n}\n\n:host .menu .name {\n  margin-top: 8px;\n  color: white;\n  font-size: 20px;\n  font-weight: 900;\n  display: block;\n}\n\n:host .menu .email {\n  color: white;\n  font-size: 16px;\n  margin-top: -15px;\n  display: block;\n}\n\n:host .menu .status {\n  height: 20px;\n  width: 20px;\n  border-radius: 100%;\n  display: inline-block;\n  position: absolute;\n  margin-top: 45px;\n  margin-left: -40px;\n}\n\n.online {\n  background-color: rgb(4, 214, 134);\n}\n\n.offline {\n  background-color: rgb(255, 255, 255);\n}\n\n.away {\n  background-color: rgb(243, 247, 3);\n}\n\n.busy {\n  background-color: rgb(247, 6, 6);\n}\n\n:host .menu img {\n  width: 70px;\n  height: 70px;\n  margin-right: 20px;\n  border-radius: 100%;\n  float: left;\n  clear: both;\n}\n\n:host .add {\n  background-color: transparent;\n  height: 84px;\n  margin-top: -77px;\n  width: 58px;\n  margin-right: 67vw;\n  padding: 0px;\n  float: right;\n  font-size: 50px;\n  clear: both;\n}\n\n:host .add:active,\n:host .add:focus {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n\n:host .add:hover {\n  color: rgb(205, 17, 226);\n}\n\n:host .notificationDot {\n  height: 20px;\n  width: 20px;\n  border-radius: 100%;\n  position: absolute;\n  margin-top: -30px;\n  margin-left: 20%;\n  background-color: rgb(205, 17, 226);\n}\n\n:host .accept {\n  background-color: transparent;\n  height: 74px;\n  margin-top: -72px;\n  width: 40px;\n  margin-right: 67vw;\n  padding: 0px;\n  float: right;\n  font-size: 45px;\n  clear: both;\n}\n\n:host .accept:hover {\n  color: rgb(17, 226, 128);\n}\n\n:host .decline {\n  background-color: transparent;\n  height: 74px;\n  margin-top: -72px;\n  width: 40px;\n  margin-right: 70.5vw;\n  padding: 0px;\n  float: right;\n  font-size: 45px;\n}\n\n:host .decline:hover {\n  color: rgb(205, 17, 226);\n}\n\n:Host .decline span,\n:host .accept span {\n  width: 10px;\n}\n\n:host .select {\n  right: -18vw;\n  font-size: 18px;\n  margin-top: -40px;\n}\n\n:host .select select {\n  background-color: transparent;\n  border: none;\n  color: transparent;\n  height: 30px;\n}\n\n:host .select:after {\n  margin-right: 20px;\n  margin-top: -15px;\n  font-size: 35px;\n}\n\n:host select:active,\n:host select:focus {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n"
+module.exports = ":host {\n  margin: 0px;\n  padding: 0px;\n}\n\n.user-item {\n  font-size: 30px;\n  margin-left: 20px;\n  margin-right: 20px;\n}\n\n.listTitle {\n  font-size: 20px;\n  margin-top: 10px;\n  margin-left: 20px;\n  margin-right: 20px;\n  padding-top: 5px;\n}\n\n.friends {\n  margin-top: 0px;\n}\n\n:host .back {\n  margin-top: 0vh;\n  margin-bottom: 10px;\n  height: 40px;\n  width: 31vw;\n  margin-left: 1vw;\n}\n\n:host .status {\n  font-size: 20px;\n  margin-left: 20px;\n  margin-right: 20px;\n  font-style: italic;\n}\n\n:host .menu {\n  background-color: rgb(72, 21, 78);\n  padding: 0px;\n}\n\n:host .menu li {\n  margin-bottom: 20px;\n}\n\n:host .menu a {\n  height: 84px;\n  ;\n}\n\n:host .menu .name {\n  margin-top: 8px;\n  color: white;\n  font-size: 20px;\n  font-weight: 900;\n  display: block;\n}\n\n:host .menu .email {\n  color: white;\n  font-size: 16px;\n  margin-top: -15px;\n  display: block;\n}\n\n:host .menu .status {\n  height: 20px;\n  width: 20px;\n  border-radius: 100%;\n  display: inline-block;\n  position: absolute;\n  margin-top: 45px;\n  margin-left: -40px;\n}\n\n.online {\n  background-color: rgb(4, 214, 134);\n}\n\n.offline {\n  background-color: rgb(255, 255, 255);\n}\n\n.away {\n  background-color: rgb(243, 247, 3);\n}\n\n.busy {\n  background-color: rgb(247, 6, 6);\n}\n\n:host .menu img {\n  width: 70px;\n  height: 70px;\n  margin-right: 20px;\n  border-radius: 100%;\n  float: left;\n  clear: both;\n}\n\n:host .add {\n  background-color: transparent;\n  height: 84px;\n  margin-top: -77px;\n  width: 58px;\n  margin-right: 67vw;\n  padding: 0px;\n  float: right;\n  font-size: 50px;\n  clear: both;\n}\n\n:host .add:active,\n:host .add:focus {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n\n:host .add:hover {\n  color: rgb(205, 17, 226);\n}\n\n:host .notificationDot {\n  height: 20px;\n  width: 20px;\n  border-radius: 100%;\n  position: absolute;\n  margin-top: -30px;\n  margin-left: 20%;\n  background-color: rgb(205, 17, 226);\n}\n\n:host .accept {\n  background-color: transparent;\n  height: 74px;\n  margin-top: -72px;\n  width: 40px;\n  margin-right: 67vw;\n  padding: 0px;\n  float: right;\n  font-size: 45px;\n  clear: both;\n}\n\n:host .accept:hover {\n  color: rgb(17, 226, 128);\n}\n\n:host .decline {\n  background-color: transparent;\n  height: 74px;\n  margin-top: -72px;\n  width: 40px;\n  margin-right: 70.5vw;\n  padding: 0px;\n  float: right;\n  font-size: 45px;\n}\n\n:host .decline:hover {\n  color: rgb(205, 17, 226);\n}\n\n:Host .decline span,\n:host .accept span {\n  width: 10px;\n}\n\n:host .select {\n  right: -18vw;\n  font-size: 18px;\n  margin-top: -40px;\n}\n\n:host .select select {\n  background-color: transparent;\n  border: none;\n  color: transparent;\n  height: 30px;\n}\n\n:host .select:after {\n  margin-right: 20px;\n  margin-top: -15px;\n  font-size: 35px;\n}\n\nselect option {\n  background-color: #8e44ad;\n}\n\nselect:active,\nselect:focus {\n  -webkit-box-shadow: none;\n          box-shadow: none;\n}\n"
 
 /***/ }),
 
 /***/ "./src/app/components/user-list/user-list.component.html":
 /***/ (function(module, exports) {
 
-module.exports = "<div *ngIf=\"state === 'friendList'\">\n  <h1 class=\"subtitle has-text-white listTitle friends\">Friend list</h1>\n\n  <div class=\"menu\">\n    <ul class=\"menu-list\">\n      <li *ngFor=\"let friend of friends\">\n        <a (click)=\"changeItem(friend)\">\n          <img src=\"{{friend.avatar}}\">\n          <span class=\"status\" [ngClass]=\"{'online' : friend.status === 'online', 'offline' : friend.status === 'offline', 'away' : friend.status === 'away', 'busy' : friend.status === 'busy'}\"></span>\n          <span class=\"name\">{{friend.fullName}}</span>\n          <br>\n          <span class=\"email\">{{friend.email}}</span>\n          <span [ngClass]=\"{'notificationDot' : friend.notification}\"></span>\n        </a>\n      </li>\n    </ul>\n  </div>\n</div>\n\n<div *ngIf=\"state === 'search'\">\n  <button class=\"button back\" (click)=\"back()\">Go back</button>\n\n  <div *ngIf=\"!searchUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">No matching users...</h1>\n  </div>\n\n  <div *ngIf=\"searchUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">Matching users</h1>\n    <div class=\"menu\">\n      <ul class=\"menu-list\">\n        <li *ngFor=\"let user of searchUsers\">\n          <a>\n            <img src=\"{{user.avatar}}\">\n            <span class=\"status\" [ngClass]=\"{'online' : user.status === 'online', 'offline' : user.status === 'offline', 'away' : user.status === 'away', 'busy' : user.status === 'busy'}\"></span>\n            <span class=\"name\">{{user.fullName}}</span>\n            <br>\n            <span class=\"email\">{{user.email}}</span>\n            <button (click)=\"addUser(user.id)\" class=\"button add is-primary\">\n              <span class=\"icon is-small\">\n                <i class=\"ion-md-person-add\"></i>\n              </span>\n            </button>\n          </a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n\n<div *ngIf=\"state === 'friendRequest'\">\n  <button class=\"button back\" (click)=\"back()\">Go back</button>\n  <div *ngIf=\"!friendRequestUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">You don't have any friend requests...</h1>\n  </div>\n\n  <div *ngIf=\"friendRequestUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">Friend requests</h1>\n    <div class=\"menu\">\n      <ul class=\"menu-list\">\n        <li *ngFor=\"let request of friendRequestUsers\">\n          <a>\n            <img src=\"{{request.avatar}}\">\n            <span class=\"name\">{{request.fullName}}</span>\n            <br>\n            <span class=\"email\">{{request.email}}</span>\n\n            <div class=\"select\">\n              <select #friendRequest (input)=\"answerRequest(friendRequest.value, request.id)\">\n                <option selected disabled hidden></option>\n                <option value=\"accept\">accept</option>\n                <option value=\"decline\">decline</option>\n              </select>\n            </div>\n          </a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n"
+module.exports = "<div *ngIf=\"state === 'friendList'\">\n  <h1 class=\"subtitle has-text-white listTitle friends\">Friend list</h1>\n\n  <div class=\"menu\">\n    <ul class=\"menu-list\">\n      <li *ngFor=\"let friend of friends\">\n        <a (click)=\"changeActiveUserItem(friend)\">\n          <img src=\"{{friend.avatar}}\">\n          <span class=\"status\" [ngClass]=\"{'online' : friend.status === 'online', 'offline' : friend.status === 'offline', 'away' : friend.status === 'away', 'busy' : friend.status === 'busy'}\"></span>\n          <span class=\"name\">{{friend.fullName}}</span>\n          <br>\n          <span class=\"email\">{{friend.email}}</span>\n          <span [ngClass]=\"{'notificationDot' : friend.notification}\"></span>\n        </a>\n      </li>\n    </ul>\n  </div>\n</div>\n\n<div *ngIf=\"state === 'search'\">\n  <button class=\"button back\" (click)=\"back()\">Go back</button>\n\n  <div *ngIf=\"!searchUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">No matching users...</h1>\n  </div>\n\n  <div *ngIf=\"searchUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">Matching users</h1>\n    <div class=\"menu\">\n      <ul class=\"menu-list\">\n        <li *ngFor=\"let user of searchUsers\">\n          <a>\n            <img src=\"{{user.avatar}}\">\n            <span class=\"status\" [ngClass]=\"{'online' : user.status === 'online', 'offline' : user.status === 'offline', 'away' : user.status === 'away', 'busy' : user.status === 'busy'}\"></span>\n            <span class=\"name\">{{user.fullName}}</span>\n            <br>\n            <span class=\"email\">{{user.email}}</span>\n            <button (click)=\"addUser(user.id)\" class=\"button add is-primary\">\n              <span class=\"icon is-small\">\n                <i class=\"ion-md-person-add\"></i>\n              </span>\n            </button>\n          </a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n\n<div *ngIf=\"state === 'friendRequest'\">\n  <button class=\"button back\" (click)=\"back()\">Go back</button>\n  <div *ngIf=\"!friendRequestUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">You don't have any friend requests...</h1>\n  </div>\n\n  <div *ngIf=\"friendRequestUsers.length > 0\">\n    <h1 class=\"subtitle has-text-white listTitle\">Friend requests</h1>\n    <div class=\"menu\">\n      <ul class=\"menu-list\">\n        <li *ngFor=\"let request of friendRequestUsers\">\n          <a>\n            <img src=\"{{request.avatar}}\">\n            <span class=\"name\">{{request.fullName}}</span>\n            <br>\n            <span class=\"email\">{{request.email}}</span>\n\n            <div class=\"select\">\n              <select #friendRequest (input)=\"answerRequest(friendRequest.value, request.id)\">\n                <option selected disabled hidden></option>\n                <option value=\"accept\">accept</option>\n                <option value=\"decline\">decline</option>\n              </select>\n            </div>\n          </a>\n        </li>\n      </ul>\n    </div>\n  </div>\n</div>\n"
 
 /***/ }),
 
@@ -1386,12 +1366,12 @@ var UserListComponent = /** @class */ (function () {
                 }
             }
         });
-        this.socket.on('updateFriends', function () {
-            _this.chatService.getFriends().subscribe(function (friends) {
-                _this.friends = friends;
-            });
-            _this.chatService.changeActiveUserItem({ id: null, fullName: 'no user selected' });
-            _this.chatService.changeActiveConversation(null);
+        this.socket.on('removeFriend', function (id) {
+            _this.chatService.getFriends().subscribe(function (friends) { return _this.friends = friends; });
+            if (id === _this.activeUserItem.id) {
+                _this.chatService.changeActiveUserItem({ id: null, fullName: 'no user selected' });
+                _this.chatService.changeActiveConversation(null);
+            }
         });
         this.socket.on('messageNotification', function (id) {
             var friend = _this.friends.filter(function (x) { return x.id === id; })[0];
@@ -1401,7 +1381,7 @@ var UserListComponent = /** @class */ (function () {
             }
         });
     };
-    UserListComponent.prototype.changeItem = function (user) {
+    UserListComponent.prototype.changeActiveUserItem = function (user) {
         this.chatService.changeActiveUserItem(user);
         this.chatService.changeActiveConversation(user.id);
         if (this.activeUserItem.notification) {
@@ -1823,10 +1803,6 @@ var WebsocketService = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return environment; });
-// The file contents for the current environment will overwrite these during build.
-// The build system defaults to the dev environment which uses `environment.ts`, but if you do
-// `ng build --env=prod` then `environment.prod.ts` will be used instead.
-// The list of which env maps to which file can be found in `.angular-cli.json`.
 var environment = {
     production: false,
     BASE_URL: 'http://localhost:8000'

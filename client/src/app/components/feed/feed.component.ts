@@ -29,7 +29,8 @@ export class FeedComponent implements OnInit {
 
       if (this.activeUserItem.id !== null) { this.activeConversation = this.conversations[this.activeUserItem.id] }
     })
-    
+
+    // Stores the conversations on the client.
     this.socket.on('newMessage', data => {
       if (this.conversations[data.id]) {
         this.conversations[data.id].push({ message: data.message, sender: data.name })

@@ -14,8 +14,8 @@ export class SendComponent implements OnInit {
 
   socket: any
   activeUserItem: any
-  showEmojis: boolean
   emojis: object
+  showEmojis: boolean
   focused: boolean
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {

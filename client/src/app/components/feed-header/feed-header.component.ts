@@ -15,18 +15,18 @@ export class FeedHeaderComponent implements OnInit {
   @ViewChild('audio') audio: any
 
   socket: any
-  activeUserItem: any
-  stream: object
-  peerId: string
   peer: any
+  data: any
+  activeUserItem: any
+  dialInformation: any
+  friends: any
+  localStream: any
+  stream: object
+  callInformation: object
+  peerId: string
   calling: boolean
   dialing: boolean
-  data: any
-  localStream: any
-  callInformation: object
-  dialInformation: any
   answered: boolean
-  friends: any
   allowAudio: boolean
 
   constructor
@@ -48,14 +48,14 @@ export class FeedHeaderComponent implements OnInit {
     this.chatService.audio.subscribe(audio => this.allowAudio = audio)
 
     try {
+      // Signals the remote peer.
       this.socket.on('newSignal', data => {
         if (data.type === 'offer') {
-          this.startAudioRinging()
+          this.startAudio('ringing')
 
           this.chatService.changeCalling(true)
 
           this.data = data
-
           this.callInformation = { caller: data.caller, callType: data.chatType }
 
           this.chatService.changeCallInformation(this.callInformation)
@@ -66,25 +66,9 @@ export class FeedHeaderComponent implements OnInit {
       this.newError()
     }
 
-    this.socket.on('callError', () => {
-      if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
-
-      this.chatService.changeDialing(false)
-      this.chatService.changeCalling(false)
-      this.stopAudio()
-    })
-    
-    this.socket.on('hangUp', () => {
-      this.chatService.changeDialing(false)
-      this.stopAudio()
-      if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
-    })
-
-    this.socket.on('cancelCall', () => {
-      this.chatService.changeCalling(false)
-      this.stopAudio()
-    })
-  
+    this.socket.on('callError', () => this.resetCallState())
+    this.socket.on('hangUp', () => this.resetCallState())
+    this.socket.on('cancelCall', () => this.resetCallState())
     this.socket.on('answered', () => this.answered = true)
   }
   
@@ -93,43 +77,34 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   startVideoCall(id) {
-    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'video' }
-
-    this.chatService.changeDialInformation(this.dialInformation)
-    this.chatService.changeDialing(true)
-    this.startAudioDial()
+    this.setupCall('video')
     this.createPeer({ audio: true, video: true }, id, 'offer', 'video', null)
-
-    setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
   }
 
   startVoiceCall(id) {
-    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: 'voice' }
+    this.setupCall('voice')
+    this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+  }
+
+  setupCall(type) {
+    this.dialInformation = { id: this.activeUserItem.id, receiver: this.activeUserItem.fullName, dialType: type }
 
     this.chatService.changeDialInformation(this.dialInformation)
     this.chatService.changeDialing(true)
-    this.startAudioDial()
-    this.createPeer({ audio: true, video: false }, id, 'offer', 'voice', null)
+    this.startAudio('dialing')
 
     setTimeout(() => { if (this.answered !== true) { this.cancelCall() } }, 10000)
   }
 
-  startAudioDial() {
+  startAudio(name) {
     if (this.allowAudio) {
-      this.audio.nativeElement.src = '../../../assets/sounds/dialing.mp3'
+      this.audio.nativeElement.src = `../../../assets/sounds/${name}.mp3`
       this.audio.nativeElement.play()
     }
   }
 
   stopAudio() {
     this.audio.nativeElement.pause()
-  }
-
-  startAudioRinging() {
-    if (this.allowAudio) {
-      this.audio.nativeElement.src = '../../../assets/sounds/ringing.mp3'
-      this.audio.nativeElement.play()
-    }
   }
 
   answerCall() {
@@ -148,28 +123,27 @@ export class FeedHeaderComponent implements OnInit {
   }
 
   cancelCall() {
-    this.chatService.changeDialing(false)
-    this.stopAudio()
-    if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
-
+    this.resetCallState()
     this.socket.emit('cancelCall', this.dialInformation.id)
   }
 
   hangUp() {
-    this.chatService.changeCalling(false)
-    this.stopAudio()
-
+    this.resetCallState()
     this.socket.emit('hangUp', this.data.id)
   }
 
   newError() {
+    this.resetCallState()
+    if (this.data) { this.socket.emit('callError', this.data.id) }
+  }
+
+  // Turns of the camera and closes popup.
+  resetCallState() {
     if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
 
     this.chatService.changeDialing(false)
     this.chatService.changeCalling(false)
     this.stopAudio()
-
-    if (this.data) { this.socket.emit('callError', this.data.id) }
   }
 
   createPeer(options, receiver, type, chatType, peerId) {
@@ -235,7 +209,6 @@ export class FeedHeaderComponent implements OnInit {
 
           peerx.on('close', () => {
             if (this.localStream) { this.localStream.getTracks().forEach(x => x.stop()) }
-
             this.router.navigate([''])
           })
         })
@@ -243,14 +216,15 @@ export class FeedHeaderComponent implements OnInit {
           this.chatService.changeFlashMessage({ type: 'error', message: 'There was an error when trying to use your camera/microphone', color: 'warning' })
           this.newError()
         })
-
-      setTimeout(() => {
-        this.peer = peerx
-        if (this.peer) { type === 'answer' ? this.peer.signal(peerId) : null }
-      }, 5000)
-    } catch (err) {
-      this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
-      this.newError()
+        
+        // Waits until the webRTC-ID has been created. 
+        setTimeout(() => {
+          this.peer = peerx
+          if (this.peer) { type === 'answer' ? this.peer.signal(peerId) : null }
+        }, 5000)
+      } catch (err) {
+        this.chatService.changeFlashMessage({ type: 'error', message: 'An error occured when trying to establish a connection, please try again...', color: 'warning' })
+        this.newError()
     }
   }
 }

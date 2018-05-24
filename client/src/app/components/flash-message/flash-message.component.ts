@@ -22,6 +22,7 @@ export class FlashMessageComponent implements OnInit {
     })
   }
 
+  // Loads specific resources again.
   retry() {
     if (this.flashMessage.dataType === 'current-user') {
       this.userService.getCurrentUser().subscribe(currentUser => {

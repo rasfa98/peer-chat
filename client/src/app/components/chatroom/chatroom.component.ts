@@ -9,12 +9,12 @@ import { ChatService } from '../../services/chat.service';
 })
 export class ChatroomComponent implements OnInit {
   socket: any
+  flashMessage: object
   displayWelcome: string
   displayChatComponents: string
   loading: boolean
   calling: boolean
   dialing: boolean
-  flashMessage: object
 
   constructor(private websocketService: WebsocketService, private chatService: ChatService) {
     this.loading = true
@@ -28,6 +28,7 @@ export class ChatroomComponent implements OnInit {
     this.chatService.dialing.subscribe(dialing => this.dialing = dialing)
     this.chatService.flashMessage.subscribe(flashMessage => this.flashMessage  = flashMessage)
     
+    // Checks if the welcome message should be displayed.
     this.chatService.activeUserItem.subscribe(activeUserItem => {
       if (activeUserItem.id === null) {
         this.displayWelcome = 'block'
@@ -40,6 +41,7 @@ export class ChatroomComponent implements OnInit {
       this.loading = false
     })
 
+    // Friend request feedback.
     this.socket.on('friendResponseServer', data => {
       if (data.type === 'success') {
         this.chatService.changeFlashMessage({ type: 'info', message: data.message, color: 'success' })
