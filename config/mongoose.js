@@ -14,7 +14,7 @@
    let connectionString
 
    if (app.get('env') === 'development') { connectionString = `mongodb://${process.env.DB_USER}:${process.env.DB_PASSWORD}@ds247479.mlab.com:47479/peer-chat` }
-   if (app.get('env') === 'production') { connectionString = 'mongodb://localhost/PeerChat' }
+   if (app.get('env') === 'production') { connectionString = 'mongodb://localhost/peer-chat' }
 
    app.set('connectionString', connectionString)
 
